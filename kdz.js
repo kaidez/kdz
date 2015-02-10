@@ -3,7 +3,7 @@
 
 "use strict";
 
-var
+var fs = require('fs'),
     program = require('commander'),
     touch = require("touch"),
     mkdirp = require('mkdirp'),
