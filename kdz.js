@@ -194,6 +194,13 @@ program
         }
         cd("../../");
       })
+      .then(function(){
+        console.log(chalk.green("Download package.json...\n"));
+      })
+      .then(getPackage)
+      .then(function(){
+        console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
+      })
     });
 
 
