@@ -160,7 +160,7 @@ program
 
 program
   .command("build")
-  .description("add 'build' folder with subfolders")
+  .description("add \"build\" folder with subfolders")
   .action(function(){
     if(!fs.existsSync("build")) {
       buildDir();
