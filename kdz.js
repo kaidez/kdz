@@ -162,20 +162,20 @@ program
   .command("build")
   .description("add 'build' folder with subfolders")
   .action(function(){
-      if(!fs.existsSync("build")) {
-        buildDir();
-      } else {
-        return console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
-      }
+    if(!fs.existsSync("build")) {
+      buildDir();
+    } else {
+      return console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
+    }
   })
 
 
 // options
 program
   .version('0.0.1')
-  .option('-b, --build', 'add "build/" folder with subfolders')
-  .option('-l, --less', 'create .less files in "css-build/"')
-  .option('-s, --sass', 'create .scss files in "css-build/"')
+  .option('-b, --build', 'add "build" folder with subfolders')
+  .option('-l, --less', 'create .less files in "css-build"')
+  .option('-s, --sass', 'create .scss files in "css-build"')
   .option('-t, --test', 'do a test scaffold in "kdz-test"');
 
 program.parse(process.argv);
