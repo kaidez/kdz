@@ -176,6 +176,12 @@ program
   .action(function(){
     changeDirectory()
       .then(buildFolders)
+      .then(function(){
+        console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
+        cd("coffee");
+        touch("main.coffee");
+        cd("../");
+      })
   });
 
 
