@@ -103,60 +103,81 @@ function getBootstrap() {
 }
 
 
-// "init" command
+// Helper function for changing over to the "kdz-test" directory
+function changeDirectory() {
+  var deferred = Q.defer();
+  if (program.test) {
+    cd("kdz-test");
+    deferred.resolve();
+  } else {
+    cd('.')
+    deferred.resolve();
+  }
+  return deferred.promise;
+}
+// // "init" command
+// program
+//   .command('init')
+//   .description('scaffold the project')
+//   .action(function(){
+//     buildFolders().then(function(){
+//       console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
+//       cd("coffee");
+//       touch("main.coffee");
+//       cd("../");
+//     })
+//     .then(function(){
+//       console.log(chalk.yellow.underline("Building CSS preprocessors files...\n"));
+//       cd("css-build/import");
+//       if(program.less) {
+//         preProcess("less");
+//       } else {
+//         if (program.sass) {
+//           preProcess("scss");
+//         }
+//       }
+//       cd("../../");
+//     })
+//     .then(function(){
+//       console.log(chalk.green("Download package.json...\n"));
+//     })
+//     .then(getPackage)
+//     .then(function(){
+//       console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
+//     })
+//     .then(function(){
+//       console.log(chalk.green("Download bower.json...\n"));
+//     })
+//     .then(getBower)
+//     .then(function(){
+//       console.log(chalk.yellow.underline("bower.json downloaded successfully!\n"));
+//     })
+//     .then(function(){
+//         console.log(chalk.green("Download bootstrap.css...\n"));
+//     })
+//     .then(getBootstrap)
+//     .then(function(){
+//       console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
+//     })
+//     .then(function(){
+//       if(program.build) {
+//         if(!fs.existsSync("build")) {
+//           buildDir();
+//         } else {
+//           return console.log(chalk.red.bold('You already have a "build" folder...a new one will not be built.\n'));
+//         }
+//       }
+//     })
+//   });
+
 program
   .command('init')
   .description('scaffold the project')
   .action(function(){
-    buildFolders().then(function(){
-      console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
-      cd("coffee");
-      touch("main.coffee");
-      cd("../");
-    })
-    .then(function(){
-      console.log(chalk.yellow.underline("Building CSS preprocessors files...\n"));
-      cd("css-build/import");
-      if(program.less) {
-        preProcess("less");
-      } else {
-        if (program.sass) {
-          preProcess("scss");
-        }
-      }
-      cd("../../");
-    })
-    .then(function(){
-      console.log(chalk.green("Download package.json...\n"));
-    })
-    .then(getPackage)
-    .then(function(){
-      console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
-    })
-    .then(function(){
-      console.log(chalk.green("Download bower.json...\n"));
-    })
-    .then(getBower)
-    .then(function(){
-      console.log(chalk.yellow.underline("bower.json downloaded successfully!\n"));
-    })
-    .then(function(){
-        console.log(chalk.green("Download bootstrap.css...\n"));
-    })
-    .then(getBootstrap)
-    .then(function(){
-      console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
-    })
-    .then(function(){
-      if(program.build) {
-        if(!fs.existsSync("build")) {
-          buildDir();
-        } else {
-          return console.log(chalk.red.bold('You already have a "build" folder...a new one will not be built.\n'));
-        }
-      }
-    })
+    changeDirectory()
+      .then(buildFolders)
   });
+
 
 program
   .command("build")
