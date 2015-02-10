@@ -182,7 +182,19 @@ program
         touch("main.coffee");
         cd("../");
       })
-  });
+      .then(function(){
+        console.log(chalk.yellow.underline("Building CSS preprocessors files...\n"));
+          cd("css-build/import");
+          if(program.less) {
+            preProcess("less");
+          } else {
+          if (program.sass) {
+            preProcess("scss");
+          }
+        }
+        cd("../../");
+      })
+    });
 
 
 program
