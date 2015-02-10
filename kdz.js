@@ -3,17 +3,17 @@
 
 "use strict";
 
-var fs = require('fs'),
-    program = require('commander'),
-    touch = require("touch"),
-    mkdirp = require('mkdirp'),
-    Q = require('q'),
-    shelljs = require("shelljs"),
-    chalk = require('chalk'),
-    Download = require('download'),
-    progress = require('download-status'),
-    prompt = require('prompt'),
-    data = require('./config/data.js');
+var fs = require('fs');
+var program = require('commander');
+var touch = require("touch");
+var mkdirp = require('mkdirp');
+var Q = require('q');
+var shelljs = require("shelljs");
+var chalk = require('chalk');
+var Download = require('download');
+var progress = require('download-status');
+var prompt = require('prompt');
+var data = require('./config/data.js');
 
 require('shelljs/global');
 
@@ -30,7 +30,6 @@ function buildFolders(){
 
 //Create a "build" folder with "css" & "js" subdirectories
 function buildDir() {
-  console.log(chalk.yellow.underline("Creating build folders...\n"));
   var deferred = Q.defer();
   setTimeout(function(){
     ["build/css", "build/js/libs"].forEach(function(element){
@@ -52,15 +51,14 @@ function preProcess(opt){
 
 
 
-// Helper function for downloading my core "bower.json" file
+// Helper function for downloading my core "package.json" file
 function getPackage() {
   var deferred = Q.defer();
-  var download = new Download({ strip: 1, mode: '755' })
-    .get('https://raw.githubusercontent.com/kaidez/kdz/master/package.json')
-    .dest('./test')
-    .use(progress());
+  var download = new Download({ strip: 1 })
+    .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/package.json')
+    .dest('./test');
 
-  download.run(function (err, files, stream) {
+  download.run(function (err) {
     if (err) {
       throw err;
     }
@@ -73,12 +71,11 @@ function getPackage() {
 // Helper function for downloading my core "bower.json" file
 function getBower() {
   var deferred = Q.defer();
-  var download = new Download({ strip: 1, mode: '755' })
-    .get('https://raw.githubusercontent.com/kaidez/kdz/master/bower.json')
-    .dest('.')
-    .use(progress());
+  var download = new Download({ strip: 1 })
+    .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/bower.json')
+    .dest('.');
 
-  download.run(function (err, files, stream) {
+  download.run(function (err) {
     if (err) {
       throw err;
     }
@@ -88,15 +85,14 @@ function getBower() {
   return deferred.promise;
 }
 
-// Helper function for downloading my core "bower.json" file
+// Helper function for downloading core "bootstrap.css" file
 function getBootstrap() {
   var deferred = Q.defer();
-  var download = new Download({ strip: 1, mode: '755' })
+  var download = new Download({ strip: 1 })
     .get('https://raw.githubusercontent.com/twbs/bootstrap/master/dist/css/bootstrap.css')
-    .dest('./css-build')
-    .use(progress());
+    .dest('./css-build');
 
-  download.run(function (err, files, stream) {
+  download.run(function (err) {
     if (err) {
       throw err;
     }
@@ -105,6 +101,7 @@ function getBootstrap() {
   });
   return deferred.promise;
 }
+
 
 // "init" command
 program
@@ -116,7 +113,8 @@ program
       cd("coffee");
       touch("main.coffee");
       cd("../");
-    }).then(function(){
+    })
+    .then(function(){
       console.log(chalk.yellow.underline("Building CSS preprocessors files...\n"));
       cd("css-build/import");
       if(program.less) {
@@ -128,17 +126,26 @@ program
       }
       cd("../../");
     })
+    .then(function(){
+      console.log(chalk.green("Download package.json...\n"));
+    })
     .then(getPackage)
     .then(function(){
       console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
+    })
+    .then(function(){
+      console.log(chalk.green("Download bower.json...\n"));
     })
     .then(getBower)
     .then(function(){
       console.log(chalk.yellow.underline("bower.json downloaded successfully!\n"));
     })
+    .then(function(){
+        console.log(chalk.green("Download bootstrap.css...\n"));
+    })
     .then(getBootstrap)
     .then(function(){
-      console.log(chalk.yellow.underline("bootstrap.css.json downloaded successfully!\n"));
+      console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
     })
     .then(function(){
       if(program.build) {
@@ -155,21 +162,21 @@ program
   .command("build")
   .description("add 'build' folder with subfolders")
   .action(function(){
-    if(program.build) {
       if(!fs.existsSync("build")) {
         buildDir();
       } else {
         return console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
       }
-    }
   })
+
 
 // options
 program
   .version('0.0.1')
   .option('-b, --build', 'add "build/" folder with subfolders')
-  .option('-l, --less', 'create .less files in "css-build/')
-  .option('-s, --sass', 'create .scss files in "css-build/');
+  .option('-l, --less', 'create .less files in "css-build/"')
+  .option('-s, --sass', 'create .scss files in "css-build/"')
+  .option('-t, --test', 'do a test scaffold in "kdz-test"');
 
 program.parse(process.argv);
 
