@@ -28,15 +28,21 @@ function buildFolders(){
 } //end "buildFolders()"
 
 
+
 //Create a "build" folder with "css" & "js" subdirectories
 function buildDir() {
   var deferred = Q.defer();
-  setTimeout(function(){
-    ["build/css", "build/js/libs"].forEach(function(element){
-      mkdirp(element);
-    });
-    deferred.resolve();
-  }, 3000)
+    if(!fs.existsSync("build")) {
+      ["build/css", "build/js/libs"].forEach(function(element){
+        mkdirp(element);
+      });
+      deferred.resolve();
+    } else {
+      return console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
+      deferred.resolve();
+    }
+
+
   return deferred.promise;
 }; // end "buildDir()"
 
@@ -103,11 +109,11 @@ function getBootstrap() {
 }
 
 
-// Helper function for changing over to the "kdz-test" directory
+// Helper function for changing over to the "init-test" directory
 function changeDirectory() {
   var deferred = Q.defer();
   if (program.test) {
-    cd("kdz-test");
+    cd("init-test");
     deferred.resolve();
   } else {
     cd('.')
@@ -168,13 +174,7 @@ program
         console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
       })
       .then(function(){
-        if(program.build) {
-          if(!fs.existsSync("build")) {
-            buildDir();
-          } else {
-            return console.log(chalk.red.bold('You already have a "build" folder...a new one will not be built.\n'));
-          }
-        }
+        buildDir();
       })
     });
 
@@ -197,7 +197,7 @@ program
   .option('-b, --build', 'add "build" folder with subfolders')
   .option('-l, --less', 'create .less files in "css-build"')
   .option('-s, --sass', 'create .scss files in "css-build"')
-  .option('-t, --test', 'do a test scaffold in "kdz-test"');
+  .option('-t, --test', 'do a test scaffold in "init-test"');
 
 program.parse(process.argv);
 
