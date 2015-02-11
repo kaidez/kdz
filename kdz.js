@@ -32,19 +32,13 @@ function buildFolders(){
 //Create a "build" folder with "css" & "js" subdirectories
 function buildDir() {
   var deferred = Q.defer();
-    if(!fs.existsSync("build")) {
-      ["build/css", "build/js/libs"].forEach(function(element){
-        mkdirp(element);
-      });
-      deferred.resolve();
-    } else {
-      return console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
-      deferred.resolve();
-    }
-
-
+  ["build/css", "build/js/libs"].forEach(function(element){
+    mkdirp(element);
+    deferred.resolve()
+  });
   return deferred.promise;
-}; // end "buildDir()"
+} // end "buildDir()"
+
 
 
 // Helper function for creating CSS preprocessors files
@@ -127,6 +121,15 @@ program
   .description('scaffold the project')
   .action(function(){
     changeDirectory()
+    .then(function(){
+      if(program.build) {
+        if(fs.existsSync("build")) {
+          console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
+        } else {
+          buildDir();
+        }
+      }
+    })
       .then(buildFolders)
       .then(function(){
         console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
@@ -173,22 +176,13 @@ program
       .then(function(){
         console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
       })
-      .then(function(){
-        buildDir();
-      })
     });
 
 
 program
   .command("build")
   .description("add \"build\" folder with subfolders")
-  .action(function(){
-    if(!fs.existsSync("build")) {
-      buildDir();
-    } else {
-      return console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
-    }
-  })
+  .action(buildDir)
 
 
 // options
