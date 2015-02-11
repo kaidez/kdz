@@ -56,7 +56,7 @@ function getPackage() {
   var deferred = Q.defer();
   var download = new Download({ strip: 1 })
     .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/package.json')
-    .dest('./test');
+    .dest('.');
 
   download.run(function (err) {
     if (err) {
@@ -143,7 +143,13 @@ program
       .then(function(){
         console.log(chalk.green("Download package.json...\n"));
       })
-      .then(getPackage)
+      .then(function(){
+        if (fs.existsSync("package.json")) {
+          return console.log(chalk.red.bold('You already have a "package.json" file...a new one will not be built.\n'));
+        } else {
+          getPackage();
+        }
+      })
       .then(function(){
         console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
       })
