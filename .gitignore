@@ -1,11 +1,19 @@
 # Site assets
 #------------
 assets/
-coffee/
-image-min/
 build/
+coffee/
 css-build/
+image-min/
 bower.json
+
+!init-test/image-min/
+!init-test/build/
+!init-test/coffee/
+!init-test/css-build/
+!init-test/image-min/
+!init-test/bower.json
+!init-test/package.json
 
 # bower downloads
 # ---------------
@@ -30,7 +38,7 @@ bower_components/
 *.eps
 
 
-# Grunt/Node-related files
+# Node-related files
 # ------------------------
 lib-cov
 *.seed
