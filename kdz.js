@@ -130,23 +130,23 @@ program
         }
       }
     })
-      .then(buildFolders)
-      .then(function(){
-        console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
-        cd("coffee");
-        touch("main.coffee");
-        cd("../");
-      })
-      .then(function(){
-        console.log(chalk.yellow.underline("Building CSS preprocessors files...\n"));
-          cd("css-build/import");
-          if(program.less) {
-            preProcess("less");
-          } else {
-          if (program.sass) {
-            preProcess("scss");
-          }
+    .then(buildFolders)
+    .then(function(){
+      console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
+      cd("coffee");
+      touch("main.coffee");
+      cd("../");
+    })
+    .then(function(){
+      console.log(chalk.yellow.underline("Building CSS preprocessors files...\n"));
+      cd("css-build/import");
+      if(program.less) {
+        preProcess("less");
+      } else {
+        if (program.sass) {
+          preProcess("scss");
         }
+      }
         cd("../../");
       })
       .then(function(){
@@ -182,7 +182,13 @@ program
 program
   .command("build")
   .description("add \"build\" folder with subfolders")
-  .action(buildDir)
+  .action(function(){
+    if (fs.existsSync("build")) {
+      console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
+    } else {
+      buildDir();
+    }
+  })
 
 
 // options
