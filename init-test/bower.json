@@ -1,0 +1,28 @@
+{
+  "name": "build-css-demo",
+  "version": "1.0.0",
+  "homepage": "https://github.com/kaidez/build-css-demo",
+  "authors": [
+    "kaidez <kai.gittens@gmail.com>"
+  ],
+  "description": "Source files for a CSS build tutorial",
+  "main": "build/index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "latest",
+    "jquery": "1.11.1",
+    "jquery-cycle2": "latest",
+    "scrollNav": "latest",
+    "matchmedia": "latest"
+  },
+  "resolutions": {
+    "jquery": "~1.11.1"
+  }
+}
