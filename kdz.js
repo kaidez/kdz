@@ -3,17 +3,17 @@
 
 "use strict";
 
-var fs = require('fs');
-var program = require('commander');
-var touch = require("touch");
-var mkdirp = require('mkdirp');
-var Q = require('q');
-var shelljs = require("shelljs");
-var chalk = require('chalk');
-var Download = require('download');
-var progress = require('download-status');
-var prompt = require('prompt');
-var data = require('./config/data.js');
+var fs = require('fs'),
+    program = require('commander'),
+    touch = require("touch"),
+    mkdirp = require('mkdirp'),
+    Q = require('q'),
+    shelljs = require("shelljs"),
+    chalk = require('chalk'),
+    Download = require('download'),
+    progress = require('download-status'),
+    prompt = require('prompt'),
+    data = require('./config/data.js');
 
 require('shelljs/global');
 
