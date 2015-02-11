@@ -5,7 +5,7 @@ coffee/
 image-min/
 build/
 css-build/
-
+bower.json
 
 # bower downloads
 # ---------------
