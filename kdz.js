@@ -196,7 +196,7 @@ program
   .action(function(){
     changeDirectory()
     .then(function(){
-      if(program.test) {
+      if(program.build) {
         testForBuild();
       }
     })
