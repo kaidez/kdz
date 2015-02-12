@@ -34,11 +34,23 @@ function buildDir() {
   var deferred = Q.defer();
   ["build/css", "build/js/libs"].forEach(function(element){
     mkdirp(element);
-    deferred.resolve()
+    deferred.resolve();
   });
   return deferred.promise;
 } // end "buildDir()"
 
+
+function testForBuild() {
+  var deferred = Q.defer();
+  if(!fs.existsSync("build")) {
+    buildDir();
+    deferred.resolve();
+  } else {
+    console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
+    deferred.resolve();
+  }
+  return deferred.promise;
+}
 
 
 // Helper function for creating CSS preprocessors files
@@ -123,11 +135,7 @@ program
     changeDirectory()
     .then(function(){
       if(program.build) {
-        if(fs.existsSync("build")) {
-          console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
-        } else {
-          buildDir();
-        }
+        testForBuild();
       }
     })
     .then(buildFolders)
@@ -186,11 +194,12 @@ program
   .command("build")
   .description("add \"build\" folder with subfolders")
   .action(function(){
-    if (fs.existsSync("build")) {
-      console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
-    } else {
-      buildDir();
-    }
+    changeDirectory()
+    .then(function(){
+      if(program.test) {
+        testForBuild();
+      }
+    })
   })
 
 
