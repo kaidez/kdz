@@ -249,9 +249,6 @@ program
 //       })
 //     });
 
-// TODO:
-// Configure "build" to check to see if the "-t" option is passed
-// If it is, do a CD to "to init-test" before running the command
 
 // program
 //   .command("build")
