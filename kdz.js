@@ -27,7 +27,10 @@ function buildFolders(){
   return Q.delay(3000);
 } //end "buildFolders()"
 
-
+function goToTest() {
+  cd("init-test");
+  return Q.delay(3000);
+}
 
 //Create a "build" folder with "css" & "js" subdirectories
 function buildDir() {
@@ -49,9 +52,13 @@ function buildDir() {
 // Helper function for creating CSS preprocessors files
 // "opt" will be a preprocessor file type: either "less" or "sass"
 function preProcess(opt){
+  var deferred = Q.defer();
+  console.log(chalk.yellow.underline("Building ." + opt + " preprocessor files...\n"));
   data["preprocess_files"].forEach(function(element){
     touch(element+"."+opt)
+    deferred.resolve();
   });
+  return deferred.promise;
 }
 
 
@@ -114,11 +121,11 @@ function runTests() {
   var test = program.test;
   var build = program.build;
   if (build && test) {
-    cd("init-test");
+    goToTest()
     buildDir();
     deferred.resolve();
   } else if (test) {
-    cd("init-test");
+    goToTest()
     deferred.resolve()
   } else if (build) {
     buildDir();
@@ -141,18 +148,6 @@ program
       cd("coffee");
       touch("main.coffee");
       cd("../");
-    })
-    .then(function(){
-      console.log(chalk.yellow.underline("Building CSS preprocessors files...\n"));
-      cd("css-build/import");
-      if(program.less) {
-        preProcess("less");
-      } else {
-        if (program.sass) {
-          preProcess("scss");
-        }
-      }
-      cd("../../");
     })
     .then(function(){
       console.log(chalk.green("Download package.json...\n"));
@@ -180,6 +175,18 @@ program
     .then(getBootstrap)
     .then(function(){
       console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
+    })
+    .then(function(){
+      if(program.less) {
+        cd("css-build/import");
+        preProcess("less");
+      } else {
+        if (program.sass) {
+          cd("css-build/import");
+          preProcess("scss");
+        }
+      }
+      cd("../../");
     })
   });
 
