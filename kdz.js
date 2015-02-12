@@ -191,76 +191,17 @@ program
   });
 
 
-// program
-//   .command('init')
-//   .description('scaffold the project')
-//   .action(function(){
-//     changeDirectory()
-//     .then(function(){
-//       if(program.build) {
-//         testForBuild();
-//       }
-//     })
-//     .then(buildFolders)
-//     .then(function(){
-//       console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
-//       cd("coffee");
-//       touch("main.coffee");
-//       cd("../");
-//     })
-//     .then(function(){
-//       console.log(chalk.yellow.underline("Building CSS preprocessors files...\n"));
-//       cd("css-build/import");
-//       if(program.less) {
-//         preProcess("less");
-//       } else {
-//         if (program.sass) {
-//           preProcess("scss");
-//         }
-//       }
-//         cd("../../");
-//       })
-//       .then(function(){
-//         console.log(chalk.green("Download package.json...\n"));
-//       })
-//       .then(function(){
-//         if (fs.existsSync("package.json")) {
-//           return console.log(chalk.red.bold('You already have a "package.json" file...a new one will not be built.\n'));
-//         } else {
-//           getPackage();
-//         }
-//       })
-//       .then(function(){
-//         console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
-//       })
-//       .then(function(){
-//         console.log(chalk.green("Download bower.json...\n"));
-//       })
-//       .then(getBower)
-//       .then(function(){
-//         console.log(chalk.yellow.underline("bower.json downloaded successfully!\n"));
-//       })
-//       .then(function(){
-//         console.log(chalk.green("Download bootstrap.css...\n"));
-//       })
-//       .then(getBootstrap)
-//       .then(function(){
-//         console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
-//       })
-//     });
-
-
-// program
-//   .command("build")
-//   .description("add \"build\" folder with subfolders")
-//   .action(function(){
-//     changeDirectory()
-//     .then(function(){
-//       if(program.build) {
-//         testForBuild();
-//       }
-//     })
-//   })
+program
+  .command("build")
+  .description("add \"build\" folder with subfolders")
+  .action(function(){
+    changeDirectory()
+    .then(function(){
+      if(program.build) {
+        testForBuild();
+      }
+    })
+  })
 
 
 // options
