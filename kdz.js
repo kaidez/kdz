@@ -138,10 +138,10 @@ program
       buildFolders()
     }).then(function(){
       console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
-     cd("coffee");
-     touch("main.coffee");
-       cd("../");
-     })
+      cd("coffee");
+      touch("main.coffee");
+      cd("../");
+    })
     .then(function(){
       console.log(chalk.yellow.underline("Building CSS preprocessors files...\n"));
       cd("css-build/import");
@@ -165,23 +165,23 @@ program
       }
     })
     .then(function(){
-            console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
-          })
-          .then(function(){
-            console.log(chalk.green("Download bower.json...\n"));
-          })
-          .then(getBower)
-          .then(function(){
-            console.log(chalk.yellow.underline("bower.json downloaded successfully!\n"));
-          })
-          .then(function(){
-            console.log(chalk.green("Download bootstrap.css...\n"));
-          })
-          .then(getBootstrap)
-          .then(function(){
-            console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
-          })
-        });
+      console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
+    })
+    .then(function(){
+      console.log(chalk.green("Download bower.json...\n"));
+    })
+    .then(getBower)
+    .then(function(){
+      console.log(chalk.yellow.underline("bower.json downloaded successfully!\n"));
+    })
+    .then(function(){
+      console.log(chalk.green("Download bootstrap.css...\n"));
+    })
+    .then(getBootstrap)
+    .then(function(){
+      console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
+    })
+  });
 
 
 // program
