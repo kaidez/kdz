@@ -24,12 +24,18 @@ function buildFolders() {
   ["css-build/import", "coffee", "image-min"].forEach( function( element ) {
     mkdirp( element );
   });
-  return Q.delay( 3000 );
+  return Q.delay(3000);
 } //end "buildFolders()"
 
 function goToTest() {
-  cd("init-test");
-  return Q.delay(3000);
+  var deferred = Q.defer();
+  if(program.test) {
+    cd("init-test");
+    deferred.resolve();
+  } else {
+    deferred.resolve();
+  }
+  return deferred.promise;
 }
 
 //Create a "build" folder with "css" & "js" subdirectories
@@ -141,23 +147,27 @@ function runBuildFolderTest() {
   return deferred.promise;
 }
 
+function buildCoffee() {
+  console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
+  cd("coffee");
+  touch("main.coffee");
+  cd("../");
+  return Q.delay(3000);
+}
 program
   .command('init')
   .description('scaffold the project')
   .action(function(){
     goToTest()
     .then(function(){
-      runBuildFolderTest()
+      runBuildFolderTest();
     })
     .then(function(){
-      buildFolders()
+      buildFolders();
     })
     .then(function(){
-      console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
-      cd("coffee");
-      touch("main.coffee");
-      cd("../");
-    }, function(){ console.log("✘ This step failed!");})
+      buildCoffee();
+    }, function(){ console.log("✘ main.coffee build failed!");})
     .then(function(){
       console.log(chalk.green("Download package.json..."));
       return Q.delay(3000);
