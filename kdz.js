@@ -169,14 +169,14 @@ program
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       if (fs.existsSync("package.json")) {
-        return console.log(chalk.red.bold('You already have a "package.json" file...a new one will not be built.\n'));
+        console.log(chalk.red.bold('You already have a "package.json" file...a new one will not be built.\n'));
       } else {
-         getPackage();
+        getPackage()
+        .then(function(){
+          console.log(chalk.yellow.underline("✔ package.json downloaded successfully!\n"));
+        }, function(){ console.log("✘ This step failed!");});
       }
     })
-    .then(function(){
-      console.log(chalk.yellow.underline("✔ package.json downloaded successfully!\n"));
-    }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       console.log(chalk.green("Download bower.json...\n"));
     }, function(){ console.log("✘ This step failed!");})
