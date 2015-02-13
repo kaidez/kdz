@@ -131,23 +131,12 @@ function getGitignore() {
   return deferred.promise;
 }
 
-
-function runTests() {
+// Check to see if a "build" folder exixs before creating one
+function runBuildFolderTest() {
   var deferred = Q.defer();
-  var test = program.test;
-  var build = program.build;
-  if (build && test) {
-    goToTest()
+  if (program.build) {
     buildDir();
     deferred.resolve();
-  } else if (test) {
-    goToTest()
-    deferred.resolve()
-  } else if (build) {
-    buildDir();
-    deferred.resolve()
-  } else {
-    deferred.resolve()
   }
   return deferred.promise;
 }
@@ -156,10 +145,13 @@ program
   .command('init')
   .description('scaffold the project')
   .action(function(){
-    runTests()
+    goToTest()
     .then(function(){
-      buildFolders()
+      runBuildFolderTest()
     }).then(function(){
+      buildFolders()
+    })
+    .then(function(){
       console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
       cd("coffee");
       touch("main.coffee");
@@ -224,7 +216,7 @@ program
   .command("build")
   .description("add \"build\" folder with subfolders")
   .action(function(){
-    runTests()
+    runBuildFolderTest()
     .then(buildDir)
   })
 
