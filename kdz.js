@@ -41,7 +41,7 @@ function buildDir() {
     });
     deferred.resolve();
   } else {
-    console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'))
+    console.log( chalk.red.bold('You already have a "build" folder so a new one will not be built.\n' ) )
     deferred.resolve();
   }
   return deferred.promise;
@@ -51,11 +51,11 @@ function buildDir() {
 
 // Helper function for creating CSS preprocessors files
 // "opt" will be a preprocessor file type: either "less" or "sass"
-function preProcess(opt){
+function preProcess( opt ) {
   var deferred = Q.defer();
-  console.log(chalk.yellow.underline("Building ." + opt + " preprocessor files...\n"));
-  data["preprocess_files"].forEach(function(element){
-    touch(element+"."+opt);
+  console.log( chalk.yellow.underline( "Building ." + opt + " preprocessor files...\n" ) );
+  data["preprocess_files"].forEach(function( element ){
+    touch ( element + "." + opt );
     deferred.resolve();
   });
   return deferred.promise;
@@ -66,7 +66,7 @@ function preProcess(opt){
 // Helper function for downloading my core "package.json" file
 function getPackage() {
   var deferred = Q.defer();
-  var download = new Download({ strip: 1 })
+  var download = new Download( { strip: 1 } )
     .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/package.json')
     .dest('.');
 
@@ -83,7 +83,7 @@ function getPackage() {
 // Helper function for downloading my core "bower.json" file
 function getBower() {
   var deferred = Q.defer();
-  var download = new Download({ strip: 1 })
+  var download = new Download( { strip: 1 } )
     .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/bower.json')
     .dest('.');
 
@@ -100,7 +100,7 @@ function getBower() {
 // Helper function for downloading core "bootstrap.css" file
 function getBootstrap() {
   var deferred = Q.defer();
-  var download = new Download({ strip: 1 })
+  var download = new Download( { strip: 1 } )
     .get('https://raw.githubusercontent.com/twbs/bootstrap/master/dist/css/bootstrap.css')
     .dest('./css-build');
 
@@ -117,7 +117,7 @@ function getBootstrap() {
 // Helper function for downloading core "bootstrap.css" file
 function getGitignore() {
   var deferred = Q.defer();
-  var download = new Download({ strip: 1 })
+  var download = new Download( { strip: 1 } )
     .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.gitignore')
     .dest('.');
 
