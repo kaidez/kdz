@@ -6,6 +6,7 @@ coffee/
 css-build/
 image-min/
 bower.json
+!download_source/bower.json
 
 !init-test/image-min/
 !init-test/build/

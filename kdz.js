@@ -27,38 +27,38 @@ function buildFolders(){
   return Q.delay(3000);
 } //end "buildFolders()"
 
-
+function goToTest() {
+  cd("init-test");
+  return Q.delay(3000);
+}
 
 //Create a "build" folder with "css" & "js" subdirectories
 function buildDir() {
   var deferred = Q.defer();
-  ["build/css", "build/js/libs"].forEach(function(element){
-    mkdirp(element);
-    deferred.resolve();
-  });
-  return deferred.promise;
-} // end "buildDir()"
-
-
-function testForBuild() {
-  var deferred = Q.defer();
   if(!fs.existsSync("build")) {
-    buildDir();
+    ["build/css", "build/js/libs"].forEach(function(element){
+      mkdirp(element);
+    });
     deferred.resolve();
   } else {
-    console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'));
+    console.log(chalk.red.bold('You already have a "build" folder so a new one will not be built.\n'))
     deferred.resolve();
   }
   return deferred.promise;
-}
+} // end "buildDir()"
+
 
 
 // Helper function for creating CSS preprocessors files
 // "opt" will be a preprocessor file type: either "less" or "sass"
 function preProcess(opt){
+  var deferred = Q.defer();
+  console.log(chalk.yellow.underline("Building ." + opt + " preprocessor files...\n"));
   data["preprocess_files"].forEach(function(element){
     touch(element+"."+opt)
+    deferred.resolve();
   });
+  return deferred.promise;
 }
 
 
@@ -115,15 +115,23 @@ function getBootstrap() {
 }
 
 
-// Helper function for changing over to the "init-test" directory
-function changeDirectory() {
+
+function runTests() {
   var deferred = Q.defer();
-  if (program.test) {
-    cd("init-test");
+  var test = program.test;
+  var build = program.build;
+  if (build && test) {
+    goToTest()
+    buildDir();
     deferred.resolve();
+  } else if (test) {
+    goToTest()
+    deferred.resolve()
+  } else if (build) {
+    buildDir();
+    deferred.resolve()
   } else {
-    cd('.')
-    deferred.resolve();
+    deferred.resolve()
   }
   return deferred.promise;
 }
@@ -132,74 +140,63 @@ program
   .command('init')
   .description('scaffold the project')
   .action(function(){
-    changeDirectory()
+    runTests()
     .then(function(){
-      if(program.build) {
-        testForBuild();
-      }
-    })
-    .then(buildFolders)
-    .then(function(){
+      buildFolders()
+    }).then(function(){
       console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
       cd("coffee");
       touch("main.coffee");
       cd("../");
     })
     .then(function(){
-      console.log(chalk.yellow.underline("Building CSS preprocessors files...\n"));
-      cd("css-build/import");
+      console.log(chalk.green("Download package.json...\n"));
+    })
+    .then(function(){
+      if (fs.existsSync("package.json")) {
+        return console.log(chalk.red.bold('You already have a "package.json" file...a new one will not be built.\n'));
+      } else {
+         getPackage();
+      }
+    })
+    .then(function(){
+      console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
+    })
+    .then(function(){
+      console.log(chalk.green("Download bower.json...\n"));
+    })
+    .then(getBower)
+    .then(function(){
+      console.log(chalk.yellow.underline("bower.json downloaded successfully!\n"));
+    })
+    .then(function(){
+      console.log(chalk.green("Download bootstrap.css...\n"));
+    })
+    .then(getBootstrap)
+    .then(function(){
+      console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
+    })
+    .then(function(){
       if(program.less) {
+        cd("css-build/import");
         preProcess("less");
       } else {
         if (program.sass) {
+          cd("css-build/import");
           preProcess("scss");
         }
       }
-        cd("../../");
-      })
-      .then(function(){
-        console.log(chalk.green("Download package.json...\n"));
-      })
-      .then(function(){
-        if (fs.existsSync("package.json")) {
-          return console.log(chalk.red.bold('You already have a "package.json" file...a new one will not be built.\n'));
-        } else {
-          getPackage();
-        }
-      })
-      .then(function(){
-        console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
-      })
-      .then(function(){
-        console.log(chalk.green("Download bower.json...\n"));
-      })
-      .then(getBower)
-      .then(function(){
-        console.log(chalk.yellow.underline("bower.json downloaded successfully!\n"));
-      })
-      .then(function(){
-        console.log(chalk.green("Download bootstrap.css...\n"));
-      })
-      .then(getBootstrap)
-      .then(function(){
-        console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
-      })
-    });
+      cd("../../");
+    })
+  });
 
-// TODO:
-// Configure "build" to check to see if the "-t" option is passed
-// If it is, do a CD to "to init-test" before running the command
-
+// "build" command: creates a "build" folder
 program
   .command("build")
   .description("add \"build\" folder with subfolders")
   .action(function(){
-    changeDirectory()
-    .then(function(){
-      if(program.build) {
-        testForBuild();
-      }
-    })
+    runTests()
+    .then(buildDir)
   })
 
 
