@@ -82,6 +82,7 @@ function getPackage() {
     .dest('.');
 
   download.run(function (err) {
+    console.log(chalk.green("Download package.json..."));
     if (err) {
       throw err;
     }
@@ -100,6 +101,7 @@ function getBower() {
     .dest('.');
 
   download.run(function (err) {
+    console.log(chalk.green("Download bower.json..."));
     if (err) {
       throw err;
     }
@@ -171,10 +173,6 @@ program
       buildCoffee();
     }, function(){ console.log("✘ main.coffee build failed!");})
     .then(function(){
-      console.log(chalk.green("Download package.json..."));
-      return Q.delay(3000);
-    }, function(){ console.log("✘ This step failed!");})
-    .then(function(){
       if (fs.existsSync("package.json")) {
         console.log(chalk.red.bold('package.json" exists...not downloading.\n'));
         return Q.delay( 3000 );
@@ -185,9 +183,6 @@ program
         }, function(){ console.log("✘ This step failed!");});
       }
     })
-    .then(function(){
-      console.log(chalk.green("Download bower.json..."));
-    }, function(){ console.log("✘ This step failed!");})
     .then(getBower)
     .then(function(){
       console.log(chalk.yellow.underline("✔ bower.json downloaded successfully!\n"));
