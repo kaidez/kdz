@@ -39,19 +39,35 @@ function goToTest() {
 }
 
 //Create a "build" folder with "css" & "js" subdirectories
-function buildDir() {
+// function buildDir() {
+//   var deferred = Q.defer();
+//   if( !fs.existsSync( "build" ) ) {
+//     ["build/css", "build/js/libs"].forEach(function(element){
+//       mkdirp( element );
+//     });
+//     deferred.resolve();
+//   } else {
+//     console.log( chalk.red.bold('"build" folder exists...don\'t create a new one.\n' ) );
+//     deferred.resolve();
+//   }
+//   return deferred.promise;
+// } // end "buildDir()"
+
+function buildDir()  {
   var deferred = Q.defer();
-  if( !fs.existsSync( "build" ) ) {
-    ["build/css", "build/js/libs"].forEach(function(element){
-      mkdirp( element );
-    });
+  fs.open('build/', "r", function(err, fd) {
+    if (err && err.code == 'ENOENT') {
+      // Does not exist
+        mkdirp("build/css");
+        mkdirp("build/js");
+    } else {
+      console.log( chalk.red.bold('"build" folder exists...don\'t create a new one.\n' ) );
+      fs.close(fd);
+    }
     deferred.resolve();
-  } else {
-    console.log( chalk.red.bold('"build" folder exists...don\'t create a new one.\n' ) );
-    deferred.resolve();
-  }
+  });
   return deferred.promise;
-} // end "buildDir()"
+}
 
 
 
@@ -160,9 +176,6 @@ program
   .action(function(){
     goToTest()
     .then(function(){
-      runBuildFolderTest();
-    })
-    .then(function(){
       buildFolders();
     })
     .then(function(){
@@ -220,11 +233,21 @@ program
       }
       cd("../../");
     }, function(){ console.log("✘ This step failed!");})
+    .then(function(){
+      if(program.build) {
+        mkdirp("build/")
+      }
+    })
   });
 
 // "build" command: creates a "build" folder
 program
   .command("build")
+  .description("add \"build\" folder with subfolders")
+  .action(buildDir)
+
+program
+  .command("test")
   .description("add \"build\" folder with subfolders")
   .action(buildDir)
 
