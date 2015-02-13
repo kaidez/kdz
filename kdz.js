@@ -226,10 +226,7 @@ program
 program
   .command("build")
   .description("add \"build\" folder with subfolders")
-  .action(function(){
-    runBuildFolderTest()
-    .then(buildDir)
-  })
+  .action(buildDir)
 
 
 // options
