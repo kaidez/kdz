@@ -17,10 +17,7 @@
   ],
   "dependencies": {
     "bootstrap": "latest",
-    "jquery": "1.11.1",
-    "jquery-cycle2": "latest",
-    "scrollNav": "latest",
-    "matchmedia": "latest"
+    "jquery": "1.11.2",
   },
   "resolutions": {
     "jquery": "~1.11.1"
