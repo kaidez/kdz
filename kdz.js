@@ -19,12 +19,12 @@ require('shelljs/global');
 
 
 //Create core project directories
-function buildFolders(){
-  console.log(chalk.yellow.underline("Creating project directories...\n"));
-  ["css-build/import", "coffee", "image-min"].forEach(function(element){
-    mkdirp(element);
+function buildFolders() {
+  console.log( chalk.yellow.underline( "Creating project directories...\n" ) );
+  ["css-build/import", "coffee", "image-min"].forEach( function( element ) {
+    mkdirp( element );
   });
-  return Q.delay(3000);
+  return Q.delay( 3000 );
 } //end "buildFolders()"
 
 function goToTest() {
@@ -35,9 +35,9 @@ function goToTest() {
 //Create a "build" folder with "css" & "js" subdirectories
 function buildDir() {
   var deferred = Q.defer();
-  if(!fs.existsSync("build")) {
+  if( !fs.existsSync( "build" ) ) {
     ["build/css", "build/js/libs"].forEach(function(element){
-      mkdirp(element);
+      mkdirp( element );
     });
     deferred.resolve();
   } else {
@@ -191,13 +191,17 @@ program
     .then(function(){
       console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
     }, function(){ console.log("This step failed!");})
-        .then(function(){
-          console.log(chalk.green("Download .gitignore...\n"));
-        }, function(){ console.log("This step failed!");})
-        .then(getGitignore, function(){ console.log("This step failed!");})
-        .then(function(){
-          console.log(chalk.yellow.underline(".gitignore downloaded successfully!\n"));
-        }, function(){ console.log("This step failed!");})
+    .then(function(){
+      console.log(chalk.green("Download .gitignore...\n"));
+    }, function(){ console.log("This step failed!");})
+    .then(function(){
+      if (fs.existsSync(".gitignore")) {
+        console.log(chalk.red.bold('".gitignore" exists...skip this step.\n'));
+      } else {
+        getGitignore()
+       .then(console.log(chalk.yellow.underline(".gitignore downloaded successfully!\n")));
+      }
+    }, function(){ console.log("This step failed!");})
     .then(function(){
       if(program.less) {
         cd("css-build/import");
