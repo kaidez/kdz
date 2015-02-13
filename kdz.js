@@ -138,8 +138,11 @@ function getGitignore() {
     .dest('.');
 
   download.run(function (err) {
+    console.log(chalk.green("Start downloading .gitignore..."));
     if (err) {
       throw err;
+    } else {
+      console.log(chalk.yellow.underline("✔ .gitignore downloaded successfully!\n"));
     }
     deferred.resolve();
   });
@@ -198,16 +201,16 @@ program
       console.log(chalk.yellow.underline("✔ bootstrap.css downloaded successfully!\n"));
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
-      console.log(chalk.green("Start downloading .gitignore..."));
-    }, function(){ console.log("✘ This step failed!");})
-    .then(function(){
-      if (fs.existsSync(".gitignore")) {
-        console.log(chalk.red.bold('".gitignore" exists...not downloading.\n'));
-      } else {
-        getGitignore()
-       .then(console.log(chalk.yellow.underline("✔ .gitignore downloaded successfully!\n")));
-      }
-    }, function(){ console.log(chalk.red.bold("✘ .gitignore failed to download!"));})
+      fs.open('.gitignore', "r", function(err, fd) {
+        if (err && err.code == 'ENOENT') {
+          // If ".gitignore" does not exist
+          getGitignore();
+        } else {
+          console.log( chalk.red.bold('".gitignore" exists...don\'t create a new one.\n' ) );
+          fs.close(fd);
+        }
+      });
+    }, function(){ console.log("✘ .gitignore failed to download!");})
     .then(function(){
       cd("css-build/import");
       if(program.less) {
