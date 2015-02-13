@@ -114,6 +114,21 @@ function getBootstrap() {
   return deferred.promise;
 }
 
+// Helper function for downloading core "bootstrap.css" file
+function getGitignore() {
+  var deferred = Q.defer();
+  var download = new Download({ strip: 1 })
+    .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.gitignore')
+    .dest('.');
+
+  download.run(function (err) {
+    if (err) {
+      throw err;
+    }
+    deferred.resolve();
+  });
+  return deferred.promise;
+}
 
 
 function runTests() {
@@ -176,6 +191,13 @@ program
     .then(function(){
       console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
     }, function(){ console.log("This step failed!");})
+        .then(function(){
+          console.log(chalk.green("Download .gitignore...\n"));
+        }, function(){ console.log("This step failed!");})
+        .then(getGitignore, function(){ console.log("This step failed!");})
+        .then(function(){
+          console.log(chalk.yellow.underline(".gitignore downloaded successfully!\n"));
+        }, function(){ console.log("This step failed!");})
     .then(function(){
       if(program.less) {
         cd("css-build/import");
