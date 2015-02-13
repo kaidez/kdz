@@ -80,6 +80,7 @@ function getPackage() {
   return deferred.promise;
 }
 
+
 // Helper function for downloading my core "bower.json" file
 function getBower() {
   var deferred = Q.defer();
@@ -118,7 +119,7 @@ function getBootstrap() {
 function getGitignore() {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
-    .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.gitignore')
+      .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.gitignore')
     .dest('.');
 
   download.run(function (err) {
@@ -165,11 +166,13 @@ program
       cd("../");
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
-      console.log(chalk.green("Download package.json...\n"));
+      console.log(chalk.green("Download package.json..."));
+      return Q.delay(3000);
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       if (fs.existsSync("package.json")) {
-        console.log(chalk.red.bold('You already have a "package.json" file...a new one will not be built.\n'));
+        console.log(chalk.red.bold('package.json" exists...not downloading.\n'));
+        return Q.delay( 3000 );
       } else {
         getPackage()
         .then(function(){
@@ -178,30 +181,30 @@ program
       }
     })
     .then(function(){
-      console.log(chalk.green("Download bower.json...\n"));
+      console.log(chalk.green("Download bower.json..."));
     }, function(){ console.log("✘ This step failed!");})
     .then(getBower)
     .then(function(){
       console.log(chalk.yellow.underline("✔ bower.json downloaded successfully!\n"));
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
-      console.log(chalk.green("Download bootstrap.css...\n"));
+      console.log(chalk.green("Download bootstrap.css..."));
     }, function(){ console.log("✘ This step failed!");})
     .then(getBootstrap, function(){ console.log("✘ This step failed!");})
     .then(function(){
       console.log(chalk.yellow.underline("✔ bootstrap.css downloaded successfully!\n"));
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
-      console.log(chalk.green("Download .gitignore...\n"));
+      console.log(chalk.green("Download .gitignore..."));
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       if (fs.existsSync(".gitignore")) {
-        console.log(chalk.red.bold('".gitignore" exists...skip this step.\n'));
+        console.log(chalk.red.bold('".gitignore" exists...not downloading.\n'));
       } else {
         getGitignore()
        .then(console.log(chalk.yellow.underline("✔ .gitignore downloaded successfully!\n")));
       }
-    }, function(){ console.log("✘ This step failed!");})
+    }, function(){ console.log(chalk.red.bold("✘ .gitignore failed to download!"));})
     .then(function(){
       if(program.less) {
         cd("css-build/import");
