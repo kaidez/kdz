@@ -54,7 +54,7 @@ function buildDir() {
 function preProcess(opt){
   var deferred = Q.defer();
   console.log(chalk.yellow.underline("Building ." + opt + " preprocessor files...\n"));
-  data["preprocess_files"].forEach(function(element, error){
+  data["preprocess_files"].forEach(function(element){
     touch(element+"."+opt);
     deferred.resolve();
   });
