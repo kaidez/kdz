@@ -227,15 +227,14 @@ program
   });
 
 // "build" command: creates a "build" folder
-program
-  .command("build")
-  .description("add \"build\" folder with subfolders")
-  .action(function() {
-    goToTest()
-    .then(buildDir)
-  })
-
-
+// Kinda useless right now...may bring back later
+// program
+//   .command("build")
+//   .description("add \"build\" folder with subfolders")
+//   .action(function() {
+//     goToTest()
+//     .then(buildDir)
+//   })
 
 
 // options
