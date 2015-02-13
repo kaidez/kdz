@@ -41,7 +41,7 @@ function buildDir() {
     });
     deferred.resolve();
   } else {
-    console.log( chalk.red.bold('You already have a "build" folder so a new one will not be built.\n' ) )
+    console.log( chalk.red.bold('"build" folder exists...don\'t create a new one.\n' ) );
     deferred.resolve();
   }
   return deferred.promise;
