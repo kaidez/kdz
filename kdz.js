@@ -47,9 +47,9 @@ function buildDir()  {
   fs.open('build/', "r", function(err, fd) {
     if (err && err.code == 'ENOENT') {
       // If "build/" does not exist
-      mkdirp("build/css");
-      mkdirp("build/js");
-      mkdirp("build/js/libs");
+      ["build/css", "build/js", "build/js/libs"].forEach( function( element ) {
+        mkdirp( element );
+      });
     } else {
       console.log( chalk.red.bold('"build" folder exists...don\'t create a new one.\n' ) );
       fs.close(fd);
