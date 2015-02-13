@@ -163,10 +163,10 @@ program
       cd("coffee");
       touch("main.coffee");
       cd("../");
-    }, function(){ console.log("This step failed!");})
+    }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       console.log(chalk.green("Download package.json...\n"));
-    }, function(){ console.log("This step failed!");})
+    }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       if (fs.existsSync("package.json")) {
         return console.log(chalk.red.bold('You already have a "package.json" file...a new one will not be built.\n'));
@@ -175,33 +175,33 @@ program
       }
     })
     .then(function(){
-      console.log(chalk.yellow.underline("package.json downloaded successfully!\n"));
-    }, function(){ console.log("This step failed!");})
+      console.log(chalk.yellow.underline("✔ package.json downloaded successfully!\n"));
+    }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       console.log(chalk.green("Download bower.json...\n"));
-    }, function(){ console.log("This step failed!");})
+    }, function(){ console.log("✘ This step failed!");})
     .then(getBower)
     .then(function(){
-      console.log(chalk.yellow.underline("bower.json downloaded successfully!\n"));
-    }, function(){ console.log("This step failed!");})
+      console.log(chalk.yellow.underline("✔ bower.json downloaded successfully!\n"));
+    }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       console.log(chalk.green("Download bootstrap.css...\n"));
-    }, function(){ console.log("This step failed!");})
-    .then(getBootstrap, function(){ console.log("This step failed!");})
+    }, function(){ console.log("✘ This step failed!");})
+    .then(getBootstrap, function(){ console.log("✘ This step failed!");})
     .then(function(){
-      console.log(chalk.yellow.underline("bootstrap.css downloaded successfully!\n"));
-    }, function(){ console.log("This step failed!");})
+      console.log(chalk.yellow.underline("✔ bootstrap.css downloaded successfully!\n"));
+    }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       console.log(chalk.green("Download .gitignore...\n"));
-    }, function(){ console.log("This step failed!");})
+    }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       if (fs.existsSync(".gitignore")) {
         console.log(chalk.red.bold('".gitignore" exists...skip this step.\n'));
       } else {
         getGitignore()
-       .then(console.log(chalk.yellow.underline(".gitignore downloaded successfully!\n")));
+       .then(console.log(chalk.yellow.underline("✔ .gitignore downloaded successfully!\n")));
       }
-    }, function(){ console.log("This step failed!");})
+    }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       if(program.less) {
         cd("css-build/import");
@@ -213,7 +213,7 @@ program
         }
       }
       cd("../../");
-    }, function(){ console.log("This step failed!");})
+    }, function(){ console.log("✘ This step failed!");})
   });
 
 // "build" command: creates a "build" folder
