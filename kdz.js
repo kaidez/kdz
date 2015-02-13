@@ -148,7 +148,8 @@ program
     goToTest()
     .then(function(){
       runBuildFolderTest()
-    }).then(function(){
+    })
+    .then(function(){
       buildFolders()
     })
     .then(function(){
