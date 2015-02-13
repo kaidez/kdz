@@ -85,6 +85,8 @@ function getPackage() {
     console.log(chalk.green("Start downloading package.json..."));
     if (err) {
       throw err;
+    } else {
+      console.log(chalk.yellow.underline("✔ package.json downloaded successfully!\n"));
     }
 
     deferred.resolve();
@@ -174,16 +176,16 @@ program
       buildCoffee();
     }, function(){ console.log("✘ main.coffee build failed!");})
     .then(function(){
-      if (fs.existsSync("package.json")) {
-        console.log(chalk.red.bold('package.json" exists...not downloading.\n'));
-        return Q.delay( 3000 );
-      } else {
-        getPackage()
-        .then(function(){
-          console.log(chalk.yellow.underline("✔ package.json downloaded successfully!\n"));
-        }, function(){ console.log("✘ This step failed!");});
-      }
-    })
+      fs.open('package.json', "r", function(err, fd) {
+        if (err && err.code == 'ENOENT') {
+          // If "package.json" does not exist
+          getPackage();
+        } else {
+          console.log( chalk.red.bold('"package.json" folder exists...don\'t create a new one.\n' ) );
+          fs.close(fd);
+        }
+      });
+    }, function(){ console.log("✘ package.json failed to download!");})
     .then(getBower)
     .then(function(){
       console.log(chalk.yellow.underline("✔ bower.json downloaded successfully!\n"));
