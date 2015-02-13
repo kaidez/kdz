@@ -18,15 +18,6 @@ var fs = require('fs'),
 require('shelljs/global');
 
 
-//Create core project directories
-function buildFolders() {
-  console.log( chalk.yellow.underline( "Creating project directories...\n" ) );
-  ["css-build/import", "coffee", "image-min"].forEach( function( element ) {
-    mkdirp( element );
-  });
-  return Q.delay(3000);
-} //end "buildFolders()"
-
 function goToTest() {
   var deferred = Q.defer();
   if(program.test) {
@@ -38,28 +29,27 @@ function goToTest() {
   return deferred.promise;
 }
 
-//Create a "build" folder with "css" & "js" subdirectories
-// function buildDir() {
-//   var deferred = Q.defer();
-//   if( !fs.existsSync( "build" ) ) {
-//     ["build/css", "build/js/libs"].forEach(function(element){
-//       mkdirp( element );
-//     });
-//     deferred.resolve();
-//   } else {
-//     console.log( chalk.red.bold('"build" folder exists...don\'t create a new one.\n' ) );
-//     deferred.resolve();
-//   }
-//   return deferred.promise;
-// } // end "buildDir()"
 
+//Create core project directories
+function buildFolders() {
+  console.log( chalk.yellow.underline( "Creating project directories...\n" ) );
+  ["css-build/import", "coffee", "image-min"].forEach( function( element ) {
+    mkdirp( element );
+  });
+  return Q.delay(3000);
+} //end "buildFolders()"
+
+
+// Create a "build" folder with "css" & "js" subdirectories
+// Check to see if it exists before building out
 function buildDir()  {
   var deferred = Q.defer();
   fs.open('build/', "r", function(err, fd) {
     if (err && err.code == 'ENOENT') {
-      // Does not exist
-        mkdirp("build/css");
-        mkdirp("build/js");
+      // If "build/" does not exist
+      mkdirp("build/css");
+      mkdirp("build/js");
+      mkdirp("build/js/libs");
     } else {
       console.log( chalk.red.bold('"build" folder exists...don\'t create a new one.\n' ) );
       fs.close(fd);
@@ -68,7 +58,6 @@ function buildDir()  {
   });
   return deferred.promise;
 }
-
 
 
 // Helper function for creating CSS preprocessors files
@@ -244,12 +233,12 @@ program
 program
   .command("build")
   .description("add \"build\" folder with subfolders")
-  .action(buildDir)
+  .action(function() {
+    goToTest()
+    .then(buildDir)
+  })
 
-program
-  .command("test")
-  .description("add \"build\" folder with subfolders")
-  .action(buildDir)
+
 
 
 // options
