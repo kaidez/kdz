@@ -106,6 +106,8 @@ function getBower() {
     console.log(chalk.green("Download bower.json..."));
     if (err) {
       throw err;
+    } else {
+      console.log(chalk.yellow.underline("✔ bower.json downloaded successfully!\n"));
     }
 
     deferred.resolve();
@@ -192,10 +194,7 @@ program
         }
       });
     }, function(){ console.log("✘ package.json failed to download!");})
-    .then(getBower, function(){ console.log("✘ This step failed!");})
-    .then(function(){
-      console.log(chalk.yellow.underline("✔ bower.json downloaded successfully!\n"));
-    }, function(){ console.log("✘ This step failed!");})
+    .then(getBower, function(){ console.log("✘ bower.json failed to download!");})
     .then(getBootstrap, function(){ console.log("✘ bootstrap.css failed to download!");})
     .then(function(){
       fs.open('.gitignore', "r", function(err, fd) {
