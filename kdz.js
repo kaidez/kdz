@@ -121,8 +121,11 @@ function getBootstrap() {
     .dest('./css-build');
 
   download.run(function (err) {
+    console.log(chalk.green("Start downloading bootstrap.css..."));
     if (err) {
       throw err;
+    } else {
+      console.log(chalk.yellow.underline("✔ bootstrap.css downloaded successfully!\n"));
     }
 
     deferred.resolve();
@@ -189,17 +192,11 @@ program
         }
       });
     }, function(){ console.log("✘ package.json failed to download!");})
-    .then(getBower)
+    .then(getBower, function(){ console.log("✘ This step failed!");})
     .then(function(){
       console.log(chalk.yellow.underline("✔ bower.json downloaded successfully!\n"));
     }, function(){ console.log("✘ This step failed!");})
-    .then(function(){
-      console.log(chalk.green("Start downloading bootstrap.css..."));
-    }, function(){ console.log("✘ This step failed!");})
-    .then(getBootstrap, function(){ console.log("✘ This step failed!");})
-    .then(function(){
-      console.log(chalk.yellow.underline("✔ bootstrap.css downloaded successfully!\n"));
-    }, function(){ console.log("✘ This step failed!");})
+    .then(getBootstrap, function(){ console.log("✘ bootstrap.css failed to download!");})
     .then(function(){
       fs.open('.gitignore', "r", function(err, fd) {
         if (err && err.code == 'ENOENT') {
