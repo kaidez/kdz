@@ -82,7 +82,7 @@ function getPackage() {
     .dest('.');
 
   download.run(function (err) {
-    console.log(chalk.green("Download package.json..."));
+    console.log(chalk.green("Start downloading package.json..."));
     if (err) {
       throw err;
     }
@@ -161,6 +161,7 @@ function buildCoffee() {
   cd("../");
   return Q.delay(3000);
 }
+
 program
   .command('init')
   .description('scaffold the project')
@@ -188,14 +189,14 @@ program
       console.log(chalk.yellow.underline("✔ bower.json downloaded successfully!\n"));
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
-      console.log(chalk.green("Download bootstrap.css..."));
+      console.log(chalk.green("Start downloading bootstrap.css..."));
     }, function(){ console.log("✘ This step failed!");})
     .then(getBootstrap, function(){ console.log("✘ This step failed!");})
     .then(function(){
       console.log(chalk.yellow.underline("✔ bootstrap.css downloaded successfully!\n"));
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
-      console.log(chalk.green("Download .gitignore..."));
+      console.log(chalk.green("Start downloading .gitignore..."));
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       if (fs.existsSync(".gitignore")) {
@@ -206,12 +207,12 @@ program
       }
     }, function(){ console.log(chalk.red.bold("✘ .gitignore failed to download!"));})
     .then(function(){
+      cd("css-build/import");
       if(program.less) {
-        cd("css-build/import");
+
         preProcess("less");
       } else {
         if (program.sass) {
-          cd("css-build/import");
           preProcess("scss");
         }
       }
