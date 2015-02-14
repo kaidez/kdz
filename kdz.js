@@ -73,6 +73,15 @@ function preProcess( opt ) {
 }
 
 
+// Helper function for creating core CSS preprocessor file
+// "opt" will be a preprocessor file type: either "less" or "sass"
+// Final file will be either "style.less" or "scss"...for now
+function buildCorePP( opt ) {
+  console.log( chalk.yellow.underline( "Building style." + opt + "...\n") );
+  touch( "style." + opt);
+  return Q.delay(3000);
+}
+
 
 // Helper function for downloading my core "package.json" file
 function getPackage() {
@@ -217,7 +226,18 @@ program
         }
       }
       cd("../../");
-    }, function(){ console.log("✘ This step failed!");})
+    }, function(){ console.log("✘ CSS preprocess files failed to build!");})
+    .then(function(){
+      cd("css-build/");
+      if(program.less) {
+        buildCorePP("less");
+      } else {
+        if (program.sass) {
+          buildCorePP("scss");
+        }
+      }
+      cd("../");
+    }, function(){ console.log("✘ Core CSS preprocess file failed to build!");})
     .then(function(){
       if(program.build) {
         buildDir();
