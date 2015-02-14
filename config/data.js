@@ -19,7 +19,6 @@ var data = {
     "min-width-768-max-width-991"
   ],
   "download_files": {
-    "bootstrap": "https://raw.githubusercontent.com/twbs/bootstrap/master/dist/css/bootstrap.css",
     "bower": "https://raw.githubusercontent.com/kaidez/kdz/master/bower.json",
     "package": "https://raw.githubusercontent.com/kaidez/kdz/master/package.json",
     "gitignore": "https://raw.githubusercontent.com/kaidez/kdz/master/.gitignore"
