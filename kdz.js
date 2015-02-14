@@ -120,25 +120,6 @@ function getBower() {
   return deferred.promise;
 }
 
-// Helper function for downloading core "bootstrap.css" file
-function getBootstrap() {
-  var deferred = Q.defer();
-  var download = new Download( { strip: 1 } )
-    .get('https://raw.githubusercontent.com/twbs/bootstrap/master/dist/css/bootstrap.css')
-    .dest('./css-build');
-
-  download.run(function (err) {
-    console.log(chalk.green("Start downloading bootstrap.css..."));
-    if (err) {
-      throw err;
-    } else {
-      console.log(chalk.yellow.underline("✔ bootstrap.css downloaded successfully!\n"));
-    }
-
-    deferred.resolve();
-  });
-  return deferred.promise;
-}
 
 // Helper function for downloading core "bootstrap.css" file
 function getGitignore() {
@@ -200,7 +181,6 @@ program
       });
     }, function(){ console.log("✘ package.json failed to download!");})
     .then(getBower, function(){ console.log("✘ bower.json failed to download!");})
-    .then(getBootstrap, function(){ console.log("✘ bootstrap.css failed to download!");})
     .then(function(){
       fs.open('.gitignore', "r", function(err, fd) {
         if (err && err.code == 'ENOENT') {
@@ -221,7 +201,7 @@ program
           preProcess("scss");
         }
       }
-      cd("../");
+      cd("../../");
     }, function(){ console.log("✘ Core CSS preprocess file failed to build!");})
     .then(function(){
       if(program.build) {
