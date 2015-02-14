@@ -67,8 +67,13 @@ function preProcess( opt ) {
   var deferred = Q.defer();
   console.log( chalk.yellow.underline( "Building ." + opt + " preprocessor files...\n" ) );
   data["preprocess_files"].forEach(function( element ){
-    touch ( element + "." + opt );
+    if (program.less) {
+      touch ( element + "." + opt );
+    } else {
+      touch ( "_" + element + "." + opt );
+    }
     deferred.resolve();
+
   });
   return deferred.promise;
 }
