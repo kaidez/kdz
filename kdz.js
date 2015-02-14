@@ -12,7 +12,6 @@ var fs = require('fs'),
     chalk = require('chalk'),
     Download = require('download'),
     progress = require('download-status'),
-    prompt = require('prompt'),
     data = require('./config/data.js');
 
 require('shelljs/global');
@@ -65,18 +64,55 @@ function buildDir()  {
 // "opt" will be a preprocessor file type: either "less" or "sass"
 function preProcess( opt ) {
   var deferred = Q.defer();
-  console.log( chalk.yellow.underline( "Building ." + opt + " preprocessor files...\n" ) );
+  console.log( chalk.yellow.underline( "Building ." + opt + " preprocessor files..." ) );
   data["preprocess_files"].forEach(function( element ){
     if (program.less) {
       touch ( element + "." + opt );
     } else {
       touch ( "_" + element + "." + opt );
     }
-    deferred.resolve();
+  });
+}
 
+
+
+function buildCore( opt ) {
+  var deferred = Q.defer();
+  var download = new Download( { strip: 1 } )
+    .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/style.' + opt )
+    .dest('css-build/')
+    .use(progress());
+
+  download.run(function (err) {
+    console.log(chalk.green("Start downloading style." + opt + "..."));
+    if (err) {
+      throw err;
+    } else {
+      console.log(chalk.yellow.underline("✔ style." + opt + " downloaded successfully!\n"));
+    }
+    if(opt == "less") {
+      var download = new Download( { strip: 1 } )
+        .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/for.less')
+        .dest('css-build/import');
+
+      download.run(function (err) {
+        console.log(chalk.green("Start downloading for.less..."));
+        if (err) {
+          throw err;
+        } else {
+          console.log(chalk.yellow.underline("✔ for.less downloaded successfully!\n"));
+        }
+      });
+    }
+    deferred.resolve();
   });
   return deferred.promise;
 }
+
+
+
+
+
 
 
 // Helper function for downloading my core "package.json" file
@@ -84,7 +120,8 @@ function getPackage() {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
     .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/package.json')
-    .dest('.');
+    .dest('.')
+    .use(progress());;
 
   download.run(function (err) {
     console.log(chalk.green("Start downloading package.json..."));
@@ -105,7 +142,8 @@ function getBower() {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
     .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/bower.json')
-    .dest('.');
+    .dest('.')
+    .use(progress());
 
   download.run(function (err) {
     console.log(chalk.green("Download bower.json..."));
@@ -126,7 +164,8 @@ function getGitignore() {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
       .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.gitignore')
-    .dest('.');
+    .dest('.')
+    .use(progress());
 
   download.run(function (err) {
     console.log(chalk.green("Start downloading .gitignore..."));
@@ -197,12 +236,20 @@ program
       if(program.less) {
         preProcess("less");
       } else {
-        if (program.sass) {
-          preProcess("scss");
-        }
+        preProcess("scss");
       }
       cd("../../");
-    }, function(){ console.log("✘ Core CSS preprocess file failed to build!");})
+    }, function(){ console.log("✘ CSS preprocess files failed to build!");})
+    .then(function(){
+      console.log(chalk.yellow.underline("CSS preprocess files downloaded successfully!\n"));
+    })
+    .then(function(){
+      if(program.less) {
+        buildCore("less");
+      } else {
+        buildCore("scss");
+      }
+    }, function(){ console.log("✘ Core preprocess file failed to download!");})
     .then(function(){
       if(program.build) {
         buildDir();
