@@ -220,7 +220,7 @@ program
     }, function(){ console.log("✘ This step failed!");})
     .then(function(){
       if(program.build) {
-        mkdirp("build/")
+        buildDir();
       }
     })
   });
