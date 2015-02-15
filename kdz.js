@@ -198,6 +198,23 @@ program
     }
   }, function(){ console.log("✘ The \"build\" folder didn't build!");})
   .then(function(){
+    if (program.gitignore) {
+      var deferred = Q.defer();
+      fs.open('.gitignore', "rs", function(err, fd) {
+        if (err && err.code == 'ENOENT') {
+          // If ".gitignore" does NOT exist, don't download it again
+          getGitignore();
+          deferred.resolve();
+        } else {
+          console.log( chalk.red.bold('".gitignore" exists...don\'t create a new one.\n' ) );
+          fs.close(fd);
+          deferred.resolve();
+        }
+        return deferred.promise;
+      });
+    }
+  }, function(){ console.log("✘ .gitignore file failed to download!");})
+  .then(function(){
     buildCoffee();
   }, function(){ console.log("✘ main.coffee build failed!");})
   .then(function(){
@@ -278,6 +295,7 @@ program
 program
 .version('0.0.1')
 .option('-b, --build', 'add "build" folder with subfolders')
+.option('-g, --gitignore', 'add ".gitignore" file')
 .option('-l, --less', 'create LESS files in "css-build"')
 .option('-s, --scss', 'create Sass files in "css-build"')
 .option('-t, --test', 'do a test scaffold in "init-test"');
