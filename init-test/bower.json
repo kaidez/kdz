@@ -1,12 +1,12 @@
 {
-  "name": "build-css-demo",
-  "version": "1.0.0",
-  "homepage": "https://github.com/kaidez/build-css-demo",
+  "name": "N/A",
+  "version": "N/A",
+  "homepage": "N/A",
   "authors": [
     "kaidez <kai.gittens@gmail.com>"
   ],
   "description": "Source files for a CSS build tutorial",
-  "main": "build/index.html",
+  "main": "N/A",
   "license": "MIT",
   "ignore": [
     "**/.*",
