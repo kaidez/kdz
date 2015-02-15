@@ -44,6 +44,7 @@ function buildFolders() {
 function buildDir()  {
   var deferred = Q.defer();
   fs.open('build/', "rs", function(err, fd) {
+    console.log( chalk.green( "Creating \"build\"...\n" ) );
     if (err && err.code == 'ENOENT') {
       // If "build/" does not exist
       ["build/css", "build/js", "build/js/libs"].forEach( function( element ) {
@@ -234,9 +235,9 @@ program
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
   .then(function(){
     if(program.less) {
-       console.log(chalk.green("Downloading style.less & for.less...\n"));
+       console.log(chalk.green("Download style.less & for.less...\n"));
     } else {
-      console.log(chalk.green("Downloading style.scss...\n"));
+      console.log(chalk.green("Download style.scss...\n"));
     }
     return Q.delay(2000);
   })
