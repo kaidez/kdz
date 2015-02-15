@@ -197,22 +197,23 @@ program
       return Q.delay(2000);
     }
   }, function(){ console.log("✘ The \"build\" folder didn't build!");})
+    .then(function(){
+      console.log(chalk.green("Download .gitignore...\n"));
+      return Q.delay(2000);
+    })
   .then(function(){
     if (program.gitignore) {
-      var deferred = Q.defer();
       fs.open('.gitignore', "rs", function(err, fd) {
         if (err && err.code == 'ENOENT') {
           // If ".gitignore" does NOT exist, don't download it again
           getGitignore();
-          deferred.resolve();
         } else {
-          console.log( chalk.red.bold('".gitignore" exists...don\'t create a new one.\n' ) );
+          console.log( chalk.red.bold('".gitignore" exists...don\'t download it.\n' ) );
           fs.close(fd);
-          deferred.resolve();
         }
-        return deferred.promise;
       });
     }
+    return Q.delay(3000);
   }, function(){ console.log("✘ .gitignore file failed to download!");})
   .then(function(){
     buildCoffee();
@@ -220,19 +221,23 @@ program
   .then(function(){
     if(program.less) {
       cd("css-build/import");
-      console.log( chalk.green( "Building .less preprocessor files..." ) );
+      console.log( chalk.green( "Building .less preprocessor files...\n" ) );
       preProcess("less");
       cd("../../");
     } else if(program.scss){
       cd("css-build/import");
-      console.log( chalk.green( "Building .scss preprocessor files..." ) );
+      console.log( chalk.green( "Building .scss preprocessor files...\n" ) );
       preProcess("scss");
       cd("../../");
     }
     return Q.delay(2000);
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
   .then(function(){
-    console.log(chalk.green("Start downloading core preprocesser stylesheet..."));
+    if(program.less) {
+       console.log(chalk.green("Downloading style.less & for.less...\n"));
+    } else {
+      console.log(chalk.green("Downloading style.scss...\n"));
+    }
     return Q.delay(2000);
   })
   .then(function(){
@@ -255,7 +260,7 @@ program
         getPackage();
         deferred.resolve();
       } else {
-        console.log( chalk.red.bold('"package.json" exists...don\'t create a new one.\n' ) );
+        console.log( chalk.red.bold('"package.json" exists...don\'t download it.\n' ) );
         fs.close(fd);
         deferred.resolve();
       }
@@ -270,7 +275,7 @@ program
         getBower();
         deferred.resolve();
       } else {
-        console.log( chalk.red.bold('"bower.json" exists...don\'t create a new one.\n' ) );
+        console.log( chalk.red.bold('"bower.json" exists...don\'t download it.\n' ) );
         fs.close(fd);
         deferred.resolve();
       }
