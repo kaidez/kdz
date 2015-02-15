@@ -76,7 +76,7 @@ function preProcess( opt ) {
 
 
 
-function buildCore( opt ) {
+function buildCoreCssPreprocess( opt ) {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
     .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/style.' + opt )
@@ -121,16 +121,13 @@ function getPackage() {
   var download = new Download( { strip: 1 } )
     .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/package.json')
     .dest('.')
-    .use(progress());;
+    .use(progress());
 
   download.run(function (err) {
-    console.log(chalk.green("Start downloading package.json..."));
     if (err) {
       throw err;
-    } else {
-      console.log(chalk.yellow.underline("✔ package.json downloaded successfully!\n"));
     }
-
+    console.log(chalk.green.underline("✔ package.json downloaded successfully!\n\n"));
     deferred.resolve();
   });
   return deferred.promise;
@@ -146,13 +143,10 @@ function getBower() {
     .use(progress());
 
   download.run(function (err) {
-    console.log(chalk.green("Download bower.json..."));
     if (err) {
       throw err;
-    } else {
-      console.log(chalk.yellow.underline("✔ bower.json downloaded successfully!\n"));
     }
-
+    console.log(chalk.green.underline("✔ bower.json downloaded successfully!\n\n"));
     deferred.resolve();
   });
   return deferred.promise;
@@ -163,17 +157,15 @@ function getBower() {
 function getGitignore() {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
-      .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.gitignore')
+    .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.gitignore')
     .dest('.')
     .use(progress());
 
   download.run(function (err) {
-    console.log(chalk.green("Start downloading .gitignore..."));
     if (err) {
       throw err;
-    } else {
-      console.log(chalk.yellow.underline("✔ .gitignore downloaded successfully!\n"));
     }
+    console.log(chalk.green.underline("✔ .gitignore downloaded successfully!\n"));
     deferred.resolve();
   });
   return deferred.promise;
@@ -209,26 +201,56 @@ program
       buildCoffee();
     }, function(){ console.log("✘ main.coffee build failed!");})
     .then(function(){
+      console.log(chalk.green("Start downloading package.json...\n"));
+      return Q.delay(2000);
+    })
+    .then(function(){
+      var deferred = Q.defer();
       fs.open('package.json', "r", function(err, fd) {
         if (err && err.code == 'ENOENT') {
-          // If "package.json" does not exist
+          // If "package.json" does NOT exist, don't download it again
           getPackage();
+          deferred.resolve();
         } else {
-          console.log( chalk.red.bold('"package.json" folder exists...don\'t create a new one.\n' ) );
+          console.log( chalk.red.bold('"package.json" folder exists...don\'t download it!\n' ) );
           fs.close(fd);
+          deferred.resolve();
         }
+        return deferred.promise;
       });
     }, function(){ console.log("✘ package.json failed to download!");})
-    .then(getBower, function(){ console.log("✘ bower.json failed to download!");})
+    .then(function(){
+      console.log(chalk.green("Start downloading bower.json...\n"));
+      return Q.delay(2000);
+    })
+    .then(function(){
+      fs.open('bower.json', "r", function(err, fd) {
+        if (err && err.code == 'ENOENT') {
+          // If "bower.json" does not exist
+          console.log(chalk.green("Start downloading bower.json...\n"));
+          getBower();
+        } else {
+          console.log( chalk.red.bold('"bower.json" exists...don\'t create a new one.\n' ) );
+          fs.close(fd);
+        }
+        return Q.delay(2000);
+      });
+    }, function(){ console.log("✘ bower.json failed to download!");})
+    .then(function(){
+      console.log(chalk.green("Start downloading .gitignore...\n"));
+      return Q.delay(2000);
+    })
     .then(function(){
       fs.open('.gitignore', "r", function(err, fd) {
         if (err && err.code == 'ENOENT') {
           // If ".gitignore" does not exist
+          console.log(chalk.green("Start downloading .gitignore...\n"));
           getGitignore();
         } else {
           console.log( chalk.red.bold('".gitignore" exists...don\'t create a new one.\n' ) );
           fs.close(fd);
         }
+        return Q.delay(2000);
       });
     }, function(){ console.log("✘ .gitignore failed to download!");})
     .then(function(){
@@ -245,7 +267,7 @@ program
     })
     .then(function(){
       if(program.less) {
-        buildCore("less");
+        buildCoreCssPreprocess("less");
       } else {
         buildCore("scss");
       }
