@@ -26,4 +26,6 @@ Great posts related to building Node CLI tools...
 [Good SO post on creating & saving files with `fs.createWriteStream()`.](http://stackoverflow.com/questions/2496710/writing-files-in-node-js)
 
 [Another Good Node scripts post from Modulus](http://blog.modulus.io/nodejs-scripts)
+
+[Great example of `Q.all()`](http://jsfiddle.net/En9n7/19/)
 -->
