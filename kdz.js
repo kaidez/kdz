@@ -31,7 +31,7 @@ function goToTest() {
 
 //Create core project directories
 function buildFolders() {
-  console.log( chalk.green( "Creating project directories...\n" ) );
+  console.log( chalk.green.underline( "Creating project directories...\n" ) );
   ["css-build/import", "coffee", "image-min"].forEach( function( element ) {
     mkdirp( element );
   });
@@ -44,7 +44,7 @@ function buildFolders() {
 function buildDir()  {
   var deferred = Q.defer();
   fs.open('build/', "rs", function(err, fd) {
-    console.log( chalk.green( "Creating \"build\"...\n" ) );
+    console.log( chalk.green.underline( "Creating \"build\"...\n" ) );
     if (err && err.code == 'ENOENT') {
       // If "build/" does not exist
       ["build/css", "build/js", "build/js/libs"].forEach( function( element ) {
@@ -176,7 +176,7 @@ function runBuildFolderTest() {
 }
 
 function buildCoffee() {
-  console.log(chalk.green("Create CoffeeScript files...\n"));
+  console.log(chalk.green.underline("Create CoffeeScript files...\n"));
   cd("coffee");
   touch("main.coffee");
   cd("../");
@@ -198,12 +198,9 @@ program
       return Q.delay(2000);
     }
   }, function(){ console.log("✘ The \"build\" folder didn't build!");})
-    .then(function(){
-      console.log(chalk.green("Download .gitignore...\n"));
-      return Q.delay(2000);
-    })
   .then(function(){
     if (program.gitignore) {
+      console.log(chalk.green.underline("Download .gitignore...\n"));
       fs.open('.gitignore', "rs", function(err, fd) {
         if (err && err.code == 'ENOENT') {
           // If ".gitignore" does NOT exist, don't download it again
@@ -222,12 +219,12 @@ program
   .then(function(){
     if(program.less) {
       cd("css-build/import");
-      console.log( chalk.green( "Building .less preprocessor files...\n" ) );
+      console.log( chalk.green.underline( "Building .less preprocessor files...\n" ) );
       preProcess("less");
       cd("../../");
     } else if(program.scss){
       cd("css-build/import");
-      console.log( chalk.green( "Building .scss preprocessor files...\n" ) );
+      console.log( chalk.green.underline( "Building .scss preprocessor files...\n" ) );
       preProcess("scss");
       cd("../../");
     }
@@ -235,55 +232,62 @@ program
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
   .then(function(){
     if(program.less) {
-       console.log(chalk.green("Download style.less & for.less...\n"));
-    } else {
-      console.log(chalk.green("Download style.scss...\n"));
+       console.log(chalk.green.underline("Download style.less & for.less...\n"));
+    } else if (program.scss) {
+      console.log(chalk.green.underline("Download style.scss...\n"));
     }
     return Q.delay(2000);
   })
   .then(function(){
     if(program.less) {
       buildCoreCssPreprocess("less");
-    } else if (program.scss){
+    } else if (program.scss) {
       buildCoreCssPreprocess("scss");
     }
     return Q.delay(2000);
   }, function(){ console.log("✘ Core preprocess file failed to download!");})
   .then(function(){
-    console.log(chalk.green("Download package.json & bower.json...\n"));
+    console.log(chalk.green.underline("Download package.json & bower.json...\n"));
     return Q.delay(2000);
   })
   .then(function(){
-    var deferred = Q.defer();
     fs.open('package.json', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
         // If "package.json" does NOT exist, don't download it again
         getPackage();
-        deferred.resolve();
       } else {
-        console.log( chalk.red.bold('"package.json" exists...don\'t download it.\n' ) );
+        console.log( chalk.red('"package.json" exists...don\'t download it.\n' ) );
         fs.close(fd);
-        deferred.resolve();
       }
-      return deferred.promise;
     });
+    return Q.delay(2000);
   }, function(){ console.log("✘ package.json failed to download!");})
   .then(function(){
-    var deferred = Q.defer();
     fs.open('bower.json', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
         // If "bower.json" does not exist
         getBower();
-        deferred.resolve();
       } else {
-        console.log( chalk.red.bold('"bower.json" exists...don\'t download it.\n' ) );
+        console.log( chalk.red('"bower.json" exists...don\'t download it.\n' ) );
         fs.close(fd);
-        deferred.resolve();
       }
-      return deferred.promise;
     });
-  }, function(){ console.log("✘ bower.json failed to download!");})
+    return Q.delay(2000);
+  }, function(){
+       console.log( chalk.red.bold( "✘ bower.json failed to download!") );
+      })
+  .done(function(){
+    console.log( chalk.yellow.bold.underline( "THE PROJECT IS SCAFFOLDED!!") );
+    console.log( chalk.yellow( "Next steps...\n") );
+    console.log( chalk.yellow( "1. fill in the following fields in \"package.json\"") );
+    console.log( chalk.yellow( "   -name, version, homepage, description, main and git URL\n") );
+    console.log( chalk.yellow( "2. fill in the following fields in \"bower.json\"") );
+    console.log( chalk.yellow( "   -name, version, homepage, description and    main\n") );
+    console.log( chalk.yellow( "3. Run \"npm-check-updates\" to check for project modules updates") );
+    console.log( chalk.yellow( "4. Run \"bower list\" to check for front-end dependency updates") );
+    console.log( chalk.yellow( "5. Run \"npm install\" and \"bower install\"") );
 
+  });
 });
 
 // "build" command: creates a "build" folder
