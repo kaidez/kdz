@@ -31,7 +31,7 @@ function goToTest() {
 
 //Create core project directories
 function buildFolders() {
-  console.log( chalk.yellow.underline( "Creating project directories...\n" ) );
+  console.log( chalk.green( "Creating project directories...\n" ) );
   ["css-build/import", "coffee", "image-min"].forEach( function( element ) {
     mkdirp( element );
   });
@@ -175,7 +175,7 @@ function runBuildFolderTest() {
 }
 
 function buildCoffee() {
-  console.log(chalk.yellow.underline("Create CoffeeScript files...\n"));
+  console.log(chalk.green("Create CoffeeScript files...\n"));
   cd("coffee");
   touch("main.coffee");
   cd("../");
@@ -220,12 +220,12 @@ program
   .then(function(){
     if(program.less) {
       cd("css-build/import");
-      console.log( chalk.yellow.underline( "Building .less preprocessor files..." ) );
+      console.log( chalk.green( "Building .less preprocessor files..." ) );
       preProcess("less");
       cd("../../");
     } else if(program.scss){
       cd("css-build/import");
-      console.log( chalk.yellow.underline( "Building .scss preprocessor files..." ) );
+      console.log( chalk.green( "Building .scss preprocessor files..." ) );
       preProcess("scss");
       cd("../../");
     }
