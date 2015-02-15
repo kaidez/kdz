@@ -1,14 +1,14 @@
 {
-  "name": "N/A",
-  "version": "N/A",
-  "description": "N/A",
-  "main": "N/A",
+  "name": "build-css-demo",
+  "version": "1.0.0",
+  "description": "Source files for a CSS build tutorial",
+  "main": "build/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "N/A"
+    "url": "https://github.com/kaidez/build-css-demo"
   },
   "author": "kaidez",
   "license": "MIT",
