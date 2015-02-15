@@ -4,15 +4,15 @@
 "use strict";
 
 var fs = require('fs'),
-    program = require('commander'),
-    touch = require("touch"),
-    mkdirp = require('mkdirp'),
-    Q = require('q'),
-    shelljs = require("shelljs"),
-    chalk = require('chalk'),
-    Download = require('download'),
-    progress = require('download-status'),
-    data = require('./config/data.js');
+program = require('commander'),
+touch = require("touch"),
+mkdirp = require('mkdirp'),
+Q = require('q'),
+shelljs = require("shelljs"),
+chalk = require('chalk'),
+Download = require('download'),
+progress = require('download-status'),
+data = require('./config/data.js');
 
 require('shelljs/global');
 
@@ -43,7 +43,7 @@ function buildFolders() {
 // Check to see if it exists before building out
 function buildDir()  {
   var deferred = Q.defer();
-  fs.open('build/', "r", function(err, fd) {
+  fs.open('build/', "rs", function(err, fd) {
     if (err && err.code == 'ENOENT') {
       // If "build/" does not exist
       ["build/css", "build/js", "build/js/libs"].forEach( function( element ) {
@@ -61,17 +61,18 @@ function buildDir()  {
 
 
 // Helper function for creating CSS preprocessors files
-// "opt" will be a preprocessor file type: either "less" or "sass"
+// "opt" will be a preprocessor file type: either "less" or "scss"
 function preProcess( opt ) {
   var deferred = Q.defer();
-  console.log( chalk.yellow.underline( "Building ." + opt + " preprocessor files..." ) );
   data["preprocess_files"].forEach(function( element ){
     if (program.less) {
       touch ( element + "." + opt );
-    } else {
+    } else if (program.scss){
       touch ( "_" + element + "." + opt );
     }
+    deferred.resolve();
   });
+  return deferred.promise;
 }
 
 
@@ -79,28 +80,23 @@ function preProcess( opt ) {
 function buildCoreCssPreprocess( opt ) {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
-    .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/style.' + opt )
-    .dest('css-build/')
-    .use(progress());
+  .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/style.' + opt )
+  .dest('css-build/')
+  .use(progress());
 
   download.run(function (err) {
-    console.log(chalk.green("Start downloading style." + opt + "..."));
     if (err) {
       throw err;
-    } else {
-      console.log(chalk.yellow.underline("✔ style." + opt + " downloaded successfully!\n"));
     }
     if(opt == "less") {
       var download = new Download( { strip: 1 } )
-        .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/for.less')
-        .dest('css-build/import');
+      .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/for.less')
+      .dest('css-build/import')
+      .use(progress());
 
       download.run(function (err) {
-        console.log(chalk.green("Start downloading for.less..."));
         if (err) {
           throw err;
-        } else {
-          console.log(chalk.yellow.underline("✔ for.less downloaded successfully!\n"));
         }
       });
     }
@@ -119,15 +115,14 @@ function buildCoreCssPreprocess( opt ) {
 function getPackage() {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
-    .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/package.json')
-    .dest('.')
-    .use(progress());
+  .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/package.json')
+  .dest('.')
+  .use(progress());
 
   download.run(function (err) {
     if (err) {
       throw err;
     }
-    console.log(chalk.green.underline("✔ package.json downloaded successfully!\n\n"));
     deferred.resolve();
   });
   return deferred.promise;
@@ -138,15 +133,14 @@ function getPackage() {
 function getBower() {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
-    .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/bower.json')
-    .dest('.')
-    .use(progress());
+  .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/bower.json')
+  .dest('.')
+  .use(progress());
 
   download.run(function (err) {
     if (err) {
       throw err;
     }
-    console.log(chalk.green.underline("✔ bower.json downloaded successfully!\n\n"));
     deferred.resolve();
   });
   return deferred.promise;
@@ -157,15 +151,14 @@ function getBower() {
 function getGitignore() {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
-    .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.gitignore')
-    .dest('.')
-    .use(progress());
+  .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.gitignore')
+  .dest('.')
+  .use(progress());
 
   download.run(function (err) {
     if (err) {
       throw err;
     }
-    console.log(chalk.green.underline("✔ .gitignore downloaded successfully!\n"));
     deferred.resolve();
   });
   return deferred.promise;
@@ -190,94 +183,85 @@ function buildCoffee() {
 }
 
 program
-  .command('init')
-  .description('scaffold the project')
-  .action(function(){
-    goToTest()
-    .then(function(){
-      buildFolders();
-    })
-    .then(function(){
-      buildCoffee();
-    }, function(){ console.log("✘ main.coffee build failed!");})
-    .then(function(){
-      console.log(chalk.green("Start downloading package.json...\n"));
+.command('init')
+.description('scaffold the project')
+.action(function(){
+  goToTest()
+  .then(function(){
+    buildFolders();
+    return Q.delay(2000);
+  })
+  .then(function(){
+    if(program.build) {
+      buildDir();
       return Q.delay(2000);
-    })
-    .then(function(){
-      var deferred = Q.defer();
-      fs.open('package.json', "r", function(err, fd) {
-        if (err && err.code == 'ENOENT') {
-          // If "package.json" does NOT exist, don't download it again
-          getPackage();
-          deferred.resolve();
-        } else {
-          console.log( chalk.red.bold('"package.json" folder exists...don\'t download it!\n' ) );
-          fs.close(fd);
-          deferred.resolve();
-        }
-        return deferred.promise;
-      });
-    }, function(){ console.log("✘ package.json failed to download!");})
-    .then(function(){
-      console.log(chalk.green("Start downloading bower.json...\n"));
-      return Q.delay(2000);
-    })
-    .then(function(){
-      fs.open('bower.json', "r", function(err, fd) {
-        if (err && err.code == 'ENOENT') {
-          // If "bower.json" does not exist
-          console.log(chalk.green("Start downloading bower.json...\n"));
-          getBower();
-        } else {
-          console.log( chalk.red.bold('"bower.json" exists...don\'t create a new one.\n' ) );
-          fs.close(fd);
-        }
-        return Q.delay(2000);
-      });
-    }, function(){ console.log("✘ bower.json failed to download!");})
-    .then(function(){
-      console.log(chalk.green("Start downloading .gitignore...\n"));
-      return Q.delay(2000);
-    })
-    .then(function(){
-      fs.open('.gitignore', "r", function(err, fd) {
-        if (err && err.code == 'ENOENT') {
-          // If ".gitignore" does not exist
-          console.log(chalk.green("Start downloading .gitignore...\n"));
-          getGitignore();
-        } else {
-          console.log( chalk.red.bold('".gitignore" exists...don\'t create a new one.\n' ) );
-          fs.close(fd);
-        }
-        return Q.delay(2000);
-      });
-    }, function(){ console.log("✘ .gitignore failed to download!");})
-    .then(function(){
+    }
+  }, function(){ console.log("✘ The \"build\" folder didn't build!");})
+  .then(function(){
+    buildCoffee();
+  }, function(){ console.log("✘ main.coffee build failed!");})
+  .then(function(){
+    if(program.less) {
       cd("css-build/import");
-      if(program.less) {
-        preProcess("less");
-      } else {
-        preProcess("scss");
-      }
+      console.log( chalk.yellow.underline( "Building .less preprocessor files..." ) );
+      preProcess("less");
       cd("../../");
-    }, function(){ console.log("✘ CSS preprocess files failed to build!");})
-    .then(function(){
-      console.log(chalk.yellow.underline("CSS preprocess files downloaded successfully!\n"));
-    })
-    .then(function(){
-      if(program.less) {
-        buildCoreCssPreprocess("less");
+    } else if(program.scss){
+      cd("css-build/import");
+      console.log( chalk.yellow.underline( "Building .scss preprocessor files..." ) );
+      preProcess("scss");
+      cd("../../");
+    }
+    return Q.delay(2000);
+  }, function(){ console.log("✘ CSS preprocess files failed to build!");})
+  .then(function(){
+    console.log(chalk.green("Start downloading core preprocesser stylesheet..."));
+    return Q.delay(2000);
+  })
+  .then(function(){
+    if(program.less) {
+      buildCoreCssPreprocess("less");
+    } else if (program.scss){
+      buildCoreCssPreprocess("scss");
+    }
+    return Q.delay(2000);
+  }, function(){ console.log("✘ Core preprocess file failed to download!");})
+  .then(function(){
+    console.log(chalk.green("Download package.json & bower.json...\n"));
+    return Q.delay(2000);
+  })
+  .then(function(){
+    var deferred = Q.defer();
+    fs.open('package.json', "rs", function(err, fd) {
+      if (err && err.code == 'ENOENT') {
+        // If "package.json" does NOT exist, don't download it again
+        getPackage();
+        deferred.resolve();
       } else {
-        buildCore("scss");
+        console.log( chalk.red.bold('"package.json" exists...don\'t create a new one.\n' ) );
+        fs.close(fd);
+        deferred.resolve();
       }
-    }, function(){ console.log("✘ Core preprocess file failed to download!");})
-    .then(function(){
-      if(program.build) {
-        buildDir();
+      return deferred.promise;
+    });
+  }, function(){ console.log("✘ package.json failed to download!");})
+  .then(function(){
+    var deferred = Q.defer();
+    fs.open('bower.json', "rs", function(err, fd) {
+      if (err && err.code == 'ENOENT') {
+        // If "bower.json" does not exist
+        getBower();
+        deferred.resolve();
+      } else {
+        console.log( chalk.red.bold('"bower.json" exists...don\'t create a new one.\n' ) );
+        fs.close(fd);
+        deferred.resolve();
       }
-    })
-  });
+      return deferred.promise;
+    });
+  }, function(){ console.log("✘ bower.json failed to download!");})
+
+});
 
 // "build" command: creates a "build" folder
 // Kinda useless right now...may bring back later
@@ -292,11 +276,11 @@ program
 
 // options
 program
-  .version('0.0.1')
-  .option('-b, --build', 'add "build" folder with subfolders')
-  .option('-l, --less', 'create .less files in "css-build"')
-  .option('-s, --sass', 'create .scss files in "css-build"')
-  .option('-t, --test', 'do a test scaffold in "init-test"');
+.version('0.0.1')
+.option('-b, --build', 'add "build" folder with subfolders')
+.option('-l, --less', 'create LESS files in "css-build"')
+.option('-s, --scss', 'create Sass files in "css-build"')
+.option('-t, --test', 'do a test scaffold in "init-test"');
 
 program.parse(process.argv);
 
