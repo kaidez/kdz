@@ -29,3 +29,5 @@ Great posts related to building Node CLI tools...
 [Another Good Node scripts post from Modulus](http://blog.modulus.io/nodejs-scripts)
 
 [Great example of `Q.all()`](http://jsfiddle.net/En9n7/19/)
+
+[Good Medium article on Node CLIs](https://medium.com/@_jh3y/creating-a-node-cli-application-72e539b2069a)
