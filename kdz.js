@@ -65,16 +65,25 @@ function buildDir()  {
 // "opt" will be a preprocessor file type: either "less" or "scss"
 function preProcess( opt ) {
   var deferred = Q.defer();
-  data["preprocess_files"].forEach(function( element ){
-    cd("css-build/import");
-    if (program.less) {
-      touch ( element + "." + opt );
-    } else if (program.scss){
-      touch ( "_" + element + "." + opt );
+
+
+  var download = new Download({ extract: true, strip: 1, mode: '755' })
+    .get('https://github.com/kaidez/kdz/raw/master/download_source/' + opt + '.zip')
+    .dest('css-build/import')
+    .use(progress());
+
+download.run(function (err, files) {
+    if (err) {
+        throw err;
     }
-    cd("../../");
-    deferred.resolve();
-  });
+
+});
+
+
+
+
+  deferred.resolve();
+
   return deferred.promise;
 }
 
@@ -224,7 +233,7 @@ program
       preProcess("less");
     } else if(program.scss){
       console.log( chalk.green.underline( "Building .scss preprocessor files...\n" ) );
-      preProcess("scss");
+      preProcess("sass");
     }
     return Q.delay(3000);
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
