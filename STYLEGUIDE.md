@@ -104,7 +104,7 @@ __Wrong__
     }
 <hr>
 
-Create classes instead of selectors (when possible...some plugins make you style headers)
+Create classes instead of IDs (when possible...some plugins make you style IDs)
 
 __Right__
 
