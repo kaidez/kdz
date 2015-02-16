@@ -66,11 +66,13 @@ function buildDir()  {
 function preProcess( opt ) {
   var deferred = Q.defer();
   data["preprocess_files"].forEach(function( element ){
+    cd("css-build/import");
     if (program.less) {
       touch ( element + "." + opt );
     } else if (program.scss){
       touch ( "_" + element + "." + opt );
     }
+    cd("../../");
     deferred.resolve();
   });
   return deferred.promise;
@@ -203,7 +205,7 @@ program
       console.log(chalk.green.underline("Download .gitignore...\n"));
       fs.open('.gitignore', "rs", function(err, fd) {
         if (err && err.code == 'ENOENT') {
-          // If ".gitignore" does NOT exist, don't download it again
+          // If ".gitignore" does NOT exist, download it
           getGitignore();
         } else {
           console.log( chalk.red.bold('".gitignore" exists...don\'t download it.\n' ) );
@@ -218,15 +220,11 @@ program
   }, function(){ console.log("✘ main.coffee build failed!");})
   .then(function(){
     if(program.less) {
-      cd("css-build/import");
       console.log( chalk.green.underline( "Building .less preprocessor files...\n" ) );
       preProcess("less");
-      cd("../../");
     } else if(program.scss){
-      cd("css-build/import");
       console.log( chalk.green.underline( "Building .scss preprocessor files...\n" ) );
       preProcess("scss");
-      cd("../../");
     }
     return Q.delay(3000);
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
@@ -253,7 +251,7 @@ program
   .then(function(){
     fs.open('package.json', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
-        // If "package.json" does NOT exist, don't download it again
+        // If "package.json" does NOT exist, download it
         getPackage();
       } else {
         console.log( chalk.red('"package.json" exists...don\'t download it.\n' ) );
@@ -265,7 +263,7 @@ program
   .then(function(){
     fs.open('bower.json', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
-        // If "bower.json" does not exist
+        // If "bower.json" does not exist, download it
         getBower();
       } else {
         console.log( chalk.red('"bower.json" exists...don\'t download it.\n' ) );
