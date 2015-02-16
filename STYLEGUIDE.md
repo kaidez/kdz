@@ -1,5 +1,5 @@
 # Style Guide for kaidez-written code
-(this is a living, breathing document)
+  (this is a living, breathing document)
 
 This is a style guide for my self-imposed rules for how I write code in projects. Follow these rules makes it easier for me to debug code, especially CSS.
 
@@ -214,7 +214,6 @@ __Really REALLY Wrong__
 <hr>
 Whenever possible, plugin-specific styles should go in their own preprocess file and start with `PLUGIN_`. So if I'm using jQuery Cycle, create a files called `PLUGIN_cycle.`
 <hr>
-* ALWAYS try to avoid using `!important`, but there are times when you have no choice, such as overriding a plugin.
+ALWAYS try to avoid using `!important`, but there are times when you have no choice, such as overriding a plugin.
 <hr>
-<hr>
-* Comments should clearly say what CSS selectors do.
+Comments should clearly say what CSS selectors do.
