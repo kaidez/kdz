@@ -31,3 +31,5 @@ Great posts related to building Node CLI tools...
 [Great example of `Q.all()`](http://jsfiddle.net/En9n7/19/)
 
 [Good Medium article on Node CLIs](https://medium.com/@_jh3y/creating-a-node-cli-application-72e539b2069a)
+
+[Good SO article on `fs.write`](http://stackoverflow.com/questions/20309398/access-name-of-file-being-written-by-fs-writefile)
