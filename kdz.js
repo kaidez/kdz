@@ -280,7 +280,7 @@ program
     console.log( chalk.yellow( "1. fill in the following fields in \"package.json\"") );
     console.log( chalk.yellow( "   -name, version, homepage, description, main and git URL\n") );
     console.log( chalk.yellow( "2. fill in the following fields in \"bower.json\"") );
-    console.log( chalk.yellow( "   -name, version, homepage, description and    main\n") );
+    console.log( chalk.yellow( "   -name, version, homepage, description and main\n") );
     console.log( chalk.yellow( "3. Run \"npm-check-updates\" to check for project modules updates") );
     console.log( chalk.yellow( "4. Run \"bower list\" to check for front-end dependency updates") );
     console.log( chalk.yellow( "5. Run \"npm install\" and \"bower install\"") );
