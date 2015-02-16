@@ -67,7 +67,21 @@ For example, if `.less` files were built out, the structure would look like this
     @import "imports/all-transform-3d-webkit-transform-3d";
     @import "imports/min-width-768-max-width-991";
 
-*(NOTE: `for.less` is a LESS-specific file that outputs a set of CSS selectors using a LESS function. The `.scss` file buildout doesn't have a similar file.)*
+Key points
+
+* All preprocessor variables would go in `variables.less`
+
+* All preprocessor mixins would go in `mixins.less`
+
+* `for.less` is a LESS-specific file that outputs a set of CSS selectors using a LESS function. The `.scss` file buildout doesn't have a similar file.
+
+* `bootstrap-overide.less` would contain classes that are inside `bootstrap.css`.
+
+* `retina-media-queries` would contain classes that define any classes based on retina and non-retina images.
+
+* `mobile-first.less` would contain classes that appear on handheld views only.
+
+* Media query files are listed in the order that the queries appear in the current version of bootstrap.css.
 
 ## CSS Build-out Process
 In the example above, `style.less` compiles out to `style.css` in `css-build`. `style.css` gets concatenated with `bootstrap.css` to wherever I specify.
@@ -109,22 +123,8 @@ __Wrong__
 
     #article-header
 <hr>
-Mimic OOCSS rule of separating class selectors based on style and structure. 
 
-__Right__
 
-    .article-header
-
-__Wrong__
-
-    #article-header
-
-* mimic OOCSS...start with structure first in selectors, then do the styles. Add a carriage return in between
-Example:
-      // Structure
-      .test
-
-CSS selectors separated by a dash , unless external code disallows it.
 
 * JS variable names written in camel case and not dashes...keeping inline with Coffeescript rules
 
