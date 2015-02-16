@@ -190,21 +190,21 @@ __Wrong__
       font-weight: bold;
     }
 
-    __Wrong__
+__Wrong__
 
     ul > .menu-list-item {
       font-size: 12px;
       font-weight: bold;
     }
 
-    __Wrong__
+__Wrong__
 
     #container ul > .menu-list-item {
       font-size: 12px;
       font-weight: bold;
     }
 
-    __Really REALLY Wrong__
+__Really REALLY Wrong__
 
     div ul > .menu-list-item {
       font-size: 12px;
