@@ -30,7 +30,6 @@ bower_components/
 # ------------------------
 *.DS_Store
 *Thumbs.db
-*.zip
 *.pot
 *.svg
 *.localized
