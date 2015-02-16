@@ -103,6 +103,17 @@ __Wrong__
       font-weight: bold;  
     }
 <hr>
+
+Create classes instead of selectors (when possible...some plugins make you style headers)
+
+__Right__
+
+    .article-header
+
+__Wrong__
+
+    #article-header
+<hr>
 Dashes between selector names
 
 __Right__
@@ -112,6 +123,22 @@ __Right__
 __Wrong__
 
     .articleHeader
+<hr>
+Selectors that appear on all views should be listed in `globals.less` and should start with `g-`
+
+__Right__
+
+    // In globals.less
+    .gl-article-element {
+      font-size: 18px;
+    }
+
+__Wrong__
+
+    // In globals.less
+    .article-element {
+      font-size: 18px;
+    }
 <hr>
 Selectors should not overlap in the various views
 
@@ -145,28 +172,49 @@ __Wrong__
         color: blue;
       }
     }
+Consider placing selectors like this `globals.less`
 <hr>
-Selectors that appear on all views should be listed in `globals.less` and should start with `g-`
+Avoid overly-specific selectors
 
 __Right__
 
-    // In globals.less
-    .gl-article-element {
-      font-size: 18px;
+    .menu-list-item {
+      font-size: 12px;
+      font-weight: bold;
     }
 
 __Wrong__
 
-    // In globals.less
-    .article-element {
-      font-size: 18px;
+    ul .menu-list-item {
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    __Wrong__
+
+    ul > .menu-list-item {
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    __Wrong__
+
+    #container ul > .menu-list-item {
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    __Really REALLY Wrong__
+
+    div ul > .menu-list-item {
+      font-size: 12px;
+      font-weight: bold;
     }
 <hr>
 
 
 * JS variable names written in camel case and not dashes...keeping inline with Coffeescript rules
 
-CSS selectors should describe the element as throughly as possible.
 
 Comments should say what functions & CSS selectors do.
 
