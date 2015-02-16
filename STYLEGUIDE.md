@@ -150,14 +150,14 @@ Selectors that appear on all views should be listed in `globals.less` and should
 
 __Right__
 
-    // In `globals.less`
+    // In globals.less
     .gl-article-element {
       font-size: 18px;
     }
 
 __Wrong__
 
-    // In `globals.less`
+    // In globals.less
     .article-element {
       font-size: 18px;
     }
