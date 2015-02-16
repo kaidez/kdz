@@ -103,7 +103,7 @@ __Wrong__
       font-weight: bold;  
     }
 <hr>
-Dashes between words
+Dashes between selector names
 
 __Right__
 
@@ -117,7 +117,7 @@ Selectors should not overlap in the various views
 
 __Right__
 
-    /* Mobile First*/
+    // Mobile First
     .article-header {
       font-size: 10px;
       color: red;
@@ -132,13 +132,13 @@ __Right__
 
 __Wrong__
 
-    /* Mobile First*/
+    // Mobile First
     .article-header {
       font-size: 10px;
       color: red;
     }
 
-    /* Overrides the Mobile First font size unnecessarily */
+    // Overrides the Mobile First font size unnecessarily
     @media (max-width: 767px) {
       .article-header {
         font-size: 10px;
@@ -146,7 +146,22 @@ __Wrong__
       }
     }
 <hr>
+Selectors that appear on all views should be listed in `globals.less` and should start with `g-`
 
+__Right__
+
+    // In `globals.less`
+    .gl-article-element {
+      font-size: 18px;
+    }
+
+__Wrong__
+
+    // In `globals.less`
+    .article-element {
+      font-size: 18px;
+    }
+<hr>
 
 
 * JS variable names written in camel case and not dashes...keeping inline with Coffeescript rules
