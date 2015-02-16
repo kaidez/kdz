@@ -1,0 +1,145 @@
+# Style Guide for kaidez-written code
+
+This is a style guide for my self-imposed rules for how I write code in projects. Follow these rules makes it easier for me to debug code, especially CSS.
+
+I would probably need to change these rules when working in a team environment. But for projects where I'm only the client side person, following this style guide works for me.
+
+## Understand the Basic structure
+When the `kdz init` command is run, it scaffolds out my standard file and folder structure for a project. The structure looks like this:
+
+       ├── project-folder
+       ├── coffee
+       |   └── main.coffee
+       ├── css-build
+       |   └── import
+       ├── image-min
+       ├── bower.json
+       └── package.json
+If either the `-l` flag or `-s` flag is passed to `kdz init`, then specific `.less` or `.scss` files will be created in `css-build/import`, respectively. Afterwards, commands are run that download Bootstrap's core CSS file via Bower and creates a core stylesheet that imports in all the preprocessor files.
+
+For example, if `.less` files were built out, the structure would look like this:
+
+       ├── project-folder
+       ...
+       └── css-build
+           ├── style.less
+           ├── bootstrap.css
+           └── import
+               ├── all-transform-3d-webkit-transform-3d.less
+               ├── bootstrap-override.less
+               ├── for.less
+               ├── globals.less
+               ├── max-device-width-480-orientation-landscape.less
+               ├── max-width-767.less
+               ├── min-width-1200.less
+               ├── min-width-768-max-width-991.less
+               ├── min-width-768.less
+               ├── min-width-992-max-width-1199.less
+               ├── min-width-992.less
+               ├── mixins.less
+               ├── mobile_first.less
+               ├── retina-media-queries.less
+               ├── screen-and-max-width-767.less
+               ├── screen-and-min-width-768.less
+               ├── screen-webkit-min-device-pixel-ratio-0.less
+               ├── screen-webkit-min-device-pixel-ratio-0
+               └── variables.less
+
+...and `style.less` would look like this
+
+    // style.less
+    @import "imports/variables";
+    @import "imports/mixins";
+    @import "imports/for";
+    @import "imports/bootstrap-override";
+    @import "imports/retina-media-queries";
+    @import "imports/globals";
+    @import "imports/mobile_first";
+    @import "imports/min-width-768";
+    @import "imports/min-width-992";
+    @import "imports/min-width-992-max-width-1199";
+    @import "imports/min-width-1200";
+    @import "imports/screen-and-max-width-767";
+    @import "imports/screen-webkit-min-device-pixel-ratio-0";
+    @import "imports/max-device-width-480-orientation-landscape";
+    @import "imports/max-width-767";
+    @import "imports/screen-and-min-width-768";
+    @import "imports/all-transform-3d-webkit-transform-3d";
+    @import "imports/min-width-768-max-width-991";
+
+*(NOTE: `for.less` is a LESS-specific file that outputs a set of CSS selectors using a LESS function. The `.scss` file buildout doesn't have a similar file.)*
+
+## CSS Build-out Process
+In the example above, `style.less` compiles out to `style.css` in `css-build`. `style.css` gets concatenated with `bootstrap.css` to wherever I specify.
+
+## CSS Naming Conventions
+Clearly define selector names
+
+__Right__
+
+    .article-header {
+      color: red;
+      font-weight: bold;
+    }
+
+__Wrong__
+
+    .red-bold-text {
+      color: red;
+      font-weight: bold;  
+    }
+<hr>
+Dashes between words
+
+__Right__
+
+    .article-header
+
+__Wrong__
+
+    .articleHeader
+<hr>
+Class over IDs (when possible)
+
+__Right__
+
+    .article-header
+
+__Wrong__
+
+    #article-header
+<hr>
+Mimic OOCSS rule of separating class selectors based on style and structure. 
+
+__Right__
+
+    .article-header
+
+__Wrong__
+
+    #article-header
+
+* mimic OOCSS...start with structure first in selectors, then do the styles. Add a carriage return in between
+Example:
+      // Structure
+      .test
+
+CSS selectors separated by a dash , unless external code disallows it.
+
+* JS variable names written in camel case and not dashes...keeping inline with Coffeescript rules
+
+CSS selectors should describe the element as throughly as possible.
+
+Comments should say what functions & CSS selectors do.
+
+
+* make separate preprocesser files for things like JS/jQuery plugins. That file should start with "PLUGIN_". Al style related to the plugin go here, even one that are defined in separate media queries. Comment them thoroughly.
+
+* use jQuery-style comments.
+
+* ALWAYS try to avoid using `!important`, but there are times when you have no choice, such as overriding a plugin..
+
+* when defining styles, list them in the following order:
+    * tags
+    * IDs (if required)
+    * classes
