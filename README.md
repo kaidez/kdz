@@ -2,7 +2,8 @@
 ## kaidez's personal project scaffolding tool
 kdz is a Node and Promise-powered build tool I created for scaffolding out projects. It's still in progress but all the code can be reviewed in the [`kdz.js` file](https://github.com/kaidez/kdz/blob/master/kdz.js).
 
-<!--
+COOL LINKS
+
 Remember that `fs.existsSync()` is being deprecated...see [this](http://nodejs.org/api/fs.html#fs_fs_existssync_path)
 
 Great posts related to building Node CLI tools...
@@ -28,4 +29,3 @@ Great posts related to building Node CLI tools...
 [Another Good Node scripts post from Modulus](http://blog.modulus.io/nodejs-scripts)
 
 [Great example of `Q.all()`](http://jsfiddle.net/En9n7/19/)
--->
