@@ -190,12 +190,12 @@ program
   goToTest()
   .then(function(){
     buildFolders();
-    return Q.delay(2000);
+    return Q.delay(3000);
   })
   .then(function(){
     if(program.build) {
       buildDir();
-      return Q.delay(2000);
+      return Q.delay(3000);
     }
   }, function(){ console.log("✘ The \"build\" folder didn't build!");})
   .then(function(){
@@ -228,7 +228,7 @@ program
       preProcess("scss");
       cd("../../");
     }
-    return Q.delay(2000);
+    return Q.delay(3000);
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
   .then(function(){
     if(program.less) {
@@ -236,7 +236,7 @@ program
     } else if (program.scss) {
       console.log(chalk.green.underline("Download style.scss...\n"));
     }
-    return Q.delay(2000);
+    return Q.delay(3000);
   })
   .then(function(){
     if(program.less) {
@@ -244,11 +244,11 @@ program
     } else if (program.scss) {
       buildCoreCssPreprocess("scss");
     }
-    return Q.delay(2000);
+    return Q.delay(3000);
   }, function(){ console.log("✘ Core preprocess file failed to download!");})
   .then(function(){
     console.log(chalk.green.underline("Download package.json & bower.json...\n"));
-    return Q.delay(2000);
+    return Q.delay(3000);
   })
   .then(function(){
     fs.open('package.json', "rs", function(err, fd) {
@@ -260,7 +260,7 @@ program
         fs.close(fd);
       }
     });
-    return Q.delay(2000);
+    return Q.delay(3000);
   }, function(){ console.log("✘ package.json failed to download!");})
   .then(function(){
     fs.open('bower.json', "rs", function(err, fd) {
@@ -272,10 +272,8 @@ program
         fs.close(fd);
       }
     });
-    return Q.delay(2000);
-  }, function(){
-       console.log( chalk.red.bold( "✘ bower.json failed to download!") );
-      })
+    return Q.delay(3000);
+  }, function(){console.log( chalk.red.bold( "✘ bower.json failed to download!") );})
   .done(function(){
     console.log( chalk.yellow.bold.underline( "THE PROJECT IS SCAFFOLDED!!") );
     console.log( chalk.yellow( "Next steps...\n") );
