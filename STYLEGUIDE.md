@@ -138,7 +138,7 @@ __Wrong__
       color: red;
     }
 
-   /* Overrides the Mobile First font size unnecessarily */
+    /* Overrides the Mobile First font size unnecessarily */
     @media (max-width: 767px) {
       .article-header {
         font-size: 10px;
