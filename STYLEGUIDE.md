@@ -113,15 +113,38 @@ __Wrong__
 
     .articleHeader
 <hr>
-Class over IDs (when possible)
+Selectors should not overlap in the various views
 
 __Right__
 
-    .article-header
+    /* Mobile First*/
+    .article-header {
+      font-size: 10px;
+      color: red;
+    }
+
+    @media (max-width: 767px) {
+      .article-header {
+        color: blue;
+      }
+    }
+
 
 __Wrong__
 
-    #article-header
+    /* Mobile First*/
+    .article-header {
+      font-size: 10px;
+      color: red;
+    }
+
+   /* Overrides the Mobile First font size unnecessarily */
+    @media (max-width: 767px) {
+      .article-header {
+        font-size: 10px;
+        color: blue;
+      }
+    }
 <hr>
 
 
