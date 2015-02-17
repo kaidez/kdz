@@ -86,6 +86,27 @@ function preProcess( opt ) {
 
 
 
+function buildCoreCssPreprocess( opt ) {
+  var deferred = Q.defer();
+  var download = new Download( { strip: 1 } )
+  .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/style.' + opt )
+  .dest('css-build/')
+  .use(progress());
+
+  download.run(function (err) {
+    if (err) {
+      throw err;
+    }
+    deferred.resolve();
+  });
+  return deferred.promise;
+}
+
+
+
+
+
+
 
 // Helper function for downloading my core "package.json" file
 function getPackage() {
@@ -201,6 +222,22 @@ program
     }
     return Q.delay(3000);
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
+  .then(function(){
+    if(program.less) {
+       console.log(chalk.green.underline("Download style.less...\n"));
+    } else if (program.scss) {
+      console.log(chalk.green.underline("Download style.scss...\n"));
+    }
+    return Q.delay(3000);
+  })
+  .then(function(){
+    if(program.less) {
+      buildCoreCssPreprocess("less");
+    } else if (program.scss) {
+      buildCoreCssPreprocess("scss");
+    }
+    return Q.delay(3000);
+  }, function(){ console.log("✘ Core preprocess file failed to download!");})
   .then(function(){
     console.log(chalk.green.underline("Download package.json & bower.json...\n"));
     return Q.delay(3000);
