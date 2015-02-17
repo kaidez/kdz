@@ -4,17 +4,18 @@
 "use strict";
 
 var fs = require('fs'),
-program = require('commander'),
-touch = require("touch"),
-mkdirp = require('mkdirp'),
-Q = require('q'),
-shelljs = require("shelljs"),
-chalk = require('chalk'),
-Download = require('download'),
-progress = require('download-status'),
-data = require('./config/data.js');
+    program = require('commander'),
+    touch = require("touch"),
+    mkdirp = require('mkdirp'),
+    Q = require('q'),
+    shelljs = require("shelljs"),
+    chalk = require('chalk'),
+    Download = require('download'),
+    progress = require('download-status'),
+    data = require('./config/data.js');
 
 require('shelljs/global');
+
 
 
 function goToTest() {
@@ -72,53 +73,16 @@ function preProcess( opt ) {
     .dest('css-build/import')
     .use(progress());
 
-download.run(function (err, files) {
-    if (err) {
-        throw err;
-    }
-
-});
-
-
-
-
-  deferred.resolve();
-
-  return deferred.promise;
-}
-
-
-
-function buildCoreCssPreprocess( opt ) {
-  var deferred = Q.defer();
-  var download = new Download( { strip: 1 } )
-  .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/style.' + opt )
-  .dest('css-build/')
-  .use(progress());
-
-  download.run(function (err) {
+  download.run(function (err, files) {
     if (err) {
       throw err;
     }
-    if(opt == "less") {
-      var download = new Download( { strip: 1 } )
-      .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/for.less')
-      .dest('css-build/import')
-      .use(progress());
-
-      download.run(function (err) {
-        if (err) {
-          throw err;
-        }
-      });
-    }
     deferred.resolve();
-  });
+});
+
+
   return deferred.promise;
 }
-
-
-
 
 
 
@@ -237,22 +201,6 @@ program
     }
     return Q.delay(3000);
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
-  .then(function(){
-    if(program.less) {
-       console.log(chalk.green.underline("Download style.less & for.less...\n"));
-    } else if (program.scss) {
-      console.log(chalk.green.underline("Download style.scss...\n"));
-    }
-    return Q.delay(3000);
-  })
-  .then(function(){
-    if(program.less) {
-      buildCoreCssPreprocess("less");
-    } else if (program.scss) {
-      buildCoreCssPreprocess("scss");
-    }
-    return Q.delay(3000);
-  }, function(){ console.log("✘ Core preprocess file failed to download!");})
   .then(function(){
     console.log(chalk.green.underline("Download package.json & bower.json...\n"));
     return Q.delay(3000);
