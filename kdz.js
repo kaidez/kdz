@@ -126,6 +126,42 @@ function getPackage() {
 }
 
 
+// Helper function for downloading my core "package.json" file
+function getGrunt() {
+  var deferred = Q.defer();
+  var download = new Download( { strip: 1 } )
+  .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/Gruntfile.js')
+  .dest('.')
+  .use(progress());
+
+  download.run(function (err) {
+    if (err) {
+      throw err;
+    }
+    deferred.resolve();
+  });
+  return deferred.promise;
+}
+// Helper function for downloading my core "package.json" file
+function getGulp() {
+  var deferred = Q.defer();
+  var download = new Download( { strip: 1 } )
+  .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/gulpfile.js')
+  .dest('.')
+  .use(progress());
+
+  download.run(function (err) {
+    if (err) {
+      throw err;
+    }
+    deferred.resolve();
+  });
+  return deferred.promise;
+}
+
+
+
+
 // Helper function for downloading my core "bower.json" file
 function getBower() {
   var deferred = Q.defer();
@@ -239,9 +275,41 @@ program
     return Q.delay(3000);
   }, function(){ console.log("✘ Core preprocess file failed to download!");})
   .then(function(){
-    console.log(chalk.green.underline("Download package.json & bower.json...\n"));
+    console.log(chalk.green.underline("Download Gulpfile.js...\n"));
     return Q.delay(3000);
   })
+    .then(function(){
+      fs.open('Gulpfile.js', "rs", function(err, fd) {
+        if (err && err.code == 'ENOENT') {
+          // If "Gulpfile.js" does NOT exist, download it
+          getGulp();
+        } else {
+          console.log( chalk.red('"Gulpfile.js" exists...don\'t download it.\n' ) );
+          fs.close(fd);
+        }
+      });
+      return Q.delay(3000);
+    }, function(){ console.log("✘ Gruntfile.js failed to download!");})
+    .then(function(){
+      console.log(chalk.green.underline("Download Gruntfile.js...\n"));
+      return Q.delay(3000);
+    })
+  .then(function(){
+    fs.open('Gruntfile.js', "rs", function(err, fd) {
+      if (err && err.code == 'ENOENT') {
+        // If "Gruntfile.js" does NOT exist, download it
+        getGrunt();
+      } else {
+        console.log( chalk.red('"Gruntfile" exists...don\'t download it.\n' ) );
+        fs.close(fd);
+      }
+    });
+    return Q.delay(3000);
+  }, function(){ console.log("✘ Gruntfile.js failed to download!");})
+    .then(function(){
+      console.log(chalk.green.underline("Download package.json & bower.json...\n"));
+      return Q.delay(3000);
+    })
   .then(function(){
     fs.open('package.json', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
