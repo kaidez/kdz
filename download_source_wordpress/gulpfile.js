@@ -1,6 +1,11 @@
 /*
- * TODO:
- * create a task that creates an "images" folder on init
+ * TODO & CONFIRM:
+ * ===============
+ * - Remember that you're commiting both the child theme & parent theme
+ * -create a task that creates an "images" folder on init
+ * -create a task that creates a "js" folder on init
+ * -make sure the tasks build .css and .js files out to the right place
+ * -create separate "wp-comment-block.css" to hold child theme header
  */
 
 // Single var pattern of gulp (require) stuff in full effect!!!
@@ -48,16 +53,15 @@ var lessFiles = ["css-build/*.less", "css-build/**/*.less"], // LESS
  *
  * 1. Runs the "gulp less" task that"s passed as a "hint"(*)
  * 2. Concatenate selected .css files listed in "gulp.src"
- * 3. Remove unused CSS
- * 4. Minify CSS
- * 5. Lint CSS
+ * 3. Minify CSS
+ * 4. Lint CSS
  *
  * (*) gulp "hints" are cool...read more about them at:
  * https://github.com/gulpjs/gulp/blob/master/docs/API.md
  *  ===================================================================
  */
 gulp.task("buildcss", ['less'],function () {
-  gulp.src(['css-build/bootstrap.css', 'css-build/style.css'])
+  gulp.src(['css-build/wp-comment-block.css','css-build/bootstrap.css', 'css-build/style.css'])
   .pipe(concatCss("style.css"))
   .pipe(autoprefixer({
     browsers: ['last 2 versions'],
@@ -66,7 +70,7 @@ gulp.task("buildcss", ['less'],function () {
   .pipe(minifyCSS({
     keepBreaks: true
   }))
-  .pipe(gulp.dest("."))
+  .pipe(gulp.dest("parlor/"))
   .pipe(csslint({
     "important": false,
     "duplicate-background-images": false,
@@ -81,7 +85,7 @@ gulp.task("buildcss", ['less'],function () {
 *  ===================================================================
 *  | IMAGE MINIFICATION TASK |
 *
-*  Take all images in "imagemin/" & minify them out to "build/img/"
+*  Take all images in "image-min/" & minify them out to "images/"
 *  ===================================================================
 */
 gulp.task('images', function () {
@@ -90,7 +94,7 @@ gulp.task('images', function () {
     progressive: true,
     svgoPlugins: [{removeViewBox: false}]
   }))
-  .pipe(gulp.dest('build/img'));
+  .pipe(gulp.dest('parlor/images/'));
 });
 
 /*
