@@ -1,3 +1,8 @@
+/*
+ * TODO:
+ * create a task that creates an "images" folder on init
+ */
+
 // Single var pattern of gulp (require) stuff in full effect!!!
 
 var gulp = require("gulp"), // "require" gulp
