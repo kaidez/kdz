@@ -4,15 +4,15 @@
 "use strict";
 
 var fs = require('fs'),
-    program = require('commander'),
-    touch = require("touch"),
-    mkdirp = require('mkdirp'),
-    Q = require('q'),
-    shelljs = require("shelljs"),
-    chalk = require('chalk'),
-    Download = require('download'),
-    progress = require('download-status'),
-    data = require('./config/data.js');
+program = require('commander'),
+touch = require("touch"),
+mkdirp = require('mkdirp'),
+Q = require('q'),
+shelljs = require("shelljs"),
+chalk = require('chalk'),
+Download = require('download'),
+progress = require('download-status'),
+data = require('./config/data.js');
 
 require('shelljs/global');
 
@@ -69,16 +69,16 @@ function preProcess( opt ) {
 
 
   var download = new Download({ extract: true, strip: 1, mode: '755' })
-    .get('https://github.com/kaidez/kdz/raw/master/download_source/' + opt + '.zip')
-    .dest('css-build/import')
-    .use(progress());
+  .get('https://github.com/kaidez/kdz/raw/master/download_source/' + opt + '.zip')
+  .dest('css-build/import')
+  .use(progress());
 
   download.run(function (err, files) {
     if (err) {
       throw err;
     }
     deferred.resolve();
-});
+  });
 
 
   return deferred.promise;
@@ -142,11 +142,28 @@ function getGrunt() {
   });
   return deferred.promise;
 }
-// Helper function for downloading my core "package.json" file
+// Helper function for downloading my core "gulpfile.js" file
 function getGulp() {
   var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
   .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/gulpfile.js')
+  .dest('.')
+  .use(progress());
+
+  download.run(function (err) {
+    if (err) {
+      throw err;
+    }
+    deferred.resolve();
+  });
+  return deferred.promise;
+}
+
+// Helper function for downloading my core "gulpfile.js" file
+function getBowerrc() {
+  var deferred = Q.defer();
+  var download = new Download( { strip: 1 } )
+  .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.bowerrc')
   .dest('.')
   .use(progress());
 
@@ -260,7 +277,7 @@ program
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
   .then(function(){
     if(program.less) {
-       console.log(chalk.green.underline("Download style.less...\n"));
+      console.log(chalk.green.underline("Download style.less...\n"));
     } else if (program.scss) {
       console.log(chalk.green.underline("Download style.scss...\n"));
     }
@@ -275,25 +292,41 @@ program
     return Q.delay(3000);
   }, function(){ console.log("✘ Core preprocess file failed to download!");})
   .then(function(){
-    console.log(chalk.green.underline("Download Gulpfile.js...\n"));
+    console.log(chalk.green.underline("Download gulpfile.js...\n"));
     return Q.delay(3000);
   })
-    .then(function(){
-      fs.open('Gulpfile.js', "rs", function(err, fd) {
-        if (err && err.code == 'ENOENT') {
-          // If "Gulpfile.js" does NOT exist, download it
-          getGulp();
-        } else {
-          console.log( chalk.red('"Gulpfile.js" exists...don\'t download it.\n' ) );
-          fs.close(fd);
-        }
-      });
-      return Q.delay(3000);
-    }, function(){ console.log("✘ Gruntfile.js failed to download!");})
-    .then(function(){
-      console.log(chalk.green.underline("Download Gruntfile.js...\n"));
-      return Q.delay(3000);
-    })
+  .then(function(){
+    fs.open('gulpfile.js', "rs", function(err, fd) {
+      if (err && err.code == 'ENOENT') {
+        // If "gulpfile.js" does NOT exist, download it
+        getGulp();
+      } else {
+        console.log( chalk.red('"gulpfile.js" exists...don\'t download it.\n' ) );
+        fs.close(fd);
+      }
+    });
+    return Q.delay(3000);
+  }, function(){ console.log("✘ gulpfile.js failed to download!");})
+  .then(function(){
+    console.log(chalk.green.underline("Download .bowerrc...\n"));
+    return Q.delay(3000);
+  })
+  .then(function(){
+    fs.open('.bowerrc', "rs", function(err, fd) {
+      if (err && err.code == 'ENOENT') {
+        // If "gulpfile.js" does NOT exist, download it
+        getBowerrc();
+      } else {
+        console.log( chalk.red('".bowerrc" exists...don\'t download it.\n' ) );
+        fs.close(fd);
+      }
+    });
+    return Q.delay(3000);
+  }, function(){ console.log("✘ .bowerrc failed to download!");})
+  .then(function(){
+    console.log(chalk.green.underline("Download Gruntfile.js...\n"));
+    return Q.delay(3000);
+  })
   .then(function(){
     fs.open('Gruntfile.js', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
@@ -306,10 +339,10 @@ program
     });
     return Q.delay(3000);
   }, function(){ console.log("✘ Gruntfile.js failed to download!");})
-    .then(function(){
-      console.log(chalk.green.underline("Download package.json & bower.json...\n"));
-      return Q.delay(3000);
-    })
+  .then(function(){
+    console.log(chalk.green.underline("Download package.json & bower.json...\n"));
+    return Q.delay(3000);
+  })
   .then(function(){
     fs.open('package.json', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
