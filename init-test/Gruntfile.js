@@ -58,7 +58,7 @@ module.exports = function(grunt) {
 
     shell: {
       lessCoreBuild: {
-        command: "lessc css-build/styles.less > css-build/styles.css"
+        command: "lessc css-build/style.less > css-build/style.css"
       }
     }
   });

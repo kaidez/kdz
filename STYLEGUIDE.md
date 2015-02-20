@@ -12,11 +12,11 @@ When the `kdz init` command is run, it scaffolds out my standard file and folder
        ├── coffee
        |   └── main.coffee
        ├── css-build
-       |   └── import
+       |   └── imports
        ├── image-min
        ├── bower.json
        └── package.json
-If either the `-l` flag or `-s` flag is passed to `kdz init`, then specific `.less` or `.scss` files will be created in `css-build/import`, respectively. Afterwards, commands are run that download Bootstrap's core CSS file via Bower and creates a core stylesheet that imports in all the preprocessor files.
+If either the `-l` flag or `-s` flag is passed to `kdz init`, then specific `.less` or `.scss` files will be created in `css-build/imports`, respectively. Afterwards, commands are run that download Bootstrap's core CSS file via Bower and creates a core stylesheet that imports in all the preprocessor files.
 
 For example, if `.less` files were built out, the structure would look like this:
 
@@ -25,7 +25,7 @@ For example, if `.less` files were built out, the structure would look like this
        └── css-build
            ├── style.less
            ├── bootstrap.css
-           └── import
+           └── imports
                ├── all-transform-3d-webkit-transform-3d.less
                ├── bootstrap-override.less
                ├── for.less

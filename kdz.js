@@ -33,7 +33,7 @@ function goToTest() {
 //Create core project directories
 function buildFolders() {
   console.log( chalk.green.underline( "Creating project directories...\n" ) );
-  ["css-build/import", "coffee", "image-min"].forEach( function( element ) {
+  ["css-build/imports", "coffee", "image-min"].forEach( function( element ) {
     mkdirp( element );
   });
   return Q.delay(3000);
@@ -70,7 +70,7 @@ function preProcess( opt ) {
 
   var download = new Download({ extract: true, strip: 1, mode: '755' })
   .get('https://github.com/kaidez/kdz/raw/master/download_source/' + opt + '.zip')
-  .dest('css-build/import')
+  .dest('css-build/imports')
   .use(progress());
 
   download.run(function (err, files) {

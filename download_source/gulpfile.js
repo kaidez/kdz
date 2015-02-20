@@ -53,8 +53,8 @@ var lessFiles = ["css-build/*.less", "css-build/**/*.less"], // LESS
  *  ===================================================================
  */
 gulp.task("buildcss", ['less'],function () {
-  gulp.src(['css-build/bootstrap.css', 'css-build/styles.css'])
-  .pipe(concatCss("styles.min.css"))
+  gulp.src(['css-build/bootstrap.css', 'css-build/style.css'])
+  .pipe(concatCss("style.min.css"))
   .pipe(uncss({
     html: ["build/index.html"],
     ignore: ignoreArray
