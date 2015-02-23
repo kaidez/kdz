@@ -23,8 +23,6 @@ function goToTest() {
   if(program.test) {
     cd("init-test");
     deferred.resolve();
-  } else {
-    deferred.resolve();
   }
   return deferred.promise;
 }
@@ -36,14 +34,12 @@ function buildFolders() {
   ["css-build/imports", "coffee", "image-min"].forEach( function( element ) {
     mkdirp( element );
   });
-  return Q.delay(3000);
 } //end "buildFolders()"
 
 
 // Create a "build" folder with "css" & "js" subdirectories
 // Check to see if it exists before building out
 function buildDir()  {
-  var deferred = Q.defer();
   fs.open('build/', "rs", function(err, fd) {
     console.log( chalk.green.underline( "Creating \"build\"...\n" ) );
     if (err && err.code == 'ENOENT') {
@@ -52,12 +48,10 @@ function buildDir()  {
         mkdirp( element );
       });
     } else {
-      console.log( chalk.red.bold('"build" folder exists...don\'t create a new one.\n' ) );
+      console.log( chalk.red('"build" folder exists...don\'t create a new one.\n' ) );
       fs.close(fd);
     }
-    deferred.resolve();
   });
-  return deferred.promise;
 }
 
 
@@ -65,7 +59,6 @@ function buildDir()  {
 // Helper function for creating CSS preprocessors files
 // "opt" will be a preprocessor file type: either "less" or "scss"
 function preProcess( opt ) {
-  var deferred = Q.defer();
 
 
   var download = new Download({ extract: true, strip: 1, mode: '755' })
@@ -77,17 +70,13 @@ function preProcess( opt ) {
     if (err) {
       throw err;
     }
-    deferred.resolve();
   });
 
-
-  return deferred.promise;
 }
 
 
 
 function buildCoreCssPreprocess( opt ) {
-  var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
   .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/style.' + opt )
   .dest('css-build/')
@@ -97,9 +86,7 @@ function buildCoreCssPreprocess( opt ) {
     if (err) {
       throw err;
     }
-    deferred.resolve();
   });
-  return deferred.promise;
 }
 
 
@@ -110,7 +97,6 @@ function buildCoreCssPreprocess( opt ) {
 
 // Helper function for downloading my core "package.json" file
 function getPackage() {
-  var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
   .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/package.json')
   .dest('.')
@@ -120,15 +106,12 @@ function getPackage() {
     if (err) {
       throw err;
     }
-    deferred.resolve();
   });
-  return deferred.promise;
 }
 
 
 // Helper function for downloading my core "package.json" file
 function getGrunt() {
-  var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
   .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/Gruntfile.js')
   .dest('.')
@@ -138,13 +121,10 @@ function getGrunt() {
     if (err) {
       throw err;
     }
-    deferred.resolve();
   });
-  return deferred.promise;
 }
 // Helper function for downloading my core "gulpfile.js" file
 function getGulp() {
-  var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
   .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/gulpfile.js')
   .dest('.')
@@ -154,14 +134,11 @@ function getGulp() {
     if (err) {
       throw err;
     }
-    deferred.resolve();
   });
-  return deferred.promise;
 }
 
 // Helper function for downloading my core "gulpfile.js" file
 function getBowerrc() {
-  var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
   .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.bowerrc')
   .dest('.')
@@ -171,9 +148,7 @@ function getBowerrc() {
     if (err) {
       throw err;
     }
-    deferred.resolve();
   });
-  return deferred.promise;
 }
 
 
@@ -181,7 +156,6 @@ function getBowerrc() {
 
 // Helper function for downloading my core "bower.json" file
 function getBower() {
-  var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
   .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/bower.json')
   .dest('.')
@@ -191,15 +165,12 @@ function getBower() {
     if (err) {
       throw err;
     }
-    deferred.resolve();
   });
-  return deferred.promise;
 }
 
 
 // Helper function for downloading core "bootstrap.css" file
 function getGitignore() {
-  var deferred = Q.defer();
   var download = new Download( { strip: 1 } )
   .get('https://raw.githubusercontent.com/kaidez/kdz/master/download_source/.gitignore')
   .dest('.')
@@ -209,17 +180,13 @@ function getGitignore() {
     if (err) {
       throw err;
     }
-    deferred.resolve();
   });
-  return deferred.promise;
 }
 
 // Check to see if a "build" folder exixs before creating one
 function runBuildFolderTest() {
-  var deferred = Q.defer();
   if (program.build) {
     buildDir();
-    deferred.resolve();
   }
   return deferred.promise;
 }
@@ -229,7 +196,7 @@ function buildCoffee() {
   cd("coffee");
   touch("main.coffee");
   cd("../");
-  return Q.delay(3000);
+  return Q.delay(1000);
 }
 
 program
@@ -239,28 +206,28 @@ program
   goToTest()
   .then(function(){
     buildFolders();
-    return Q.delay(3000);
+    return Q.delay(1000);
   })
   .then(function(){
     if(program.build) {
       buildDir();
-      return Q.delay(3000);
+      return Q.delay(1000);
     }
   }, function(){ console.log("✘ The \"build\" folder didn't build!");})
   .then(function(){
     if (program.gitignore) {
-      console.log(chalk.green.underline("Download .gitignore...\n"));
       fs.open('.gitignore', "rs", function(err, fd) {
         if (err && err.code == 'ENOENT') {
           // If ".gitignore" does NOT exist, download it
+          console.log(chalk.green.underline("Download .gitignore...\n"));
           getGitignore();
         } else {
-          console.log( chalk.red.bold('".gitignore" exists...don\'t download it.\n' ) );
+          console.log( chalk.red('".gitignore" exists...don\'t download it.\n' ) );
           fs.close(fd);
         }
       });
     }
-    return Q.delay(3000);
+    return Q.delay(1000);
   }, function(){ console.log("✘ .gitignore file failed to download!");})
   .then(function(){
     buildCoffee();
@@ -273,99 +240,82 @@ program
       console.log( chalk.green.underline( "Building .scss preprocessor files...\n" ) );
       preProcess("sass");
     }
-    return Q.delay(3000);
+    return Q.delay(1000);
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
   .then(function(){
     if(program.less) {
       console.log(chalk.green.underline("Download style.less...\n"));
-    } else if (program.scss) {
-      console.log(chalk.green.underline("Download style.scss...\n"));
-    }
-    return Q.delay(3000);
-  })
-  .then(function(){
-    if(program.less) {
       buildCoreCssPreprocess("less");
     } else if (program.scss) {
+      console.log(chalk.green.underline("Download style.scss...\n"));
       buildCoreCssPreprocess("scss");
     }
-    return Q.delay(3000);
+    return Q.delay(1000);
   }, function(){ console.log("✘ Core preprocess file failed to download!");})
-  .then(function(){
-    console.log(chalk.green.underline("Download gulpfile.js...\n"));
-    return Q.delay(3000);
-  })
   .then(function(){
     fs.open('gulpfile.js', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
         // If "gulpfile.js" does NOT exist, download it
+        console.log(chalk.green.underline("Download gulpfile.js...\n"));
         getGulp();
       } else {
         console.log( chalk.red('"gulpfile.js" exists...don\'t download it.\n' ) );
         fs.close(fd);
       }
     });
-    return Q.delay(3000);
+    return Q.delay(1000);
   }, function(){ console.log("✘ gulpfile.js failed to download!");})
-  .then(function(){
-    console.log(chalk.green.underline("Download .bowerrc...\n"));
-    return Q.delay(3000);
-  })
   .then(function(){
     fs.open('.bowerrc', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
-        // If "gulpfile.js" does NOT exist, download it
+        // If ".bowerrc" does NOT exist, download it
+        console.log(chalk.green.underline("Download .bowerrc...\n"));
         getBowerrc();
       } else {
         console.log( chalk.red('".bowerrc" exists...don\'t download it.\n' ) );
         fs.close(fd);
       }
     });
-    return Q.delay(3000);
+    return Q.delay(1000);
   }, function(){ console.log("✘ .bowerrc failed to download!");})
-  .then(function(){
-    console.log(chalk.green.underline("Download Gruntfile.js...\n"));
-    return Q.delay(3000);
-  })
   .then(function(){
     fs.open('Gruntfile.js', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
         // If "Gruntfile.js" does NOT exist, download it
+        console.log(chalk.green.underline("Download Gruntfile.js...\n"))
         getGrunt();
       } else {
         console.log( chalk.red('"Gruntfile" exists...don\'t download it.\n' ) );
         fs.close(fd);
       }
     });
-    return Q.delay(3000);
+    return Q.delay(1000);
   }, function(){ console.log("✘ Gruntfile.js failed to download!");})
-  .then(function(){
-    console.log(chalk.green.underline("Download package.json & bower.json...\n"));
-    return Q.delay(3000);
-  })
   .then(function(){
     fs.open('package.json', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
         // If "package.json" does NOT exist, download it
+        console.log(chalk.green.underline("Download package.json..\n"));
         getPackage();
       } else {
         console.log( chalk.red('"package.json" exists...don\'t download it.\n' ) );
         fs.close(fd);
       }
     });
-    return Q.delay(3000);
+    return Q.delay(1000);
   }, function(){ console.log("✘ package.json failed to download!");})
   .then(function(){
     fs.open('bower.json', "rs", function(err, fd) {
       if (err && err.code == 'ENOENT') {
         // If "bower.json" does not exist, download it
+        console.log(chalk.green.underline("Download bower.json...\n"));
         getBower();
       } else {
         console.log( chalk.red('"bower.json" exists...don\'t download it.\n' ) );
         fs.close(fd);
       }
     });
-    return Q.delay(3000);
+    return Q.delay(1000);
   }, function(){console.log( chalk.red.bold( "✘ bower.json failed to download!") );})
   .done(function(){
     console.log( chalk.yellow.bold.underline( "THE PROJECT IS SCAFFOLDED!!") );
