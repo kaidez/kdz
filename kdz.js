@@ -17,7 +17,7 @@ data = require('./config/data.js');
 require('shelljs/global');
 
 
-
+// if the test flag is passed, go the "init-test" directory
 function goToTest() {
   var deferred = Q.defer();
   if(program.test) {
