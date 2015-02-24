@@ -136,7 +136,17 @@ function buildCoreCssPreprocess( opt ) {
 }
 
 
-
+function doneMessage() {
+      console.log( chalk.yellow.bold.underline( "THE PROJECT IS SCAFFOLDED!!") );
+      console.log( chalk.yellow( "Next steps...\n") );
+      console.log( chalk.yellow( "1. fill in the following fields in \"package.json\"") );
+      console.log( chalk.yellow( "   -name, version, homepage, description, main and git URL\n") );
+      console.log( chalk.yellow( "2. fill in the following fields in \"bower.json\"") );
+      console.log( chalk.yellow( "   -name, version, homepage, description and main\n") );
+      console.log( chalk.yellow( "3. Run \"npm-check-updates\" to check for project modules updates") );
+      console.log( chalk.yellow( "4. Run \"bower list\" to check for front-end dependency updates") );
+      console.log( chalk.yellow( "5. Run \"npm install\" and \"bower install\"") );
+}
 // "app" command: scaffolds out a SPA-like project
 program
 .command("app")
@@ -177,7 +187,7 @@ program
   .then(function(){
     var grunt = new GetFile("Gruntfile.js", ".");
     return Q.delay(2000);
-  }, function(){console.log( chalk.red.bold( "✘ Gruntfile.gs failed to download!") );})
+  }, function(){console.log( chalk.red.bold( "✘ Gruntfile.js failed to download!") );})
   .then(function(){
     var gulp = new GetFile("gulpfile.js", ".");
     return Q.delay(2000);
@@ -202,17 +212,8 @@ program
     }
     return Q.delay(2000);
   }, function(){ console.log("✘ Core preprocess file failed to download!");})
-  .done(function(){
-    console.log( chalk.yellow.bold.underline( "THE PROJECT IS SCAFFOLDED!!") );
-    console.log( chalk.yellow( "Next steps...\n") );
-    console.log( chalk.yellow( "1. fill in the following fields in \"package.json\"") );
-    console.log( chalk.yellow( "   -name, version, homepage, description, main and git URL\n") );
-    console.log( chalk.yellow( "2. fill in the following fields in \"bower.json\"") );
-    console.log( chalk.yellow( "   -name, version, homepage, description and main\n") );
-    console.log( chalk.yellow( "3. Run \"npm-check-updates\" to check for project modules updates") );
-    console.log( chalk.yellow( "4. Run \"bower list\" to check for front-end dependency updates") );
-    console.log( chalk.yellow( "5. Run \"npm install\" and \"bower install\"") );
-
+  .done(function() {
+    doneMessage();
   });
 })
 
@@ -221,10 +222,11 @@ program
 program
 .version('0.0.1')
 .option('-b, --build', 'add "build" folder with subfolders')
+.option('-g, --gitignore', 'add ".gitignore" file')
 .option('-l, --less', 'create LESS files in "css-build"')
 .option('-s, --scss', 'create Sass files in "css-build"')
-.option('-t, --test', 'do a test scaffold in "init-test"')
-.option('-g, --gitignore', 'add ".gitignore" file');
+.option('-t, --test', 'do a test scaffold in "init-test"');
+
 
 program.parse(process.argv);
 
