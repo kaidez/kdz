@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Run this task with node
 
-// "use strict";
+"use strict";
 
 var fs = require('fs'),
 program = require('commander'),
