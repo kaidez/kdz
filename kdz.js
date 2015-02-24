@@ -1,23 +1,26 @@
 #!/usr/bin/env node
-// Run this task with node
+// Run this task with Node
 
-"use strict";
 
+"use strict"; // use ES5 when possible
+
+
+// Bring in Node modules
 var fs = require( 'fs' ),
-program = require( 'commander' ),
-touch = require('touch'),
-mkdirp = require( 'mkdirp' ),
-Q = require( 'q' ),
-shelljs = require( 'shelljs' ),
-chalk = require( 'chalk' ),
-Download = require( 'download' ),
-progress = require( 'download-status' ),
-data = require( './config/data.js' );
+    program = require( 'commander' ),
+    touch = require('touch'),
+    mkdirp = require( 'mkdirp' ),
+    Q = require( 'q' ),
+    shelljs = require( 'shelljs' ),
+    chalk = require( 'chalk' ),
+    Download = require( 'download' ),
+    progress = require( 'download-status' ),
+    data = require( './config/data.js' );
 
 require( 'shelljs/global' );
 
 
-// if the test flag is passed, cd into the "init-test" directory
+// If the "test" flag is passed, cd into the "init-test" directory
 function goToTest() {
   var deferred = Q.defer();
   if( program.test ) {
@@ -30,7 +33,7 @@ function goToTest() {
 } //end "goToTest()"
 
 
-//Create core project directories
+// Create core project directories when "kdz app" is run
 function buildFolders() {
   console.log( chalk.green.underline( 'Creating project directories...\n' ) );
   ['css-build/imports', 'coffee', 'image-min'].forEach( function( element ) {
@@ -39,24 +42,33 @@ function buildFolders() {
 } //end 'buildFolders()'
 
 
-// Create a "build" folder with "css" & "js" subdirectories
-// Check to see if it exists before building out
+// If the "build" flag is passed, create a "build/" folder
+// Place "css/" & "js/" subdirectories inside of it.
 function buildDir()  {
-  fs.open( 'build', "rs", function(err, fd) {
+
+  // Use Node fs.open to check if the folder exists before making it
+  fs.open( 'build', 'rs', function(err, fd) {
     console.log( chalk.green.underline( 'Creating \"build\"...\n' ) );
     if ( err && err.code == 'ENOENT' ) {
-      // If "build/" does not exist
+
+      // If "build/" does NOT exist, create the folder and subdirectories
       ['build/css', 'build/js', 'build/js/libs'].forEach( function( element ) {
         mkdirp( element );
       });
     } else {
+
+      // If "build" DOES exist, don't create it
+      // Pass a console message syaing it exists & stop the fs process
       console.log( chalk.red( '"build" folder exists...don\'t create a new one.\n' ) );
       fs.close( fd );
     }
   });
 } //end "buildDir()"
 
-// create "coffee/main.coffee"
+
+// Step 1: go to the "coffee" directory
+// Step 2: create "main.coffee" inside of "coffee"
+// Step 3: go back up to the root folder
 function buildCoffee() {
   console.log( chalk.green.underline( 'Create CoffeeScript files...\n' ) );
   cd( 'coffee' );
@@ -72,7 +84,7 @@ function GetFile( file, target ) {
   global.file = file;
 
   // Represents the file's download target
-  // In Node, "global" is the same thing as "this"
+  // In Node, "global" is the similar to as "this"
   global.target = target;
 
   // Root URL for downloading files from GitHub
@@ -81,6 +93,7 @@ function GetFile( file, target ) {
   // Use Node fs.open to check if the file exists before downloading it
   fs.open( global.file, 'rs', function( err, fd ) {
     if ( err && err.code == 'ENOENT' ) {
+
       // If the file does NOT exists, download it
       console.log( chalk.green.underline( '>> Download ' + global.file + '...\n' ) );
 
@@ -100,7 +113,7 @@ function GetFile( file, target ) {
       fs.close( fd );
     }
   });
-} //end "getFile()"
+} //end "GetFile()"
 
 
 // Helper function for creating CSS preprocessors files
@@ -116,8 +129,7 @@ function preProcess( opt ) {
       throw err;
     }
   });
-}
-
+} // end "preProcess()"
 
 
 function buildCoreCssPreprocess( opt ) {
@@ -131,7 +143,7 @@ function buildCoreCssPreprocess( opt ) {
       throw err;
     }
   });
-}
+} // end "buildCoreCssPreprocess()"
 
 
 function doneMessage() {
@@ -144,12 +156,14 @@ function doneMessage() {
   console.log( chalk.yellow( '3. Run \"npm-check-updates\" to check for project modules updates') );
   console.log( chalk.yellow( '4. Run \"bower list\" to check for front-end dependency updates') );
   console.log( chalk.yellow( '5. Run \"npm install\" and \"bower install\"') );
-}
+} // end "doneMessage()"
+
+
 // "app" command: scaffolds out a SPA-like project
 program
 .command( 'app' )
 .description( 'scaffold a basic web application' )
-.action( function() {
+.action(function() {
   goToTest()
   .then(function() {
     buildFolders();
@@ -213,7 +227,7 @@ program
   .done(function() {
     doneMessage();
   });
-})
+}) // end "app" command
 
 
 // options
@@ -227,6 +241,7 @@ program
 
 
 program.parse( process.argv );
+
 
 // If no arguments or commands are passed, display "help"
 if ( !program.args.length ) program.help();
