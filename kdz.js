@@ -8,7 +8,7 @@ program = require('commander'),
 touch = require("touch"),
 mkdirp = require('mkdirp'),
 Q = require('q'),
-shelljs = require("shelljs"),
+shelljs = require('shelljs'),
 chalk = require('chalk'),
 Download = require('download'),
 progress = require('download-status'),
@@ -21,7 +21,7 @@ require('shelljs/global');
 function goToTest() {
   var deferred = Q.defer();
   if(program.test) {
-    cd("init-test");
+    cd('init-test');
     deferred.resolve();
   } else {
     deferred.resolve();
@@ -32,21 +32,21 @@ function goToTest() {
 
 //Create core project directories
 function buildFolders() {
-  console.log( chalk.green.underline( "Creating project directories...\n" ) );
-  ["css-build/imports", "coffee", "image-min"].forEach( function( element ) {
+  console.log( chalk.green.underline( 'Creating project directories...\n' ) );
+  ['css-build/imports', 'coffee', 'image-min'].forEach( function( element ) {
     mkdirp( element );
   });
-} //end "buildFolders()"
+} //end 'buildFolders()'
 
 
 // Create a "build" folder with "css" & "js" subdirectories
 // Check to see if it exists before building out
 function buildDir()  {
   fs.open('build', "rs", function(err, fd) {
-    console.log( chalk.green.underline( "Creating \"build\"...\n" ) );
+    console.log( chalk.green.underline( 'Creating \"build\"...\n' ) );
     if (err && err.code == 'ENOENT') {
       // If "build/" does not exist
-      ["build/css", "build/js", "build/js/libs"].forEach( function( element ) {
+      ['build/css', 'build/js', 'build/js/libs'].forEach( function( element ) {
         mkdirp( element );
       });
     } else {
@@ -58,10 +58,10 @@ function buildDir()  {
 
 // create "coffee/main.coffee"
 function buildCoffee() {
-  console.log(chalk.green.underline("Create CoffeeScript files...\n"));
-  cd("coffee");
-  touch("main.coffee");
-  cd("../");
+  console.log(chalk.green.underline('Create CoffeeScript files...\n'));
+  cd('coffee');
+  touch('main.coffee');
+  cd('../');
   return Q.delay(2000);
 } //end "buildCoffee()"
 
@@ -76,12 +76,12 @@ function GetFile( file, target ) {
   global.target = target;
 
   // Root URL for downloading files from GitHub
-  var appDownloadRoot = "https://raw.githubusercontent.com/kaidez/kdz/master/download_source/";
+  var appDownloadRoot = 'https://raw.githubusercontent.com/kaidez/kdz/master/download_source/';
 
-  fs.open(global.file, "rs", function(err, fd) {
+  fs.open(global.file, 'rs', function(err, fd) {
     if (err && err.code == 'ENOENT') {
       // If the file does NOT exists, download it
-      console.log(chalk.green.underline(">> Download " + global.file + "...\n"));
+      console.log(chalk.green.underline('>> Download ' + global.file + '...\n'));
 
       var download = new Download( { strip: 1 } )
       .get(  appDownloadRoot + global.file )
@@ -95,7 +95,7 @@ function GetFile( file, target ) {
       });
 
     } else {
-      console.log( chalk.red( global.file + " exists...don\'t download it.\n" ) );
+      console.log( chalk.red( global.file + ' exists...don\'t download it.\n' ) );
       fs.close(fd);
     }
   });
@@ -137,15 +137,15 @@ function buildCoreCssPreprocess( opt ) {
 
 
 function doneMessage() {
-      console.log( chalk.yellow.bold.underline( "THE PROJECT IS SCAFFOLDED!!") );
-      console.log( chalk.yellow( "Next steps...\n") );
-      console.log( chalk.yellow( "1. fill in the following fields in \"package.json\"") );
-      console.log( chalk.yellow( "   -name, version, homepage, description, main and git URL\n") );
-      console.log( chalk.yellow( "2. fill in the following fields in \"bower.json\"") );
-      console.log( chalk.yellow( "   -name, version, homepage, description and main\n") );
-      console.log( chalk.yellow( "3. Run \"npm-check-updates\" to check for project modules updates") );
-      console.log( chalk.yellow( "4. Run \"bower list\" to check for front-end dependency updates") );
-      console.log( chalk.yellow( "5. Run \"npm install\" and \"bower install\"") );
+      console.log( chalk.yellow.bold.underline( 'THE PROJECT IS SCAFFOLDED!!') );
+      console.log( chalk.yellow( 'Next steps...\n') );
+      console.log( chalk.yellow( '1. fill in the following fields in \"package.json\"') );
+      console.log( chalk.yellow( '   -name, version, homepage, description, main and git URL\n') );
+      console.log( chalk.yellow( '2. fill in the following fields in \"bower.json\"') );
+      console.log( chalk.yellow( '   -name, version, homepage, description and main\n') );
+      console.log( chalk.yellow( '3. Run \"npm-check-updates\" to check for project modules updates') );
+      console.log( chalk.yellow( '4. Run \"bower list\" to check for front-end dependency updates') );
+      console.log( chalk.yellow( '5. Run \"npm install\" and \"bower install\"') );
 }
 // "app" command: scaffolds out a SPA-like project
 program
@@ -159,59 +159,59 @@ program
   })
   .then(function(){
     buildCoffee();
-  }, function(){ console.log("✘ main.coffee build failed!");})
+  }, function(){ console.log('✘ main.coffee build failed!');})
   .then(function(){
     if(program.build) {
       buildDir();
       return Q.delay(2000);
     }
-  }, function(){ console.log("✘ The \"build\" folder didn't build!");})
+  }, function(){ console.log('✘ The "build" folder didn\'t build!');})
   .then(function(){
     if(program.gitignore) {
-      var gitignore = new GetFile(".gitignore", ".")
+      var gitignore = new GetFile('.gitignore', '.')
       return Q.delay(2000);
     }
-  }, function(){ console.log("✘ .gitignore failed to download!");})
+  }, function(){ console.log('✘ .gitignore failed to download!');})
   .then(function(){
-    var pkg = new GetFile("package.json", ".");
+    var pkg = new GetFile('package.json', '.');
     return Q.delay(2000);
-  }, function(){console.log( chalk.red.bold( "✘ package.json failed to download!") );})
+  }, function(){console.log( chalk.red.bold( '✘ package.json failed to download!') );})
   .then(function(){
-    var bower = new GetFile("bower.json", ".");
+    var bower = new GetFile('bower.json', '.');
     return Q.delay(2000);
-  }, function(){console.log( chalk.red.bold( "✘ bower.json failed to download!") );})
+  }, function(){console.log( chalk.red.bold( '✘ bower.json failed to download!') );})
   .then(function(){
-    var bowerrc = new GetFile(".bowerrc", ".");
+    var bowerrc = new GetFile('.bowerrc', '.');
     return Q.delay(2000);
-  }, function(){console.log( chalk.red.bold( "✘ .bowerrc failed to download!") );})
+  }, function(){console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );})
   .then(function(){
-    var grunt = new GetFile("Gruntfile.js", ".");
+    var grunt = new GetFile('Gruntfile.js', '.');
     return Q.delay(2000);
-  }, function(){console.log( chalk.red.bold( "✘ Gruntfile.js failed to download!") );})
+  }, function(){console.log( chalk.red.bold( '✘ Gruntfile.js failed to download!') );})
   .then(function(){
-    var gulp = new GetFile("gulpfile.js", ".");
+    var gulp = new GetFile('gulpfile.js', '.');
     return Q.delay(2000);
-  }, function(){console.log( chalk.red.bold( "✘ gulpfile.js failed to download!") );})
+  }, function(){console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );})
   .then(function(){
     if(program.less) {
-      console.log( chalk.green.underline( "Building .less preprocessor files...\n" ) );
-      preProcess("less");
+      console.log( chalk.green.underline( 'Building .less preprocessor files...\n' ) );
+      preProcess('less');
     } else if(program.scss){
-      console.log( chalk.green.underline( "Building .scss preprocessor files...\n" ) );
-      preProcess("sass");
+      console.log( chalk.green.underline( 'Building .scss preprocessor files...\n' ) );
+      preProcess('sass');
     }
     return Q.delay(2000);
-  }, function(){ console.log("✘ CSS preprocess files failed to build!");})
+  }, function(){ console.log('✘ CSS preprocess files failed to build!');})
   .then(function(){
     if(program.less) {
-      console.log(chalk.green.underline("Download style.less...\n"));
-      buildCoreCssPreprocess("less");
+      console.log(chalk.green.underline('Download style.less...\n'));
+      buildCoreCssPreprocess('less');
     } else if (program.scss) {
-      console.log(chalk.green.underline("Download style.scss...\n"));
-      buildCoreCssPreprocess("scss");
+      console.log(chalk.green.underline('Download style.scss...\n'));
+      buildCoreCssPreprocess('scss');
     }
     return Q.delay(2000);
-  }, function(){ console.log("✘ Core preprocess file failed to download!");})
+  }, function(){ console.log('✘ Core preprocess file failed to download!');})
   .done(function() {
     doneMessage();
   });
