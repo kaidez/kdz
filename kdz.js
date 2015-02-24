@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Run this task with node
 
-"use strict";
+// "use strict";
 
 var fs = require('fs'),
 program = require('commander'),
@@ -40,7 +40,7 @@ function buildFolders() {
 // Create a "build" folder with "css" & "js" subdirectories
 // Check to see if it exists before building out
 function buildDir()  {
-  fs.open('build/', "rs", function(err, fd) {
+  fs.open('build', "rs", function(err, fd) {
     console.log( chalk.green.underline( "Creating \"build\"...\n" ) );
     if (err && err.code == 'ENOENT') {
       // If "build/" does not exist
@@ -53,6 +53,44 @@ function buildDir()  {
     }
   });
 }
+
+function GetFile( file, target ) {
+
+  // Represents the file to be downloaded
+  global.file = file;
+
+  // Represents the file's download target
+  // In Node, "globals" is the same thing as "this"
+  global.target = target;
+
+  // Root URL for downloading files from GitHub
+  var appDownloadRoot = "https://raw.githubusercontent.com/kaidez/kdz/master/download_source/";
+
+  fs.open(global.file, "rs", function(err, fd) {
+    if (err && err.code == 'ENOENT') {
+      // If the file does NOT exists, download it
+      console.log(chalk.green.underline(">> Download " + global.file + "...\n"));
+
+      var download = new Download( { strip: 1 } )
+      .get(  appDownloadRoot + global.file )
+      .dest( global.target )
+      .use(progress());
+
+      download.run(function (err) {
+        if (err) {
+          throw err;
+        }
+      });
+
+    } else {
+      console.log( chalk.red( this.file + " exists...don\'t download it.\n" ) );
+      fs.close(fd);
+    }
+  });
+}
+
+
+
 
 
 
@@ -183,20 +221,13 @@ function getGitignore() {
   });
 }
 
-// Check to see if a "build" folder exixs before creating one
-function runBuildFolderTest() {
-  if (program.build) {
-    buildDir();
-  }
-  return deferred.promise;
-}
 
 function buildCoffee() {
   console.log(chalk.green.underline("Create CoffeeScript files...\n"));
   cd("coffee");
   touch("main.coffee");
   cd("../");
-  return Q.delay(1000);
+  return Q.delay(2000);
 }
 
 program
@@ -206,12 +237,12 @@ program
   goToTest()
   .then(function(){
     buildFolders();
-    return Q.delay(1000);
+    return Q.delay(2000);
   })
   .then(function(){
     if(program.build) {
       buildDir();
-      return Q.delay(1000);
+      return Q.delay(2000);
     }
   }, function(){ console.log("✘ The \"build\" folder didn't build!");})
   .then(function(){
@@ -227,7 +258,7 @@ program
         }
       });
     }
-    return Q.delay(1000);
+    return Q.delay(2000);
   }, function(){ console.log("✘ .gitignore file failed to download!");})
   .then(function(){
     buildCoffee();
@@ -240,7 +271,7 @@ program
       console.log( chalk.green.underline( "Building .scss preprocessor files...\n" ) );
       preProcess("sass");
     }
-    return Q.delay(1000);
+    return Q.delay(2000);
   }, function(){ console.log("✘ CSS preprocess files failed to build!");})
   .then(function(){
     if(program.less) {
@@ -250,7 +281,7 @@ program
       console.log(chalk.green.underline("Download style.scss...\n"));
       buildCoreCssPreprocess("scss");
     }
-    return Q.delay(1000);
+    return Q.delay(2000);
   }, function(){ console.log("✘ Core preprocess file failed to download!");})
   .then(function(){
     fs.open('gulpfile.js', "rs", function(err, fd) {
@@ -263,7 +294,7 @@ program
         fs.close(fd);
       }
     });
-    return Q.delay(1000);
+    return Q.delay(2000);
   }, function(){ console.log("✘ gulpfile.js failed to download!");})
   .then(function(){
     fs.open('.bowerrc', "rs", function(err, fd) {
@@ -276,7 +307,7 @@ program
         fs.close(fd);
       }
     });
-    return Q.delay(1000);
+    return Q.delay(2000);
   }, function(){ console.log("✘ .bowerrc failed to download!");})
   .then(function(){
     fs.open('Gruntfile.js', "rs", function(err, fd) {
@@ -289,7 +320,7 @@ program
         fs.close(fd);
       }
     });
-    return Q.delay(1000);
+    return Q.delay(2000);
   }, function(){ console.log("✘ Gruntfile.js failed to download!");})
   .then(function(){
     fs.open('package.json', "rs", function(err, fd) {
@@ -302,7 +333,7 @@ program
         fs.close(fd);
       }
     });
-    return Q.delay(1000);
+    return Q.delay(2000);
   }, function(){ console.log("✘ package.json failed to download!");})
   .then(function(){
     fs.open('bower.json', "rs", function(err, fd) {
@@ -315,7 +346,7 @@ program
         fs.close(fd);
       }
     });
-    return Q.delay(1000);
+    return Q.delay(2000);
   }, function(){console.log( chalk.red.bold( "✘ bower.json failed to download!") );})
   .done(function(){
     console.log( chalk.yellow.bold.underline( "THE PROJECT IS SCAFFOLDED!!") );
@@ -333,23 +364,40 @@ program
 
 // "build" command: creates a "build" folder
 // Kinda useless right now...may bring back later
-// program
-//   .command("build")
-//   .description("add \"build\" folder with subfolders")
-//   .action(function() {
-//     goToTest()
-//     .then(buildDir)
-//   })
+program
+.command("app")
+.description('scaffold a basic web application')
+.action(function(){
+  goToTest()
+  .then(function(){
+    buildFolders();
+    return Q.delay(2000);
+  })
+  .then(function(){
+    if(program.build) {
+      buildDir();
+      return Q.delay(2000);
+    }
+  }, function(){ console.log("✘ The \"build\" folder didn't build!");})
+  .then(function(){
+    var bower = new GetFile("bower.json", ".");
+    return Q.delay(2000);
+  }, function(){console.log( chalk.red.bold( "✘ bower.json failed to download!") );})
+  .then(function(){
+    var pkg = new GetFile("package.json", ".");
+    return Q.delay(2000);
+  }, function(){console.log( chalk.red.bold( "✘ package.json failed to download!") );});
+})
 
 
 // options
 program
 .version('0.0.1')
 .option('-b, --build', 'add "build" folder with subfolders')
-.option('-g, --gitignore', 'add ".gitignore" file')
 .option('-l, --less', 'create LESS files in "css-build"')
 .option('-s, --scss', 'create Sass files in "css-build"')
-.option('-t, --test', 'do a test scaffold in "init-test"');
+.option('-t, --test', 'do a test scaffold in "init-test"')
+.option('-g, --gitignore', 'add ".gitignore" file');
 
 program.parse(process.argv);
 
