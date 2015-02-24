@@ -35,7 +35,7 @@ function goToTest() {
 
 // Create core project directories when "kdz app" is run
 function buildFolders() {
-  console.log( chalk.green.underline( 'Creating project directories...\n' ) );
+  console.log( chalk.green.underline( '>> Creating project directories...\n' ) );
   ['css-build/imports', 'coffee', 'image-min'].forEach( function( element ) {
     mkdirp( element );
   });
@@ -48,10 +48,10 @@ function buildDir()  {
 
   // Use Node fs.open to check if the folder exists before making it
   fs.open( 'build', 'rs', function(err, fd) {
-    console.log( chalk.green.underline( 'Creating \"build\"...\n' ) );
+    console.log( chalk.green.underline( '>> Creating \"build\" folder...\n' ) );
     if ( err && err.code == 'ENOENT' ) {
 
-      // If "build/" does NOT exist, create the folder and subdirectories
+      // If "build/" does NOT exist, create it & its subdirectories
       ['build/css', 'build/js', 'build/js/libs'].forEach( function( element ) {
         mkdirp( element );
       });
@@ -70,7 +70,7 @@ function buildDir()  {
 // Step 2: create "main.coffee" inside of "coffee"
 // Step 3: go back up to the root folder
 function buildCoffee() {
-  console.log( chalk.green.underline( 'Create CoffeeScript files...\n' ) );
+  console.log( chalk.green.underline( '>> Creating "coffee/main.coffee"...\n' ) );
   cd( 'coffee' );
   touch( 'main.coffee' );
   cd( '../' );
@@ -78,6 +78,11 @@ function buildCoffee() {
 } //end "buildCoffee()"
 
 
+/*
+ * "GetFile()" function
+ * =====================================================================
+ *
+ */
 function GetFile( file, target ) {
 
   // Represents the file to be downloaded
@@ -88,7 +93,7 @@ function GetFile( file, target ) {
   global.target = target;
 
   // Root URL for downloading files from GitHub
-  var appDownloadRoot = 'https://raw.githubusercontent.com/kaidez/kdz/master/download_source/';
+  var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/download_source/' + global.file;
 
   // Use Node fs.open to check if the file exists before downloading it
   fs.open( global.file, 'rs', function( err, fd ) {
@@ -98,7 +103,7 @@ function GetFile( file, target ) {
       console.log( chalk.green.underline( '>> Download ' + global.file + '...\n' ) );
 
       var download = new Download( { strip: 1 } )
-      .get( appDownloadRoot + global.file )
+      .get( fileDownload )
       .dest( global.target )
       .use( progress() );
 
@@ -146,6 +151,7 @@ function buildCoreCssPreprocess( opt ) {
 } // end "buildCoreCssPreprocess()"
 
 
+// Output a console message after "app" is done
 function doneMessage() {
   console.log( chalk.yellow.bold.underline( 'THE PROJECT IS SCAFFOLDED!!') );
   console.log( chalk.yellow( 'Next steps...\n') );
@@ -206,20 +212,20 @@ program
   }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );})
   .then(function() {
     if( program.less ) {
-      console.log( chalk.green.underline( 'Building .less preprocessor files...\n' ) );
+      console.log( chalk.green.underline( '>> Download .less preprocessor files...\n' ) );
       preProcess( 'less' );
     } else if( program.scss ) {
-      console.log( chalk.green.underline( 'Building .scss preprocessor files...\n' ) );
+      console.log( chalk.green.underline( '>> Download .scss preprocessor files...\n' ) );
       preProcess( 'sass' );
     }
     return Q.delay( 2000 );
   }, function() { console.log( '✘ CSS preprocess files failed to build!' );} )
   .then(function() {
     if( program.less ) {
-      console.log( chalk.green.underline( 'Download style.less...\n' ) );
+      console.log( chalk.green.underline( '>> Download style.less...\n' ) );
       buildCoreCssPreprocess( 'less' );
     } else if ( program.scss ) {
-      console.log( chalk.green.underline( 'Download style.scss...\n' ) );
+      console.log( chalk.green.underline( '>> Download style.scss...\n' ) );
       buildCoreCssPreprocess( 'scss' );
     }
     return Q.delay( 2000 );
