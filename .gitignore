@@ -20,6 +20,9 @@ gulpfile.js
 !init-test/image-min/
 !init-test/bower.json
 !init-test/package.json
+!init-test/.bowerrc
+!init-test/Gruntfile.js
+!init-test/gulpfile.js
 
 # bower downloads
 # ---------------
