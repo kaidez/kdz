@@ -8,6 +8,11 @@ image-min/
 bower.json
 !download_source/bower.json
 
+.bowerrc
+Gruntfile.js
+gulpfile.js
+
+
 !init-test/image-min/
 !init-test/build/
 !init-test/coffee/
