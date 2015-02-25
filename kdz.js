@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // Run this task with Node
 
-
 "use strict"; // use ES5 when possible
 
 
@@ -74,16 +73,16 @@ function buildCoffee() {
   cd( 'coffee' );
   touch( 'main.coffee' );
   cd( '../' );
-  return Q.delay( 2000 );
+  return Q.delay( 3000 );
 } //end "buildCoffee()"
 
 
 /*
- * "GetFile()" function
+ * "getFile()" function
  * =====================================================================
  *
  */
-function GetFile( file ) {
+function getFile( file ) {
 
   // Represents the file to be downloaded
   global.file = file;
@@ -113,8 +112,9 @@ function GetFile( file ) {
       console.log( chalk.red( global.file + ' exists...don\'t download it.\n' ) );
       fs.close( fd );
     }
+    return Q.delay( 3000 );
   });
-} //end "GetFile()"
+} //end "getFile()"
 
 
 // Helper function for creating CSS preprocessors files
@@ -181,19 +181,19 @@ program
   goToTest()
   .then(function() {
     buildFolders();
-    return Q.delay( 2000 );
+    return Q.delay( 3000 );
   })
   .then(buildCoffee, function() { console.log( '✘ main.coffee build failed!' );})
   .then(function() {
     if( program.build ) {
       buildDir();
-      return Q.delay( 2000 );
+      return Q.delay( 3000 );
     }
   }, function() { console.log( '✘ The "build" folder didn\'t build!' );} )
   .then(function() {
     if( program.gitignore ) {
-      var gitignore = new GetFile( '.gitignore' )
-      return Q.delay( 2000 );
+      getFile( '.gitignore' )
+      return Q.delay( 3000 );
     }
   }, function() { console.log( '✘ .gitignore failed to download!' );} )
   .then(function() {
@@ -202,7 +202,7 @@ program
     } else if( program.scss ) {
       preProcess( 'sass' );
     }
-    return Q.delay( 2000 );
+    return Q.delay( 3000 );
   }, function() { console.log( '✘ CSS preprocess files failed to build!' );} )
   .then(function() {
     if( program.less ) {
@@ -210,27 +210,27 @@ program
     } else if ( program.scss ) {
       buildCoreCssPreprocess( 'scss' );
     }
-    return Q.delay( 2000 );
+    return Q.delay( 3000 );
   }, function() { console.log( '✘ Core preprocess file failed to download!' );} )
   .then(function() {
-    var pkg = new GetFile( 'package.json' );
-    return Q.delay( 2000 );
+    getFile( 'package.json' );
+    return Q.delay( 3000 );
   }, function() { console.log( chalk.red.bold( '✘ package.json failed to download!') );} )
   .then(function() {
-    var bower = new GetFile( 'bower.json' );
-    return Q.delay( 2000 );
+    getFile( 'bower.json' );
+    return Q.delay( 3000 );
   }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );})
   .then(function() {
-    var bowerrc = new GetFile( '.bowerrc' );
-    return Q.delay( 2000 );
+    getFile( '.bowerrc' );
+    return Q.delay( 3000 );
   }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );})
   .then(function() {
-    var grunt = new GetFile( 'Gruntfile.js' );
-    return Q.delay( 2000 );
+    getFile( 'Gruntfile.js' );
+    return Q.delay( 3000 );
   }, function() { console.log( chalk.red.bold( '✘ Gruntfile.js failed to download!') );})
   .then(function() {
-    var gulp = new GetFile( 'gulpfile.js' );
-    return Q.delay( 2000 );
+    getFile( 'gulpfile.js' );
+    return Q.delay( 3000 );
   }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );})
   .done( doneMessage );
 }) // end "app" command
