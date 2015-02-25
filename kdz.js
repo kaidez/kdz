@@ -183,9 +183,7 @@ program
     buildFolders();
     return Q.delay( 2000 );
   })
-  .then(function() {
-    buildCoffee();
-  }, function() { console.log( '✘ main.coffee build failed!' );} )
+    .then(buildCoffee, function() { console.log( '✘ main.coffee build failed!' );})
   .then(function() {
     if( program.build ) {
       buildDir();
@@ -234,7 +232,7 @@ program
     var gulp = new GetFile( 'gulpfile.js' );
     return Q.delay( 2000 );
   }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );})
-  .done(doneMessage);
+  .done( doneMessage );
 }) // end "app" command
 
 
