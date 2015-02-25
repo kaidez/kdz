@@ -183,7 +183,7 @@ program
     buildFolders();
     return Q.delay( 2000 );
   })
-    .then(buildCoffee, function() { console.log( '✘ main.coffee build failed!' );})
+  .then(buildCoffee, function() { console.log( '✘ main.coffee build failed!' );})
   .then(function() {
     if( program.build ) {
       buildDir();
