@@ -57,7 +57,7 @@ function buildDir()  {
     } else {
 
       // If "build" DOES exist, don't create it
-      // Pass a console message syaing it exists & stop the fs process
+      // Pass a console message saying it exists & stop the fs process
       console.log( chalk.red( '"build" folder exists...don\'t create a new one.\n' ) );
       fs.close( fd );
     }
