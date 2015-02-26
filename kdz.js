@@ -7,7 +7,7 @@
 // Bring in Node modules
 var fs = require( 'fs' ),
     program = require( 'commander' ),
-    touch = require('touch'),
+    touch = require( 'touch' ),
     mkdirp = require( 'mkdirp' ),
     Q = require( 'q' ),
     shelljs = require( 'shelljs' ),
