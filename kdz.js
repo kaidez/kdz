@@ -20,14 +20,9 @@ require( 'shelljs/global' );
 
 // If the "test" flag is passed, cd into the "init-test" directory
 function goToTest() {
-  var deferred = Q.defer();
   if( program.test ) {
     cd( 'init-test' );
-    deferred.resolve();
-  } else {
-    deferred.resolve();
   }
-  return deferred.promise;
 } //end "goToTest()"
 
 
@@ -177,12 +172,9 @@ program
 .command( 'app' )
 .description( 'scaffold a basic web application' )
 .action(function() {
-  goToTest()
-  .then(function() {
-    buildFolders();
-    return Q.delay( 3000 );
-  })
-  .then(buildCoffee, function() { console.log( '✘ main.coffee build failed!' );})
+  goToTest(); // does not return a promise
+  buildFolders(); // does not return a promise
+  buildCoffee() // returns a promise
   .then(function() {
     if( program.build ) {
       buildDir();
@@ -218,19 +210,19 @@ program
   .then(function() {
     getFile( 'bower.json' );
     return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );})
+  }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );} )
   .then(function() {
     getFile( '.bowerrc' );
     return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );})
+  }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );} )
   .then(function() {
     getFile( 'Gruntfile.js' );
     return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ Gruntfile.js failed to download!') );})
+  }, function() { console.log( chalk.red.bold( '✘ Gruntfile.js failed to download!') );} )
   .then(function() {
     getFile( 'gulpfile.js' );
     return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );})
+  }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );} )
   .done( doneMessage );
 }) // end "app" command
 
