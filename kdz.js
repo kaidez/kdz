@@ -13,8 +13,7 @@ var fs = require( 'fs' ),
     shelljs = require( 'shelljs' ),
     chalk = require( 'chalk' ),
     Download = require( 'download' ),
-    progress = require( 'download-status' ),
-    data = require( './config/data.js' );
+    progress = require( 'download-status' );
 
 require( 'shelljs/global' );
 
