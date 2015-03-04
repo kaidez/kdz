@@ -8,4 +8,4 @@ I want a task that runs "npm install" and "bower install" after the files have d
 
 I want there to be an option to add a "build" folder. (done)
 
-I want a styleguide as part of the build.
+I want a styleguide as part of the build (in progress).
