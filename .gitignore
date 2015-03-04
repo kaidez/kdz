@@ -6,15 +6,19 @@ coffee/
 css-build/
 image-min/
 bower.json
-!download_source/bower.json
-!download_source_wordpress/bower.json
-
-!download_source/.bowerrc
-!download_source_wordpress/.bowerrc
 
 .bowerrc
 Gruntfile.js
 gulpfile.js
+!download_source/bower.json
+!download_source_wordpress/bower.json
+!download_source/.bowerrc
+!download_source_wordpress/.bowerrc
+!download_source/Gruntfile.js
+!download_source_wordpress/Gruntfile.js
+!download_source/gulpfile.js
+!download_source_wordpress/gulpfile.js
+
 
 
 !init-test/image-min/
