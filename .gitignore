@@ -10,6 +10,11 @@ bower.json
 .bowerrc
 Gruntfile.js
 gulpfile.js
+
+!core-files/bower.json
+!core-files/for.less
+!core-files/.bowerrc
+
 !download_source/bower.json
 !download_source_wordpress/bower.json
 !download_source/.bowerrc
