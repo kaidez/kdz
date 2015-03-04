@@ -272,11 +272,11 @@ program
     return Q.delay( 3000 );
   }, function() { console.log( chalk.red.bold( '✘ package.json failed to download!') );} )
   .then(function() {
-    getFile( 'bower.json' );
+     getSharedFiles( 'bower.json' );
     return Q.delay( 3000 );
   }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );} )
   .then(function() {
-    getFile( '.bowerrc' );
+    getSharedFiles( '.bowerrc' );
     return Q.delay( 3000 );
   }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );} )
   .then(function() {
