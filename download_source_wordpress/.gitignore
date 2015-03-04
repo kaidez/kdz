@@ -1,0 +1,42 @@
+# Site assets
+#------------
+assets/
+
+# bower downloads
+# ---------------
+bower_components/
+
+
+# Sass-related files
+# ------------------
+*.sass-cache
+
+
+# General all-around files
+# ------------------------
+*.DS_Store
+*Thumbs.db
+*.pot
+*.svg
+*.localized
+*.psd
+*.ai
+*.eps
+
+
+# Node-related files
+# ------------------------
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+node_modules
+pids
+logs
+results
+npm-debug.log
+tmp
