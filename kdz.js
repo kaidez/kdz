@@ -26,6 +26,16 @@ function goToTest() {
 } //end "goToTest()"
 
 
+// If the "test" flag is passed, cd into the "init-test" directory
+function goToWPTest() {
+  if( program.test ) {
+    cd( 'wp-test' );
+  }
+} //end "goToTest()"
+
+
+
+
 // Create core project directories when "kdz app" is run
 function buildFolders() {
   console.log( chalk.green.underline( '>> Creating project directories...\n' ) );
@@ -33,6 +43,10 @@ function buildFolders() {
     mkdirp( element );
   });
 } //end 'buildFolders()'
+
+
+
+
 
 
 // If the "build" flag is passed, create a "build/" folder
@@ -225,6 +239,59 @@ program
   }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );} )
   .done( doneMessage );
 }) // end "app" command
+
+// "wordpress" command: scaffolds out a WordPRessproject
+program
+.command( 'wordpress' )
+.description( 'scaffold a basic web application' )
+.action(function() {
+  goToWPTest(); // does not return a promisee
+  buildCoffee() // returns a promise
+  .then(function() {
+    if( program.gitignore ) {
+      getFile( '.gitignore' )
+      return Q.delay( 3000 );
+    }
+  }, function() { console.log( '✘ .gitignore failed to download!' );} )
+  .then(function() {
+    if( program.less ) {
+      preProcess( 'less' );
+    } else if( program.scss ) {
+      preProcess( 'sass' );
+    }
+    return Q.delay( 3000 );
+  }, function() { console.log( '✘ CSS preprocess files failed to build!' );} )
+  .then(function() {
+    if( program.less ) {
+      buildCoreCssPreprocess( 'less' );
+    } else if ( program.scss ) {
+      buildCoreCssPreprocess( 'scss' );
+    }
+    return Q.delay( 3000 );
+  }, function() { console.log( '✘ Core preprocess file failed to download!' );} )
+  .then(function() {
+    getFile( 'package.json' );
+    return Q.delay( 3000 );
+  }, function() { console.log( chalk.red.bold( '✘ package.json failed to download!') );} )
+  .then(function() {
+    getFile( 'bower.json' );
+    return Q.delay( 3000 );
+  }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );} )
+  .then(function() {
+    getFile( '.bowerrc' );
+    return Q.delay( 3000 );
+  }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );} )
+  .then(function() {
+    getFile( 'Gruntfile.js' );
+    return Q.delay( 3000 );
+  }, function() { console.log( chalk.red.bold( '✘ Gruntfile.js failed to download!') );} )
+  .then(function() {
+    getFile( 'gulpfile.js' );
+    return Q.delay( 3000 );
+  }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );} )
+  .done( doneMessage );
+}) // end "app" command
+
 
 
 // options
