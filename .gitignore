@@ -7,6 +7,10 @@ css-build/
 image-min/
 bower.json
 !download_source/bower.json
+!download_source_wordpress/bower.json
+
+!download_source/.bowerrc
+!download_source_wordpress/.bowerrc
 
 .bowerrc
 Gruntfile.js
