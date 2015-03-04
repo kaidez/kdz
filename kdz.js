@@ -85,6 +85,56 @@ function buildCoffee() {
 } //end "buildCoffee()"
 
 
+
+
+
+
+/*
+ * "getSharedFiles()" function
+ * =====================================================================
+ *
+ */
+function getSharedFiles( file ) {
+
+  // Represents the file to be downloaded
+  global.file = file;
+
+  // Root URL for downloading files from GitHub
+  var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/shared-files/' + global.file;
+
+  // Use Node fs.open to check if the file exists before downloading it
+  fs.open( global.file, 'rs', function( err, fd ) {
+    if ( err && err.code == 'ENOENT' ) {
+
+      // If the file does NOT exists, download it
+      console.log( chalk.green.underline( '>> Download ' + global.file + '...\n' ) );
+
+      var download = new Download( { strip: 1 } )
+      .get( fileDownload )
+      .dest( '.' )
+      .use( progress() );
+
+      download.run( function ( err ) {
+        if ( err ) {
+          throw err;
+        }
+      });
+
+    } else {
+      console.log( chalk.red( global.file + ' exists...don\'t download it.\n' ) );
+      fs.close( fd );
+    }
+    return Q.delay( 3000 );
+  });
+} //end "getFile()"
+
+
+
+
+
+
+
+
 /*
  * "getFile()" function
  * =====================================================================
