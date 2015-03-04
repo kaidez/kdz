@@ -60,7 +60,7 @@ var lessFiles = ["css-build/*.less", "css-build/**/*.less"], // LESS
  * https://github.com/gulpjs/gulp/blob/master/docs/API.md
  *  ===================================================================
  */
-gulp.task("buildcss", ['less'],function () {
+gulp.task("buildcss", ['lint','less'],function () {
   gulp.src(['css-build/wp-comment-block.css','css-build/bootstrap.css', 'css-build/style.css'])
   .pipe(concatCss("style.css"))
   .pipe(autoprefixer({
@@ -70,16 +70,27 @@ gulp.task("buildcss", ['less'],function () {
   .pipe(minifyCSS({
     keepBreaks: true
   }))
-  .pipe(gulp.dest("parlor/"))
-  .pipe(csslint({
-    "important": false,
-    "duplicate-background-images": false,
-    "ids": false,
-    "text-indent": false
-  }))
-  .pipe(csslint.reporter())
+  .pipe(gulp.dest("/"))
+
 });
 
+/*
+ *  ===================================================================
+ *  | CSS LINT TASK |
+ *
+ *  Lint "css-build/style.css' ONLY!!!
+ *  ===================================================================
+ */
+ gulp.task('lint', function() {
+   gulp.src('css-build/style.css')
+   .pipe(csslint({
+     "important": false,
+     "duplicate-background-images": false,
+     "ids": false,
+     "text-indent": false
+   }))
+   .pipe(csslint.reporter());
+ });
 
 /*
 *  ===================================================================
@@ -94,7 +105,7 @@ gulp.task('images', function () {
     progressive: true,
     svgoPlugins: [{removeViewBox: false}]
   }))
-  .pipe(gulp.dest('parlor/images/'));
+  .pipe(gulp.dest('/'));
 });
 
 /*
