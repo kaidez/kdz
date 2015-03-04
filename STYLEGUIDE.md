@@ -175,7 +175,7 @@ __Wrong__
     }
 Consider placing selectors like this `globals.less`
 <hr>
-Avoid overly-specific selectors
+Avoid overly-specific selectors (this may be unavoidable with WordPress)
 
 __Right__
 
