@@ -11,9 +11,9 @@ bower.json
 Gruntfile.js
 gulpfile.js
 
-!core-files/bower.json
-!core-files/for.less
-!core-files/.bowerrc
+!shared-files/bower.json
+!shared-files/for.less
+!shared-files/.bowerrc
 
 !download_source/bower.json
 !download_source_wordpress/bower.json
