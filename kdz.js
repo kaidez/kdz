@@ -6,13 +6,13 @@
 
 // Bring in Node modules
 var fs = require( 'fs' ),
-program = require( 'commander' ),
-touch = require( 'touch' ),
-mkdirp = require( 'mkdirp' ),
-Q = require( 'q' ),
-chalk = require( 'chalk' ),
-Download = require( 'download' ),
-progress = require( 'download-status' );
+    program = require( 'commander' ),
+    touch = require( 'touch' ),
+    mkdirp = require( 'mkdirp' ),
+    Q = require( 'q' ),
+    chalk = require( 'chalk' ),
+    Download = require( 'download' ),
+    progress = require( 'download-status' );
 
 
 // If the "test" flag is passed, cd into the "init-test" directory
