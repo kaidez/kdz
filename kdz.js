@@ -244,7 +244,7 @@ program
 .action(function() {
   goToTest(); // does not return a promise
   buildFolders() // does not return a promise
-  .then(buildCoffee) // returns a promise
+  .then( buildCoffee ) // returns a promise
   .then(function() {
     if( program.build ) {
       buildDir();
