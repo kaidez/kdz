@@ -35,3 +35,5 @@ Great posts related to building Node CLI tools...
 [Good SO article on `fs.write`](http://stackoverflow.com/questions/20309398/access-name-of-file-being-written-by-fs-writefile)
 
 ["Globals" instead of "this"](http://stackoverflow.com/questions/19850234/node-js-variable-declaration-and-scope)
+
+[Excellent SO thread on `stdin`, `stdout` and `stderror`](http://stackoverflow.com/questions/3385201/confused-about-stdin-stdout-and-stderr)
