@@ -93,58 +93,11 @@ function buildCoffee() {
 
 
 
-
 /*
-* "getSharedFiles()" function
-* =====================================================================
-*
-*/
-function getSharedFiles( file ) {
-
-  // Represents the file to be downloaded
-  global.file = file;
-
-  // Root URL for downloading files from GitHub
-  var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/shared-files/' + global.file;
-
-  // Use Node fs.open to check if the file exists before downloading it
-  fs.open( global.file, 'rs', function( err, fd ) {
-    if ( err && err.code == 'ENOENT' ) {
-
-      // If the file does NOT exists, download it
-      console.log( chalk.green.underline( '>> Download ' + global.file + '...\n' ) );
-
-      var download = new Download( { strip: 1 } )
-      .get( fileDownload )
-      .dest( '.' )
-      .use( progress() );
-
-      download.run( function ( err ) {
-        if ( err ) {
-          throw err;
-        }
-      });
-
-    } else {
-      console.log( chalk.red( global.file + ' exists...don\'t download it.\n' ) );
-      fs.close( fd );
-    }
-    return Q.delay( 3000 );
-  });
-} // end "getFile()"
-
-
-
-
-
-
-
-
-/*
-* "getFile()" function
-* =====================================================================
-*
-*/
+ * "getFile()" function
+ * =====================================================================
+ *
+ */
 function getFile( file ) {
 
   // Represents the file to be downloaded
@@ -239,125 +192,71 @@ function doneMessage() {
 
 // "app" command: scaffolds out a SPA-like project
 program
-.command( 'app' )
-.description( 'scaffold a basic web application' )
-.action(function() {
-  goToTest(); // does not return a promise
-  buildFolders() // does not return a promise
-  .then( buildCoffee ) // returns a promise
-  .then(function() {
-    if( program.build ) {
-      buildDir();
+  .command( 'app' )
+  .description( 'scaffold a basic web application' )
+  .action(function() {
+    goToTest(); // does not return a promise
+    buildFolders() // does not return a promise
+    .then( buildCoffee ) // returns a promise
+    .then(function() {
+      if( program.build ) {
+        buildDir();
+        return Q.delay( 3000 );
+      }
+    }, function() { console.log( '✘ The "build" folder didn\'t build!' );} )
+    .then(function() {
+      if( program.gitignore ) {
+        getFile( '.gitignore' )
+        return Q.delay( 3000 );
+      }
+    }, function() { console.log( '✘ .gitignore failed to download!' );} )
+    .then(function() {
+      if( program.less ) {
+        preProcess( 'less' );
+      } else if( program.scss ) {
+        preProcess( 'sass' );
+      }
       return Q.delay( 3000 );
-    }
-  }, function() { console.log( '✘ The "build" folder didn\'t build!' );} )
-  .then(function() {
-    if( program.gitignore ) {
-      getFile( '.gitignore' )
+    }, function() { console.log( '✘ CSS preprocess files failed to build!' );} )
+    .then(function() {
+      if( program.less ) {
+        buildCoreCssPreprocess( 'less' );
+      } else if ( program.scss ) {
+        buildCoreCssPreprocess( 'scss' );
+      }
       return Q.delay( 3000 );
-    }
-  }, function() { console.log( '✘ .gitignore failed to download!' );} )
-  .then(function() {
-    if( program.less ) {
-      preProcess( 'less' );
-    } else if( program.scss ) {
-      preProcess( 'sass' );
-    }
-    return Q.delay( 3000 );
-  }, function() { console.log( '✘ CSS preprocess files failed to build!' );} )
-  .then(function() {
-    if( program.less ) {
-      buildCoreCssPreprocess( 'less' );
-    } else if ( program.scss ) {
-      buildCoreCssPreprocess( 'scss' );
-    }
-    return Q.delay( 3000 );
-  }, function() { console.log( '✘ Core preprocess file failed to download!' );} )
-  .then(function() {
-    getFile( 'package.json' );
-    return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ package.json failed to download!') );} )
-  .then(function() {
-    getSharedFiles( 'bower.json' );
-    return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );} )
-  .then(function() {
-    getSharedFiles( '.bowerrc' );
-    return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );} )
-  .then(function() {
-    getFile( 'Gruntfile.js' );
-    return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ Gruntfile.js failed to download!') );} )
-  .then(function() {
-    getFile( 'gulpfile.js' );
-    return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );} )
-  .done( doneMessage );
-}) // end "app" command
-
-// "wordpress" command: scaffolds out a WordPress project
-program
-.command( 'wordpress' )
-.description( 'scaffold a WordPress project' )
-.action(function() {
-  goToWPTest(); // does not return a promisee
-  buildCoffee() // returns a promise
-  .then(function() {
-    if( program.gitignore ) {
-      getFile( '.gitignore' )
+    }, function() { console.log( '✘ Core preprocess file failed to download!' );} )
+    .then(function() {
+      getFile( 'package.json' );
       return Q.delay( 3000 );
-    }
-  }, function() { console.log( '✘ .gitignore failed to download!' );} )
-  .then(function() {
-    if( program.less ) {
-      preProcess( 'less' );
-    } else if( program.scss ) {
-      preProcess( 'sass' );
-    }
-    return Q.delay( 3000 );
-  }, function() { console.log( '✘ CSS preprocess files failed to build!' );} )
-  .then(function() {
-    if( program.less ) {
-      buildCoreCssPreprocess( 'less' );
-    } else if ( program.scss ) {
-      buildCoreCssPreprocess( 'scss' );
-    }
-    return Q.delay( 3000 );
-  }, function() { console.log( '✘ Core preprocess file failed to download!' );} )
-  .then(function() {
-    getFile( 'package.json' );
-    return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ package.json failed to download!') );} )
-  .then(function() {
-    getFile( 'bower.json' );
-    return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );} )
-  .then(function() {
-    getFile( '.bowerrc' );
-    return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );} )
-  .then(function() {
-    getFile( 'Gruntfile.js' );
-    return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ Gruntfile.js failed to download!') );} )
-  .then(function() {
-    getFile( 'gulpfile.js' );
-    return Q.delay( 3000 );
-  }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );} )
-  .done( doneMessage );
-}) // end "app" command
-
-
+    }, function() { console.log( chalk.red.bold( '✘ package.json failed to download!') );} )
+    .then(function() {
+      getFile( 'bower.json' );
+      return Q.delay( 3000 );
+    }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );} )
+    .then(function() {
+      getFile( '.bowerrc' );
+      return Q.delay( 3000 );
+    }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );} )
+    .then(function() {
+      getFile( 'Gruntfile.js' );
+      return Q.delay( 3000 );
+    }, function() { console.log( chalk.red.bold( '✘ Gruntfile.js failed to download!') );} )
+    .then(function() {
+      getFile( 'gulpfile.js' );
+      return Q.delay( 3000 );
+    }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );} )
+    .done( doneMessage );
+  }) // end "app" command
 
 // options
 program
-.version( '0.0.1' )
-.option( '-b, --build', 'add "build" folder with subfolders' )
-.option( '-g, --gitignore', 'add ".gitignore" file' )
-.option( '-l, --less', 'create LESS files in "css-build"' )
-.option( '-s, --scss', 'create Sass files in "css-build"' )
-.option( '-t, --test', 'do a test scaffold in "init-test"' );
+  .version( '0.0.1' )
+  .option( '-b, --build', 'add "build" folder with subfolders' )
+  .option( '-g, --gitignore', 'add ".gitignore" file' )
+  .option( '-l, --less', 'create LESS files in "css-build"' )
+  .option( '-s, --scss', 'create Sass files in "css-build"' )
+  .option( '-t, --test', 'do a test scaffold in "init-test"' );
 
 
 program.parse( process.argv );
