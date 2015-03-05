@@ -6,13 +6,14 @@
 
 // Bring in Node modules
 var fs = require( 'fs' ),
+    exec = require( 'child_process' ).exec,
     program = require( 'commander' ),
-    touch = require( 'touch' ),
     mkdirp = require( 'mkdirp' ),
     Q = require( 'q' ),
     chalk = require( 'chalk' ),
     Download = require( 'download' ),
-    progress = require( 'download-status' );
+    progress = require( 'download-status' ),
+    child;
 
 
 // If the "test" flag is passed, cd into the "init-test" directory
@@ -84,7 +85,14 @@ function buildDir()  {
 function buildCoffee() {
   console.log( chalk.green.underline( '>> Creating "coffee/main.coffee"...\n' ) );
   process.chdir( 'coffee' );
-  touch( 'main.coffee' );
+
+  child = exec('touch main.coffee',
+  function ( error ) {
+    if (error !== null) {
+      console.log( 'exec error: ' + error );
+    }
+  });
+
   process.chdir( '../' );
   return Q.delay( 3000 );
 } // end "buildCoffee()"
@@ -142,9 +150,9 @@ function preProcess( opt ) {
   .dest( 'css-build/imports' )
   .use( progress() );
 
-  if(program.less) {
+  if( program.less ) {
     console.log( chalk.green.underline( '>> Download .less preprocessor files...\n' ) );
-  } else if(program.scss){
+  } else if( program.scss ){
     console.log( chalk.green.underline( '>> Download .scss preprocessor files...\n' ) );
   }
 
@@ -161,7 +169,6 @@ function buildCoreCssPreprocess( opt ) {
   .get( 'https://raw.githubusercontent.com/kaidez/kdz/master/download_source/style.' + opt )
   .dest( 'css-build/' )
   .use( progress() );
-
 
   if( program.less ) {
     console.log( chalk.green.underline( '>> Download style.less...\n' ) );
@@ -248,6 +255,7 @@ program
     }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );} )
     .done( doneMessage );
   }) // end "app" command
+
 
 // options
 program
