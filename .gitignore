@@ -15,14 +15,14 @@ gulpfile.js
 !shared-files/for.less
 !shared-files/.bowerrc
 
-!download_source/bower.json
-!download_source_wordpress/bower.json
-!download_source/.bowerrc
-!download_source_wordpress/.bowerrc
-!download_source/Gruntfile.js
-!download_source_wordpress/Gruntfile.js
-!download_source/gulpfile.js
-!download_source_wordpress/gulpfile.js
+!source-spa/bower.json
+!source-wordpress/bower.json
+!source-spa/.bowerrc
+!source-wordpress/.bowerrc
+!source-spa/Gruntfile.js
+!source-wordpress/Gruntfile.js
+!source-spa/gulpfile.js
+!source-wordpress/gulpfile.js
 
 
 
