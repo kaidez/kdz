@@ -16,22 +16,18 @@ var fs = require( 'fs' ),
     child;
 
 
-// If the "test" flag is passed, cd into the "init-test" directory
+// If the "test" flag is passed, check the type of project
+// Go to "init-test" if it's "program.build"
+// Go to "wp-test" if it's "program.wordpress"
 function goToTest() {
-  if( program.test ) {
+  if( program.build && program.test ) {
     process.chdir( 'init-test' );
+  } else if( program.wordpress && program.test )  {
+    process.chdir( 'wp-test' );
+  } else {
+    return false;
   }
 } // end "goToTest()"
-
-
-// If the "test" flag is passed, cd into the "init-test" directory
-function goToWPTest() {
-  if( program.test ) {
-    process.chdir( 'wp-test' );
-  }
-} // end "goToWPTest()"
-
-
 
 
 // Create core project directories when "kdz app" is run
@@ -119,8 +115,6 @@ function getFile( file ) {
     if ( err && err.code == 'ENOENT' ) {
 
       // If the file does NOT exists, download it
-      console.log( chalk.green.underline( '>> Download ' + global.file + '...\n' ) );
-
       var download = new Download( { strip: 1 } )
       .get( fileDownload )
       .dest( '.' )
@@ -205,6 +199,18 @@ program
     goToTest(); // does not return a promise
     buildFolders() // does not return a promise
     .then( buildCoffee ) // returns a promise
+    .then(function(){
+      console.log( chalk.green.underline( '>> Download Bower-related files...' ) );
+      return Q.delay( 3000 );
+    })
+    .then(function() {
+      getFile( 'bower.json' );
+      return Q.delay( 3000 );
+    }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );} )
+    .then(function() {
+      getFile( '.bowerrc' );
+      return Q.delay( 3000 );
+    }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );} )
     .then(function() {
       if( program.build ) {
         buildDir();
@@ -238,14 +244,6 @@ program
       return Q.delay( 3000 );
     }, function() { console.log( chalk.red.bold( '✘ package.json failed to download!') );} )
     .then(function() {
-      getFile( 'bower.json' );
-      return Q.delay( 3000 );
-    }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );} )
-    .then(function() {
-      getFile( '.bowerrc' );
-      return Q.delay( 3000 );
-    }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );} )
-    .then(function() {
       getFile( 'Gruntfile.js' );
       return Q.delay( 3000 );
     }, function() { console.log( chalk.red.bold( '✘ Gruntfile.js failed to download!') );} )
@@ -260,7 +258,8 @@ program
 // options
 program
   .version( '0.0.1' )
-  .option( '-b, --build', 'add "build" folder with subfolders' )
+  .option( '-b, --build', 'create a SPA-link project' )
+  .option( '-w, --wordpress', 'scaffold out a WordPress project' )
   .option( '-g, --gitignore', 'add ".gitignore" file' )
   .option( '-l, --less', 'create LESS files in "css-build"' )
   .option( '-s, --scss', 'create Sass files in "css-build"' )
