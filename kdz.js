@@ -290,10 +290,10 @@ program
   .done( doneMessage );
 }) // end "app" command
 
-// "wordpress" command: scaffolds out a WordPRessproject
+// "wordpress" command: scaffolds out a WordPress project
 program
 .command( 'wordpress' )
-.description( 'scaffold a basic web application' )
+.description( 'scaffold a WordPress project' )
 .action(function() {
   goToWPTest(); // does not return a promisee
   buildCoffee() // returns a promise
