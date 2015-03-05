@@ -28,7 +28,7 @@ function goToWPTest() {
   if( program.test ) {
     process.chdir( 'wp-test' );
   }
-} // end "goToTest()"
+} // end "goToWPTest()"
 
 
 
@@ -55,7 +55,7 @@ function buildFolders() {
 function buildDir()  {
 
   // Use Node fs.open to check if the folder exists before making it
-  fs.open( 'build', 'rs', function(err, fd) {
+  fs.open( 'build', 'rs', function( err, fd ) {
     console.log( chalk.green.underline( '>> Creating \"build\" folder & sub-directories...\n' ) );
     if ( err && err.code == 'ENOENT' ) {
 
@@ -75,7 +75,7 @@ function buildDir()  {
     }
   });
   return Q.delay( 3000 );
-} //end "buildDir()"
+} // end "buildDir()"
 
 
 // Step 1: go to the "coffee" directory
@@ -87,7 +87,7 @@ function buildCoffee() {
   touch( 'main.coffee' );
   process.chdir( '../' );
   return Q.delay( 3000 );
-} //end "buildCoffee()"
+} // end "buildCoffee()"
 
 
 
@@ -131,7 +131,7 @@ function getSharedFiles( file ) {
     }
     return Q.delay( 3000 );
   });
-} //end "getFile()"
+} // end "getFile()"
 
 
 
@@ -177,7 +177,8 @@ function getFile( file ) {
     }
     return Q.delay( 3000 );
   });
-} //end "getFile()"
+} // end "getFile()"
+
 
 
 // Helper function for creating CSS preprocessors files
@@ -214,11 +215,11 @@ function buildCoreCssPreprocess( opt ) {
   } else if ( program.scss ) {
     console.log( chalk.green.underline( '>> Download style.scss...\n' ) );
   }
-  download.run(function ( err ) {
+  download.run( function ( err ) {
     if ( err ) {
       throw err;
     }
-  });
+  } );
 } // end "buildCoreCssPreprocess()"
 
 
