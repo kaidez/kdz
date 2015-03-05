@@ -10,18 +10,15 @@ var fs = require( 'fs' ),
     touch = require( 'touch' ),
     mkdirp = require( 'mkdirp' ),
     Q = require( 'q' ),
-    shelljs = require( 'shelljs' ),
     chalk = require( 'chalk' ),
     Download = require( 'download' ),
     progress = require( 'download-status' );
-
-require( 'shelljs/global' );
 
 
 // If the "test" flag is passed, cd into the "init-test" directory
 function goToTest() {
   if( program.test ) {
-    cd( 'init-test' );
+    process.chdir( 'init-test' );
   }
 } //end "goToTest()"
 
@@ -29,7 +26,7 @@ function goToTest() {
 // If the "test" flag is passed, cd into the "init-test" directory
 function goToWPTest() {
   if( program.test ) {
-    cd( 'wp-test' );
+    process.chdir( 'wp-test' );
   }
 } //end "goToTest()"
 
@@ -78,9 +75,9 @@ function buildDir()  {
 // Step 3: go back up to the root folder
 function buildCoffee() {
   console.log( chalk.green.underline( '>> Creating "coffee/main.coffee"...\n' ) );
-  cd( 'coffee' );
+  process.chdir( 'coffee' );
   touch( 'main.coffee' );
-  cd( '../' );
+  process.chdir( '../' );
   return Q.delay( 3000 );
 } //end "buildCoffee()"
 
