@@ -6,13 +6,13 @@
 
 // Bring in Node modules
 var fs = require( 'fs' ),
-    program = require( 'commander' ),
-    touch = require( 'touch' ),
-    mkdirp = require( 'mkdirp' ),
-    Q = require( 'q' ),
-    chalk = require( 'chalk' ),
-    Download = require( 'download' ),
-    progress = require( 'download-status' );
+program = require( 'commander' ),
+touch = require( 'touch' ),
+mkdirp = require( 'mkdirp' ),
+Q = require( 'q' ),
+chalk = require( 'chalk' ),
+Download = require( 'download' ),
+progress = require( 'download-status' );
 
 
 // If the "test" flag is passed, cd into the "init-test" directory
@@ -20,7 +20,7 @@ function goToTest() {
   if( program.test ) {
     process.chdir( 'init-test' );
   }
-} //end "goToTest()"
+} // end "goToTest()"
 
 
 // If the "test" flag is passed, cd into the "init-test" directory
@@ -28,7 +28,7 @@ function goToWPTest() {
   if( program.test ) {
     process.chdir( 'wp-test' );
   }
-} //end "goToTest()"
+} // end "goToTest()"
 
 
 
@@ -37,9 +37,13 @@ function goToWPTest() {
 function buildFolders() {
   console.log( chalk.green.underline( '>> Creating project directories...\n' ) );
   ['css-build/imports', 'coffee', 'image-min'].forEach( function( element ) {
-    mkdirp( element );
+    mkdirp( element , function ( err ) {
+      if ( err ) console.error( err )
+      else console.log( '"' + element + '/" created!\n' )
+    });
   });
-} //end 'buildFolders()'
+  return Q.delay( 3000 );
+} // end 'buildFolders()'
 
 
 
@@ -52,12 +56,15 @@ function buildDir()  {
 
   // Use Node fs.open to check if the folder exists before making it
   fs.open( 'build', 'rs', function(err, fd) {
-    console.log( chalk.green.underline( '>> Creating \"build\" folder...\n' ) );
+    console.log( chalk.green.underline( '>> Creating \"build\" folder & sub-directories...\n' ) );
     if ( err && err.code == 'ENOENT' ) {
 
       // If "build/" does NOT exist, create it & its subdirectories
       ['build/css', 'build/js', 'build/js/libs'].forEach( function( element ) {
-        mkdirp( element );
+        mkdirp( element , function ( err ) {
+          if ( err ) console.error( err )
+          else console.log( '"' + element + '" created!\n' )
+        });
       });
     } else {
 
@@ -67,6 +74,7 @@ function buildDir()  {
       fs.close( fd );
     }
   });
+  return Q.delay( 3000 );
 } //end "buildDir()"
 
 
@@ -87,10 +95,10 @@ function buildCoffee() {
 
 
 /*
- * "getSharedFiles()" function
- * =====================================================================
- *
- */
+* "getSharedFiles()" function
+* =====================================================================
+*
+*/
 function getSharedFiles( file ) {
 
   // Represents the file to be downloaded
@@ -133,10 +141,10 @@ function getSharedFiles( file ) {
 
 
 /*
- * "getFile()" function
- * =====================================================================
- *
- */
+* "getFile()" function
+* =====================================================================
+*
+*/
 function getFile( file ) {
 
   // Represents the file to be downloaded
@@ -234,8 +242,8 @@ program
 .description( 'scaffold a basic web application' )
 .action(function() {
   goToTest(); // does not return a promise
-  buildFolders(); // does not return a promise
-  buildCoffee() // returns a promise
+  buildFolders() // does not return a promise
+  .then(buildCoffee) // returns a promise
   .then(function() {
     if( program.build ) {
       buildDir();
@@ -269,7 +277,7 @@ program
     return Q.delay( 3000 );
   }, function() { console.log( chalk.red.bold( '✘ package.json failed to download!') );} )
   .then(function() {
-     getSharedFiles( 'bower.json' );
+    getSharedFiles( 'bower.json' );
     return Q.delay( 3000 );
   }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );} )
   .then(function() {
@@ -343,12 +351,12 @@ program
 
 // options
 program
-  .version( '0.0.1' )
-  .option( '-b, --build', 'add "build" folder with subfolders' )
-  .option( '-g, --gitignore', 'add ".gitignore" file' )
-  .option( '-l, --less', 'create LESS files in "css-build"' )
-  .option( '-s, --scss', 'create Sass files in "css-build"' )
-  .option( '-t, --test', 'do a test scaffold in "init-test"' );
+.version( '0.0.1' )
+.option( '-b, --build', 'add "build" folder with subfolders' )
+.option( '-g, --gitignore', 'add ".gitignore" file' )
+.option( '-l, --less', 'create LESS files in "css-build"' )
+.option( '-s, --scss', 'create Sass files in "css-build"' )
+.option( '-t, --test', 'do a test scaffold in "init-test"' );
 
 
 program.parse( process.argv );
