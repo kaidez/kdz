@@ -22,8 +22,8 @@ var fs = require( 'fs' ),
 // Exit task if "build" & "wordpress" flags are passed at the same time
 // Pass the error as "Invalid Argument"
 function flagCheck(){
-  var error = new Error('"build and "wordpress" flags were passed at the same time\nExiting task....\n');
-  if ( program.build && program.test ) {
+  var error = new Error('"build and "wordpress" flags cannot be passed at the same time\nExiting task....\n');
+  if ( program.build && program.wordpress ) {
     console.log(chalk.red( error ) );
     process.exit(9);
   }
@@ -58,7 +58,6 @@ function getFile( array, folder ) {
 
   array.forEach( function( coreFile ) {
     var file  = fileDownload + coreFile;
-
     // Use Node "fs.open" to check if the file exists before downloading
     fs.open( file, 'rs', function( err, fd ) {
       if ( err && err.code == 'ENOENT' ) {
@@ -81,9 +80,8 @@ function getFile( array, folder ) {
         fs.close( fd );
       }
 
-      return Q.delay( 3000 );
     });
-
+    return Q.delay( 3000 );
   })
 
 
@@ -156,46 +154,17 @@ function buildCoffee() {
 
 
 // Helper function for creating CSS preprocessors files
-// "opt" will be a preprocessor file type: either "less" or "scss"
-function preProcess( opt ) {
-  var download = new Download( { extract: true, strip: 1, mode: '755' } )
-  .get( 'https://github.com/kaidez/kdz/raw/master/download_source/' + opt + '.zip' )
-  .dest( 'css-build/imports' )
-  .use( progress() );
+// "whatType" will be a preprocessor file type: either "less" or "scss"
+function preProcess( whatType ) {
 
-  if( program.less ) {
-    console.log( chalk.green.underline( '>> Download .less preprocessor files...\n' ) );
-  } else if( program.scss ){
-    console.log( chalk.green.underline( '>> Download .scss preprocessor files...\n' ) );
+  if( program.wordpress ) {
+    getFile( whatType, "wordpress" );
+
+  } else if ( program.build ) {
+    getFile( whatType, "spa" );
   }
-
-  download.run( function ( err, files ) {
-    if ( err ) {
-      throw err;
-    }
-  });
 
 } // end "preProcess()"
-
-
-
-function buildCoreCssPreprocess( opt ) {
-  var download = new Download( { strip: 1 } )
-  .get( 'https://raw.githubusercontent.com/kaidez/kdz/master/download_source/style.' + opt )
-  .dest( 'css-build/' )
-  .use( progress() );
-
-  if( program.less ) {
-    console.log( chalk.green.underline( '>> Download style.less...\n' ) );
-  } else if ( program.scss ) {
-    console.log( chalk.green.underline( '>> Download style.scss...\n' ) );
-  }
-  download.run( function ( err ) {
-    if ( err ) {
-      throw err;
-    }
-  } );
-} // end "buildCoreCssPreprocess()"
 
 
 
@@ -227,33 +196,28 @@ program
       if( program.build ) {
         buildDir();
       }
-    })
+    }, function() { console.log( '✘ "build/" directory failed to be created!' );} )
     .then(function(){
       getFile( data.shared, "shared-files" );
-    })
+    }, function() { console.log( '✘ Core project files failed to down!' );} )
     .then(function() {
       if( program.wordpress ) {
         getFile( data.core, "wordpress" );
       } else if( program.build ) {
         getFile( data.core, "spa" );
+      } else {
+        return false;
       }
-    })
+    }, function() { console.log( '✘ Core files failed to download!' );} )
     .then(function() {
       if( program.less ) {
-        preProcess( 'less' );
-      } else if( program.scss ) {
-        preProcess( 'sass' );
+        preProcess( data.less )
+      } else if( program.scss  ) {
+        preProcess( data.sass )
+      } else {
+        return false;
       }
-      return Q.delay( 3000 );
-    }, function() { console.log( '✘ CSS preprocess files failed to build!' );} )
-    .then(function() {
-      if( program.less ) {
-        buildCoreCssPreprocess( 'less' );
-      } else if ( program.scss ) {
-        buildCoreCssPreprocess( 'scss' );
-      }
-      return Q.delay( 3000 );
-    }, function() { console.log( '✘ Core preprocess file failed to download!' );} )
+    }, function() { console.log( '✘ Preprocessor files failed to download!' );} )
     .done( doneMessage );
   }) // end "app" command
 
