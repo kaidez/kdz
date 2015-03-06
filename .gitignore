@@ -5,37 +5,31 @@ build/
 coffee/
 css-build/
 image-min/
+
+STYLEGUIDE.md
+less.zip
+style.less
+style.scss
 bower.json
 
 .bowerrc
 Gruntfile.js
 gulpfile.js
 
-!source-shared-files/bower.json
-!source-shared-files/for.less
-!source-shared-files/.bowerrc
+!source-shared-files/*
 
-!source-spa/bower.json
-!source-wordpress/bower.json
-!source-spa/.bowerrc
-!source-wordpress/.bowerrc
-!source-spa/Gruntfile.js
-!source-wordpress/Gruntfile.js
-!source-spa/gulpfile.js
-!source-wordpress/gulpfile.js
+
+!source-spa/*
+
+
+!source-wordpress/*
+
+
+!init-test/*
 
 
 
-!init-test/image-min/
-!init-test/build/
-!init-test/coffee/
-!init-test/css-build/
-!init-test/image-min/
-!init-test/bower.json
-!init-test/package.json
-!init-test/.bowerrc
-!init-test/Gruntfile.js
-!init-test/gulpfile.js
+!wp-test/*
 
 # bower downloads
 # ---------------
