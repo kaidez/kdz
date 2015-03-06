@@ -1,7 +1,7 @@
 var data = {
   "core": [
     ".bowerrc",
-    "bower",
+    "bower.json",
     "Gruntfile.js",
     "gulpfile.js",
     "package.json"
