@@ -30,6 +30,50 @@ function goToTest() {
 } // end "goToTest()"
 
 
+
+/*
+ * "getFile()" function
+ * =====================================================================
+ *
+ */
+function getFile( file, folder ) {
+
+  // Represents the file to be downloaded
+  global.file = file;
+
+  // Represents the file to be downloaded
+  global.folder = folder;
+
+  // Root URL for downloading files from GitHub
+  var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-' + global.folder + '/' + global.file;
+
+  // Use Node fs.open to check if the file exists before downloading it
+  fs.open( global.file, 'rs', function( err, fd ) {
+    if ( err && err.code == 'ENOENT' ) {
+
+      // If the file does NOT exists, download it
+      var download = new Download( { strip: 1 } )
+      .get( fileDownload )
+      .dest( '.' )
+      .use( progress() );
+
+      download.run( function ( err ) {
+        if ( err ) {
+          throw err;
+        }
+      });
+
+    } else {
+      console.log( chalk.red( global.file + ' exists...don\'t download it.\n' ) );
+      fs.close( fd );
+    }
+    return Q.delay( 3000 );
+  });
+} // end "getFile()"
+
+
+
+
 // Create core project directories when "kdz app" is run
 function buildFolders() {
   console.log( chalk.green.underline( '>> Creating project directories...\n' ) );
@@ -96,43 +140,6 @@ function buildCoffee() {
 
 
 
-
-/*
- * "getFile()" function
- * =====================================================================
- *
- */
-function getFile( file ) {
-
-  // Represents the file to be downloaded
-  global.file = file;
-
-  // Root URL for downloading files from GitHub
-  var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/download_source/' + global.file;
-
-  // Use Node fs.open to check if the file exists before downloading it
-  fs.open( global.file, 'rs', function( err, fd ) {
-    if ( err && err.code == 'ENOENT' ) {
-
-      // If the file does NOT exists, download it
-      var download = new Download( { strip: 1 } )
-      .get( fileDownload )
-      .dest( '.' )
-      .use( progress() );
-
-      download.run( function ( err ) {
-        if ( err ) {
-          throw err;
-        }
-      });
-
-    } else {
-      console.log( chalk.red( global.file + ' exists...don\'t download it.\n' ) );
-      fs.close( fd );
-    }
-    return Q.delay( 3000 );
-  });
-} // end "getFile()"
 
 
 
@@ -212,11 +219,15 @@ program
       return Q.delay( 3000 );
     }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );} )
     .then(function() {
-      if( program.build ) {
-        buildDir();
-        return Q.delay( 3000 );
-      }
-    }, function() { console.log( '✘ The "build" folder didn\'t build!' );} )
+      var coreFiles = data.core;
+      coreFiles.forEach(function( index ) {
+        if( program.wordress ) {
+          getFile( coreFiles[index], "wordpress" );
+        } else {
+          getFile( coreFiles[index], "spa" );
+        }
+      });
+    })
     .then(function() {
       if( program.gitignore ) {
         getFile( '.gitignore' )
@@ -239,18 +250,6 @@ program
       }
       return Q.delay( 3000 );
     }, function() { console.log( '✘ Core preprocess file failed to download!' );} )
-    .then(function() {
-      getFile( 'package.json' );
-      return Q.delay( 3000 );
-    }, function() { console.log( chalk.red.bold( '✘ package.json failed to download!') );} )
-    .then(function() {
-      getFile( 'Gruntfile.js' );
-      return Q.delay( 3000 );
-    }, function() { console.log( chalk.red.bold( '✘ Gruntfile.js failed to download!') );} )
-    .then(function() {
-      getFile( 'gulpfile.js' );
-      return Q.delay( 3000 );
-    }, function() { console.log( chalk.red.bold( '✘ gulpfile.js failed to download!') );} )
     .done( doneMessage );
   }) // end "app" command
 
