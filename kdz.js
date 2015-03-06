@@ -14,6 +14,7 @@ var fs = require( 'fs' ),
     chalk = require( 'chalk' ),
     Download = require( 'download' ),
     progress = require( 'download-status' ),
+    Decompress = require('decompress'),
     data = require('./config/data.js'),
     child;
 
@@ -168,6 +169,22 @@ function preProcess( whatType ) {
 
 } // end "preProcess()"
 
+
+
+function unzip(){
+  var decompress = new Decompress({mode: '755'})
+  .src('foo.zip')
+  .dest('destFolder')
+  .use(Decompress.zip({strip: 1}));
+
+  decompress.run(function (err) {
+    if (err) {
+      throw err;
+    }
+
+    console.log('Archive extracted successfully!');
+  });
+}
 
 
 // Output a console message after "app" is done
