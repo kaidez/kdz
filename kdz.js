@@ -14,20 +14,29 @@ var fs = require( 'fs' ),
     chalk = require( 'chalk' ),
     Download = require( 'download' ),
     progress = require( 'download-status' ),
-    Decompress = require('decompress'),
-    data = require('./config/data.js'),
+    Decompress = require( 'decompress' ),
+    data = require( './config/data.js' ),
     child;
 
 
 
 // Exit task if "build" & "wordpress" flags are passed at the same time
-// Pass the error as "Invalid Argument"
-function flagCheck(){
-  var error = new Error('"build and "wordpress" flags cannot be passed at the same time\nExiting task....\n');
+// Also exit task if "less" & "sass" flags are passed at the same time
+// Passes the error as under code 9 ("Invalid Argument")
+function flagCheck() {
+
+  // Build type
   if ( program.build && program.wordpress ) {
-    console.log(chalk.red( error ) );
+    console.log(chalk.red( '"build and "wordpress" flags cannot be passed at the same time\nExiting task....\n' ) );
     process.exit(9);
   }
+
+  // CSS preprocessor type
+  if ( program.less && program.scss ) {
+    console.log(chalk.red( '"less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
+    process.exit(9);
+  }
+
 }
 
 
@@ -83,7 +92,7 @@ function getFile( array, folder ) {
       }
 
     });
-    return Q.delay( 3000 );
+    return Q.delay( 2000 );
   })
 
 
@@ -130,7 +139,7 @@ function buildDir()  {
       fs.close( fd );
     }
   });
-  return Q.delay( 3000 );
+  return Q.delay( 2000 );
 } // end "buildDir()"
 
 
@@ -150,7 +159,7 @@ function buildCoffee() {
   });
 
   process.chdir( '../' );
-  return Q.delay( 3000 );
+  return Q.delay( 2000 );
 } // end "buildCoffee()"
 
 
@@ -158,33 +167,63 @@ function buildCoffee() {
 // Helper function for creating CSS preprocessors files
 // "whatType" will be a preprocessor file type: either "less" or "scss"
 // Internally uses the above "getFile()" function
-function preProcess( whatType ) {
+function preProcess( whatType, ifFile ) {
 
-  if( program.wordpress ) {
-    getFile( whatType, "wordpress" );
+  var coreFile = "css-build/" + ifFile;
 
-  } else if ( program.build ) {
-    getFile( whatType, "spa" );
-  }
+  fs.open( coreFile, 'rs', function( err, fd ) {
+    if ( err && err.code == 'ENOENT' ) {
+      if( program.wordpress ) {
+        getFile( whatType, "wordpress" );
+
+      } else if ( program.build ) {
+        getFile( whatType, "spa" );
+      }
+    } else {
+      // If "build" DOES exist, don't create it
+      // Pass a console message saying it exists & stop the fs process
+      console.log( chalk.red( '"CSS preprocessor files may exists...don\'t create new ones.\n' ) );
+      fs.close( fd );
+    }
+
+
+  });
+
+
+    return Q.delay( 2000 );
+
 
 } // end "preProcess()"
 
 
 
-function unzip(){
-  var decompress = new Decompress({mode: '755'})
-  .src('foo.zip')
-  .dest('destFolder')
-  .use(Decompress.zip({strip: 1}));
+// Unzip preprocessor zip files to "css-build/imports"
+function unzip() {
 
-  decompress.run(function (err) {
-    if (err) {
+  var whatType;
+  if( program.less ) {
+    whatType = "less.zip";
+  } else {
+    whatType = "sass.zip";
+  }
+  var decompress = new Decompress({mode: '755'})
+    .src( whatType )
+    .dest( 'css-build/imports' )
+    .use( Decompress.zip( {strip: 1} ) );
+
+  decompress.run(function ( err ) {
+    if ( err ) {
       throw err;
     }
 
-    console.log('Archive extracted successfully!');
   });
+
+  return Q.delay( 2000 );
+
 }
+
+
+
 
 
 // Output a console message after "app" is done
@@ -215,19 +254,19 @@ program
       if( program.build ) {
         buildDir();
       }
-      return Q.delay( 3000 );
+      return Q.delay( 2000 );
     }, function() { console.log( '✘ "build/" directory failed to be created!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download common project files"...\n' ) );
-      return Q.delay( 3000 );
+      return Q.delay( 2000 );
     }, function() { console.log( '✘ Common project files failed to down!' );})
     .then(function(){
       getFile( data.shared, "shared-files" );
-      return Q.delay( 3000 );
+      return Q.delay( 2000 );
     }, function() { console.log( '✘ Core project files failed to download!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download task runner project files & package.json...\n' ) );
-      return Q.delay( 3000 );
+      return Q.delay( 2000 );
     }, function() { console.log( '✘ Task runner project and.or files failed to download!' );})
     .then(function() {
       if( program.wordpress ) {
@@ -237,22 +276,37 @@ program
       } else {
         return false;
       }
-      return Q.delay( 3000 );
+      return Q.delay( 2000 );
     }, function() { console.log( '✘ Core files failed to download!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download CSS preprocessor project files"...\n' ) );
-      return Q.delay( 3000 );
-    }, function() { console.log( '✘ Task runner project and.or files failed to download!' );})
+      return Q.delay( 2000 );
+    })
     .then(function() {
       if( program.less ) {
-        preProcess( data.less )
-      } else if( program.scss  ) {
-        preProcess( data.sass )
+        preProcess( data.less, "style.less" )
+      } else if( program.scss ) {
+        preProcess( data.sass, "style.scss" )
       } else {
         return false;
       }
-      return Q.delay( 3000 );
+      return Q.delay( 2000 );
     }, function() { console.log( '✘ Preprocessor files failed to download!' );} )
+    .then(function() {
+      return unzip()
+      .then(function(){
+        var zip, file;
+        if ( program.less ) {
+          zip = "rm -rf less.zip";
+          file = "mv style.less css-build/";
+        } else if ( program.scss ) {
+          zip = "rm -rf sass.zip";
+          file = "mv style.scss css-build/";
+        }
+        exec(zip);
+        exec(file);
+      })
+    })
     .done( doneMessage );
   }) // end "app" command
 
@@ -261,7 +315,7 @@ program
 // options
 program
   .version( '0.0.1' )
-  .option( '-b, --build', 'create a SPA-link project' )
+  .option( '-b, --build', 'create a SPA-like project' )
   .option( '-w, --wordpress', 'create a WordPress project' )
   .option( '-g, --gitignore', 'download ".gitignore" file' )
   .option( '-l, --less', 'download LESS files in "css-build"' )
