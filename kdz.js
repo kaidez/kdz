@@ -58,8 +58,9 @@ function getFile( array, folder ) {
 
   array.forEach( function( coreFile ) {
     var file  = fileDownload + coreFile;
+
     // Use Node "fs.open" to check if the file exists before downloading
-    fs.open( file, 'rs', function( err, fd ) {
+    fs.open( coreFile, 'rs', function( err, fd ) {
       if ( err && err.code == 'ENOENT' ) {
 
         // If the file DOES NOT exists, download it
@@ -76,7 +77,7 @@ function getFile( array, folder ) {
 
       } else {
       // If the file DOES NOT exists, download it
-        console.log( chalk.red( file + ' exists...don\'t download it.\n' ) );
+        console.log( chalk.red( coreFile + ' exists...don\'t download it.\n' ) );
         fs.close( fd );
       }
 
@@ -155,6 +156,7 @@ function buildCoffee() {
 
 // Helper function for creating CSS preprocessors files
 // "whatType" will be a preprocessor file type: either "less" or "scss"
+// Internally uses the above "getFile()" function
 function preProcess( whatType ) {
 
   if( program.wordpress ) {
@@ -196,10 +198,20 @@ program
       if( program.build ) {
         buildDir();
       }
+      return Q.delay( 3000 );
     }, function() { console.log( '✘ "build/" directory failed to be created!' );} )
     .then(function(){
+      console.log( chalk.green.underline( '>> Download common project files"...\n' ) );
+      return Q.delay( 3000 );
+    }, function() { console.log( '✘ Common project files failed to down!' );})
+    .then(function(){
       getFile( data.shared, "shared-files" );
-    }, function() { console.log( '✘ Core project files failed to down!' );} )
+      return Q.delay( 3000 );
+    }, function() { console.log( '✘ Core project files failed to download!' );} )
+    .then(function(){
+      console.log( chalk.green.underline( '>> Download task runner project files & package.json...\n' ) );
+      return Q.delay( 3000 );
+    }, function() { console.log( '✘ Task runner project and.or files failed to download!' );})
     .then(function() {
       if( program.wordpress ) {
         getFile( data.core, "wordpress" );
@@ -208,7 +220,12 @@ program
       } else {
         return false;
       }
+      return Q.delay( 3000 );
     }, function() { console.log( '✘ Core files failed to download!' );} )
+    .then(function(){
+      console.log( chalk.green.underline( '>> Download CSS preprocessor project files"...\n' ) );
+      return Q.delay( 3000 );
+    }, function() { console.log( '✘ Task runner project and.or files failed to download!' );})
     .then(function() {
       if( program.less ) {
         preProcess( data.less )
@@ -217,6 +234,7 @@ program
       } else {
         return false;
       }
+      return Q.delay( 3000 );
     }, function() { console.log( '✘ Preprocessor files failed to download!' );} )
     .done( doneMessage );
   }) // end "app" command
