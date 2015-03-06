@@ -34,7 +34,7 @@ module.exports = function(grunt) {
 
         // copy to the "css-build" directory
         options: {
-          destPrefix: ""
+          destPrefix: "build/js/libs/"
         },
         files: {
           "jquery.min.js": "jquery/dist/jquery.min.js"
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         files: {
           // compile & concat .coffee files to a single file called
           // "build/js/main.js"
-          "": ["coffee/main.coffee"]
+          "build/js/main.js": ["coffee/main.coffee"]
         }
       }
     }, // end "coffee" task
