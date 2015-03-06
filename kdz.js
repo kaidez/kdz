@@ -19,6 +19,18 @@ var fs = require( 'fs' ),
 
 
 
+// Exit task if "build" & "wordpress" flags are passed at the same time
+// Pass the error as "Invalid Argument"
+function flagCheck(){
+  var error = new Error('"build and "wordpress" flags were passed at the same time\nExiting task....\n');
+  if ( program.build && program.test ) {
+    console.log(chalk.red( error ) );
+    process.exit(9);
+  }
+}
+
+
+
 // If the "test" flag is passed, check the type of project
 // Go to "init-test" if it's "program.build"
 // Go to "wp-test" if it's "program.wordpress"
@@ -88,7 +100,38 @@ function buildFolders() {
       else console.log( '"' + element + '/" created!\n' )
     });
   });
+
 } // end 'buildFolders()'
+
+
+
+// If the "build" flag is passed, create a "build/" folder
+// Place "css/" & "js/" subdirectories inside of it.
+function buildDir()  {
+
+  // Use Node fs.open to check if the folder exists before making it
+  fs.open( 'build', 'rs', function( err, fd ) {
+    console.log( chalk.green.underline( '>> Creating \"build\" folder & sub-directories...\n' ) );
+    if ( err && err.code == 'ENOENT' ) {
+
+      // If "build/" does NOT exist, create it & its subdirectories
+      ['build/css', 'build/js', 'build/js/libs'].forEach( function( element ) {
+        mkdirp( element , function ( err ) {
+          if ( err ) console.error( err )
+          else console.log( '"' + element + '" created!\n' )
+        });
+      });
+
+    } else {
+
+      // If "build" DOES exist, don't create it
+      // Pass a console message saying it exists & stop the fs process
+      console.log( chalk.red( '"build/" already exists...don\'t create a new one.\n' ) );
+      fs.close( fd );
+    }
+  });
+  return Q.delay( 3000 );
+} // end "buildDir()"
 
 
 
@@ -112,35 +155,6 @@ function buildCoffee() {
 
 
 
-// If the "build" flag is passed, create a "build/" folder
-// Place "css/" & "js/" subdirectories inside of it.
-function buildDir()  {
-
-  // Use Node fs.open to check if the folder exists before making it
-  fs.open( 'build', 'rs', function( err, fd ) {
-    console.log( chalk.green.underline( '>> Creating \"build\" folder & sub-directories...\n' ) );
-    if ( err && err.code == 'ENOENT' ) {
-
-      // If "build/" does NOT exist, create it & its subdirectories
-      ['build/css', 'build/js', 'build/js/libs'].forEach( function( element ) {
-        mkdirp( element , function ( err ) {
-          if ( err ) console.error( err )
-          else console.log( '"' + element + '" created!\n' )
-        });
-      });
-    } else {
-
-      // If "build" DOES exist, don't create it
-      // Pass a console message saying it exists & stop the fs process
-      console.log( chalk.red( '"build" folder exists...don\'t create a new one.\n' ) );
-      fs.close( fd );
-    }
-  });
-  return Q.delay( 3000 );
-} // end "buildDir()"
-
-
-
 // Helper function for creating CSS preprocessors files
 // "opt" will be a preprocessor file type: either "less" or "scss"
 function preProcess( opt ) {
@@ -160,6 +174,7 @@ function preProcess( opt ) {
       throw err;
     }
   });
+
 } // end "preProcess()"
 
 
@@ -204,15 +219,23 @@ program
   .command( 'app' )
   .description( 'scaffold a basic web application' )
   .action(function() {
+    flagCheck(); // does not return a promise
     goToTest(); // does not return a promise
     buildFolders(); // does not return a promise
     buildCoffee() // returns a promise
     .then(function() {
-      var getArray = data.core;
+      if( program.build ) {
+        buildDir();
+      }
+    })
+    .then(function(){
+      getFile( data.shared, "shared-files" );
+    })
+    .then(function() {
       if( program.wordpress ) {
-        getFile( getArray, "wordpress" );
+        getFile( data.core, "wordpress" );
       } else if( program.build ) {
-        getFile( getArray, "spa" );
+        getFile( data.core, "spa" );
       }
     })
     .then(function() {
