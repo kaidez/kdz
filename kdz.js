@@ -4,6 +4,7 @@
 "use strict"; // use ES5 when possible
 
 
+
 // Bring in Node modules
 var fs = require( 'fs' ),
     exec = require( 'child_process' ).exec,
@@ -13,7 +14,9 @@ var fs = require( 'fs' ),
     chalk = require( 'chalk' ),
     Download = require( 'download' ),
     progress = require( 'download-status' ),
+    data = require('./config/data.js'),
     child;
+
 
 
 // If the "test" flag is passed, check the type of project
@@ -32,45 +35,47 @@ function goToTest() {
 
 
 /*
- * "getFile()" function
- * =====================================================================
- *
- */
-function getFile( file, folder ) {
-
-  // Represents the file to be downloaded
-  global.file = file;
-
-  // Represents the file to be downloaded
-  global.folder = folder;
+* "getFile()" function
+* =====================================================================
+*
+*/
+function getFile( array, folder ) {
 
   // Root URL for downloading files from GitHub
-  var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-' + global.folder + '/' + global.file;
+  var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-' + folder + '/';
 
-  // Use Node fs.open to check if the file exists before downloading it
-  fs.open( global.file, 'rs', function( err, fd ) {
-    if ( err && err.code == 'ENOENT' ) {
+  array.forEach( function( coreFile ) {
+    var file  = fileDownload + coreFile;
 
-      // If the file does NOT exists, download it
-      var download = new Download( { strip: 1 } )
-      .get( fileDownload )
-      .dest( '.' )
-      .use( progress() );
+    // Use Node "fs.open" to check if the file exists before downloading
+    fs.open( file, 'rs', function( err, fd ) {
+      if ( err && err.code == 'ENOENT' ) {
 
-      download.run( function ( err ) {
-        if ( err ) {
-          throw err;
-        }
-      });
+        // If the file DOES NOT exists, download it
+        var download = new Download( { strip: 1 } )
+        .get( file )
+        .dest( '.' )
+        .use( progress() );
 
-    } else {
-      console.log( chalk.red( global.file + ' exists...don\'t download it.\n' ) );
-      fs.close( fd );
-    }
-    return Q.delay( 3000 );
-  });
+        download.run( function ( err ) {
+          if ( err ) {
+            throw err;
+          }
+        });
+
+      } else {
+      // If the file DOES NOT exists, download it
+        console.log( chalk.red( file + ' exists...don\'t download it.\n' ) );
+        fs.close( fd );
+      }
+
+      return Q.delay( 3000 );
+    });
+
+  })
+
+
 } // end "getFile()"
-
 
 
 
@@ -83,11 +88,27 @@ function buildFolders() {
       else console.log( '"' + element + '/" created!\n' )
     });
   });
-  return Q.delay( 3000 );
 } // end 'buildFolders()'
 
 
 
+// Step 1: go to the "coffee" directory
+// Step 2: create "main.coffee" inside of "coffee"
+// Step 3: go back up to the root folder
+function buildCoffee() {
+  console.log( chalk.green.underline( '>> Creating "coffee/main.coffee"...\n' ) );
+  process.chdir( 'coffee' );
+
+  child = exec('touch main.coffee',
+  function ( error ) {
+    if (error !== null) {
+      console.log( 'exec error: ' + error );
+    }
+  });
+
+  process.chdir( '../' );
+  return Q.delay( 3000 );
+} // end "buildCoffee()"
 
 
 
@@ -119,29 +140,6 @@ function buildDir()  {
 } // end "buildDir()"
 
 
-// Step 1: go to the "coffee" directory
-// Step 2: create "main.coffee" inside of "coffee"
-// Step 3: go back up to the root folder
-function buildCoffee() {
-  console.log( chalk.green.underline( '>> Creating "coffee/main.coffee"...\n' ) );
-  process.chdir( 'coffee' );
-
-  child = exec('touch main.coffee',
-  function ( error ) {
-    if (error !== null) {
-      console.log( 'exec error: ' + error );
-    }
-  });
-
-  process.chdir( '../' );
-  return Q.delay( 3000 );
-} // end "buildCoffee()"
-
-
-
-
-
-
 
 // Helper function for creating CSS preprocessors files
 // "opt" will be a preprocessor file type: either "less" or "scss"
@@ -165,6 +163,7 @@ function preProcess( opt ) {
 } // end "preProcess()"
 
 
+
 function buildCoreCssPreprocess( opt ) {
   var download = new Download( { strip: 1 } )
   .get( 'https://raw.githubusercontent.com/kaidez/kdz/master/download_source/style.' + opt )
@@ -184,6 +183,7 @@ function buildCoreCssPreprocess( opt ) {
 } // end "buildCoreCssPreprocess()"
 
 
+
 // Output a console message after "app" is done
 function doneMessage() {
   console.log( chalk.yellow.bold.underline( 'THE PROJECT IS SCAFFOLDED!!') );
@@ -198,42 +198,23 @@ function doneMessage() {
 } // end "doneMessage()"
 
 
+
 // "app" command: scaffolds out a SPA-like project
 program
   .command( 'app' )
   .description( 'scaffold a basic web application' )
   .action(function() {
     goToTest(); // does not return a promise
-    buildFolders() // does not return a promise
-    .then( buildCoffee ) // returns a promise
-    .then(function(){
-      console.log( chalk.green.underline( '>> Download Bower-related files...' ) );
-      return Q.delay( 3000 );
-    })
+    buildFolders(); // does not return a promise
+    buildCoffee() // returns a promise
     .then(function() {
-      getFile( 'bower.json' );
-      return Q.delay( 3000 );
-    }, function() { console.log( chalk.red.bold( '✘ bower.json failed to download!') );} )
-    .then(function() {
-      getFile( '.bowerrc' );
-      return Q.delay( 3000 );
-    }, function() { console.log( chalk.red.bold( '✘ .bowerrc failed to download!') );} )
-    .then(function() {
-      var coreFiles = data.core;
-      coreFiles.forEach(function( index ) {
-        if( program.wordress ) {
-          getFile( coreFiles[index], "wordpress" );
-        } else {
-          getFile( coreFiles[index], "spa" );
-        }
-      });
-    })
-    .then(function() {
-      if( program.gitignore ) {
-        getFile( '.gitignore' )
-        return Q.delay( 3000 );
+      var getArray = data.core;
+      if( program.wordpress ) {
+        getFile( getArray, "wordpress" );
+      } else if( program.build ) {
+        getFile( getArray, "spa" );
       }
-    }, function() { console.log( '✘ .gitignore failed to download!' );} )
+    })
     .then(function() {
       if( program.less ) {
         preProcess( 'less' );
@@ -254,18 +235,21 @@ program
   }) // end "app" command
 
 
+
 // options
 program
   .version( '0.0.1' )
   .option( '-b, --build', 'create a SPA-link project' )
-  .option( '-w, --wordpress', 'scaffold out a WordPress project' )
-  .option( '-g, --gitignore', 'add ".gitignore" file' )
-  .option( '-l, --less', 'create LESS files in "css-build"' )
-  .option( '-s, --scss', 'create Sass files in "css-build"' )
-  .option( '-t, --test', 'do a test scaffold in "init-test"' );
+  .option( '-w, --wordpress', 'create a WordPress project' )
+  .option( '-g, --gitignore', 'download ".gitignore" file' )
+  .option( '-l, --less', 'download LESS files in "css-build"' )
+  .option( '-s, --scss', 'download Sass files in "css-build"' )
+  .option( '-t, --test', 'do a test scaffold' );
+
 
 
 program.parse( process.argv );
+
 
 
 // If no arguments or commands are passed, display "help"
