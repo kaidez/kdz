@@ -1,7 +1,16 @@
+/*
+ * TODO & CONFIRM:
+ * ===============
+ * - Remember that you're commiting both the child theme & parent theme
+ * -create a task that creates an "images" folder on init
+ * -create a task that creates a "js" folder on init
+ * -make sure the tasks build .css and .js files out to the right place
+ * -create separate "wp-comment-block.css" to hold child theme header
+ */
+
 // Single var pattern of gulp (require) stuff in full effect!!!
 
 var gulp = require("gulp"), // "require" gulp
-    uncss = require("gulp-uncss"), // Remove unused css selectors
     minifyCSS = require("gulp-minify-css"), // Minify CSS
     concatCss = require("gulp-concat-css"), // Concatenate CSS only
     csslint = require("gulp-csslint"), // Lint CSS
@@ -32,7 +41,7 @@ var lessFiles = ["css-build/*.less", "css-build/**/*.less"], // LESS
      * 2. IDs second
      * 3. Classes third
      */
-     ignoreArray = [];
+
 
 
 
@@ -44,21 +53,16 @@ var lessFiles = ["css-build/*.less", "css-build/**/*.less"], // LESS
  *
  * 1. Runs the "gulp less" task that"s passed as a "hint"(*)
  * 2. Concatenate selected .css files listed in "gulp.src"
- * 3. Remove unused CSS
- * 4. Minify CSS
- * 5. Lint CSS
+ * 3. Minify CSS
+ * 4. Lint CSS
  *
  * (*) gulp "hints" are cool...read more about them at:
  * https://github.com/gulpjs/gulp/blob/master/docs/API.md
  *  ===================================================================
  */
-gulp.task("buildcss", ['less'],function () {
-  gulp.src(['css-build/bootstrap.css', 'css-build/style.css'])
-  .pipe(concatCss("style.min.css"))
-  .pipe(uncss({
-    html: ["build/index.html"],
-    ignore: ignoreArray
-  }))
+gulp.task("buildcss", ['lint','less'],function () {
+  gulp.src(['css-build/wp-comment-block.css','css-build/bootstrap.css', 'css-build/style.css'])
+  .pipe(concatCss("style.css"))
   .pipe(autoprefixer({
     browsers: ['last 2 versions'],
     cascade: false
@@ -66,23 +70,33 @@ gulp.task("buildcss", ['less'],function () {
   .pipe(minifyCSS({
     keepBreaks: true
   }))
-  .pipe(gulp.dest("build/css/"))
-  .pipe(csslint({
-    "important": false,
-    "duplicate-background-images": false,
-    "ids": false,
-    "text-indent": false
-  }))
-  .pipe(csslint.reporter())
-  .pipe(connect.reload())
+  .pipe(gulp.dest("/"))
+
 });
 
+/*
+ *  ===================================================================
+ *  | CSS LINT TASK |
+ *
+ *  Lint "css-build/style.css' ONLY!!!
+ *  ===================================================================
+ */
+ gulp.task('lint', function() {
+   gulp.src('css-build/style.css')
+   .pipe(csslint({
+     "important": false,
+     "duplicate-background-images": false,
+     "ids": false,
+     "text-indent": false
+   }))
+   .pipe(csslint.reporter());
+ });
 
 /*
 *  ===================================================================
 *  | IMAGE MINIFICATION TASK |
 *
-*  Take all images in "imagemin/" & minify them out to "build/img/"
+*  Take all images in "image-min/" & minify them out to "images/"
 *  ===================================================================
 */
 gulp.task('images', function () {
@@ -91,7 +105,7 @@ gulp.task('images', function () {
     progressive: true,
     svgoPlugins: [{removeViewBox: false}]
   }))
-  .pipe(gulp.dest('build/img'));
+  .pipe(gulp.dest('/'));
 });
 
 /*
