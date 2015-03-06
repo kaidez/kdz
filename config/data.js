@@ -1,7 +1,10 @@
 var data = {
-  "core": [
+  "shared": [
     ".bowerrc",
     "bower.json",
+    "STYLEGUIDE.md"
+  ],
+  "core": [
     "Gruntfile.js",
     "gulpfile.js",
     "package.json"
