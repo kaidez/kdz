@@ -16,7 +16,12 @@ var data = {
   "sass": [
     "sass.zip",
     "style.scss"
-  ]
+  ],
+  "wp_files":[
+    ".gitignore",
+    "functions.php"
+  ],
+  "spa_files": ".gitignore"
 }
 
 module.exports = data;
