@@ -42,13 +42,13 @@ function flagCheck() {
 
 // If the "test" flag is passed, check the type of project
 // Go to "test-spa" if it's "program.build"
-// Go to "test-wp" if it's "program.wordpress"
+// Go to "test-wordpress" if it's "program.wordpress"
 function goToTest() {
 
   if( program.build && program.test ) {
     process.chdir( 'test-spa' );
   } else if( program.wordpress && program.test )  {
-    process.chdir( 'test-wp' );
+    process.chdir( 'test-wordpress' );
   } else {
     return false;
   }

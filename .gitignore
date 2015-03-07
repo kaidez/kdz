@@ -17,7 +17,6 @@ Gruntfile.js
 gulpfile.js
 
 functions.php
-!test-wp/functions.php
 
 !source-shared-files/*
 
