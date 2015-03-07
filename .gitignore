@@ -16,6 +16,9 @@ bower.json
 Gruntfile.js
 gulpfile.js
 
+functions.php
+!wp-test/functions.php
+
 !source-shared-files/*
 
 
