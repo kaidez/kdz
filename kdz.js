@@ -4,7 +4,6 @@
 "use strict"; // use ES5 strict mode
 
 
-
 // Bring in Node modules
 var fs = require( 'fs' ),
     exec = require( 'child_process' ).exec,
@@ -18,10 +17,12 @@ var fs = require( 'fs' ),
     data = require( './config/data.js' ),
     child;
 
-  // Root URL for downloading files from GitHub
-  // Concatenate this to other variables create absolute file references
-  // Used in both "getAllFiles()" and "getSingleFile()" functions
-  var githubRoot = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-';
+
+
+// Root URL for downloading files from GitHub
+// Concatenate this to other variables create absolute file references
+// Used in both "getAllFiles()" and "getSingleFile()" functions
+var githubRoot = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-';
 
 // Exit tasks under certain conditions
 // Passes error as under Node proccess exit code 9 ("Invalid Argument")
@@ -61,70 +62,24 @@ function goToTest() {
 
 
 /*
- * "getAllFiles()" function
+ * "download()" function
  * =====================================================================
  *
- * Download files based on arrays in "config/data.js"
- * Download them to folders defined by the "folder" parameter
- * "folder" is defined by concatenating this param in "var githubRoot"
- * THIS WILL NEED TO BE REFACTORED!!!!!!!!!!
- */
-function getAllFiles( array, folder ) {
-
-  // Loop through the array to find files
-  // "coreFile" represents one item in an array
-  array.forEach( function( coreFile ) {
-
-    // Concatenate a file name to reference a file on my GitHub Repo
-    // "githubRoot" is defined above
-    var file  = githubRoot + folder + '/' + coreFile;
-
-    // Use Node "fs.open" to check if the file exists before downloading
-    fs.open( coreFile, 'rs', function( err, fd ) {
-      if ( err && err.code == 'ENOENT' ) {
-
-        // If the file DOES NOT exists, download it
-        var download = new Download( { strip: 1 } )
-        .get( file )
-        .dest( '.' )
-        .use( progress() );
-
-        // Throw an error if the file can't be downloaded
-        download.run( function ( err ) {
-          if ( err ) {
-            throw err;
-          }
-        });
-
-      } else {
-
-        // If the file DOES exists, pass a console message saying so
-        // Stop the fs process
-        console.log( chalk.red( coreFile + ' exists...don\'t download it.\n' ) );
-        fs.close( fd );
-      }
-
-    });
-
-    return Q.delay( 2000 ); // Return a Promise
-  })
-
-} // end "getAllFiles()"
-
-
-
-/*
- * "getSingleFile()" function
- * =====================================================================
+ * Used in both the "getAllFiles()" and "getSingle()" functions
+ * "file" parameter represents the file to be downloaded
+ * "folder" parameter defines which folder the file's in...
+ *  ...which is either "source-spa" or "source-wordpress"
  *
- * Roughly the same as "getAllFiles()" but grabs only one file
- * THIS WILL NEED TO BE REFACTORED!!!!!!!!!!
+ * "download()" performs the following steps:
+ * 1. Builds GitHub repo link for the file that needs to be downloaded
+ * 2. Checks to see if this file doesn't already exist
+ * 3. Downloads the file if it DOES NOT exist
+ * 4. Doesn't downloads the file if it DOES exist, then sends a message
+ * 5. Stops the Node "fs" process
  */
-function getSingleFile( file, folder ) {
+function download( file, folder ) {
 
-  // Concatenate a file name to reference a file on my GitHub Repo
-  // "githubRoot" is defined above
-  var singleFile  = githubRoot + folder + '/'  + file;
+  var getFile  = githubRoot + folder + '/' + file;
 
   // Use Node "fs.open" to check if the file exists before downloading
   fs.open( file, 'rs', function( err, fd ) {
@@ -132,7 +87,7 @@ function getSingleFile( file, folder ) {
 
       // If the file DOES NOT exists, download it
       var download = new Download( { strip: 1 } )
-      .get( singleFile )
+      .get( getFile )
       .dest( '.' )
       .use( progress() );
 
@@ -145,13 +100,56 @@ function getSingleFile( file, folder ) {
 
     } else {
 
-      // If the file DOES exists, pass a console message saying so
-      // Stop the fs process
+      // If the file DOES exists, don't download it
+      // Pass a console message saying so and stop the fs process
       console.log( chalk.red( file + ' exists...don\'t download it.\n' ) );
       fs.close( fd );
     }
 
   });
+} // end "download()"
+
+
+
+/*
+ * "getAllFiles()" function
+ * =====================================================================
+ *
+ * Uses the above "download()" method to download an array of files
+ * "arrays" parameter points to an array listed in "config/data.js"
+ * "folder" parameter points to which folder to download the files
+ */
+function getAllFiles( array, folder ) {
+
+  // Loop through the array to find files
+  // "coreFile" represents one item in an array
+  array.forEach( function( coreFile ) {
+
+    // Use "download()" to file-check & download the files in the array
+    // Pass "array" & "folder" params above, "download()" does the rest
+    download( coreFile, folder );
+
+  })
+
+  return Q.delay( 2000 ); // Return a Promise
+
+} // end "getAllFiles()"
+
+
+
+/*
+ * "getSingleFile()" function
+ * =====================================================================
+ *
+ * Uses the above "download()" method to download a single file
+ * "file" parameter points to a file listed in "config/data.js"
+ * "folder" parameter points to which folder to download the files
+ */
+function getSingleFile( file, folder ) {
+
+  // Use "download()" to file-check & download the single file
+  // Pass "file" & "folder" params above, "download()" does the rest
+  download( file, folder );
 
   return Q.delay( 2000 ); // Return a Promise
 
@@ -234,7 +232,7 @@ function buildCoffee() {
 // "ifFile" is a file to look for before downloading files...
 // ...either "style.less" or "style.scss"
 // Internally uses the above "getAllFiles()" function
-// Downloads .zip files, which are unzipped with the "unzip()" function
+// Downloads .zip files to be later unzipped with the "unzip()" function
 function preProcess( whatType, ifFile ) {
 
   // Create a reference for a file to look for before downloading files
