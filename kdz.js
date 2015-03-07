@@ -296,6 +296,12 @@ program
       }
       return Q.delay( 2000 );
     }, function() { console.log( '✘ "build/" directory failed to be created!' );} )
+    .then(function() {
+      if( program.wordpress ) {
+        getSingleFile( data.wp_files[1], "wordpress" );
+      }
+      return Q.delay( 2000 );
+    }, function() { console.log( '✘ "functions.php" failed to download!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download common project files"...\n' ) );
       return Q.delay( 2000 );
