@@ -18,7 +18,10 @@ var fs = require( 'fs' ),
     data = require( './config/data.js' ),
     child;
 
-
+  // Root URL for downloading files from GitHub
+  // Concatenate this to other variables create absolute file references
+  // Used in both "getAllFiles()" and "getSingleFile()" functions
+  var githubRoot = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-';
 
 // Exit tasks under certain conditions
 // Passes error as under Node proccess exit code 9 ("Invalid Argument")
@@ -63,19 +66,18 @@ function goToTest() {
  *
  * Download files based on arrays in "config/data.js"
  * Download them to folders defined by the "folder" parameter
- * "folder" is defined by concatenating this param in "var fileDownload"
+ * "folder" is defined by concatenating this param in "var githubRoot"
  * THIS WILL NEED TO BE REFACTORED!!!!!!!!!!
  */
 function getAllFiles( array, folder ) {
 
-  // Root URL for downloading files from GitHub
-  var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-' + folder + '/';
-
-  // Loop through the given array to find files
+  // Loop through the array to find files
+  // "coreFile" represents one item in an array
   array.forEach( function( coreFile ) {
 
     // Concatenate a file name to reference a file on my GitHub Repo
-    var file  = fileDownload + coreFile;
+    // "githubRoot" is defined above
+    var file  = githubRoot + folder + '/' + coreFile;
 
     // Use Node "fs.open" to check if the file exists before downloading
     fs.open( coreFile, 'rs', function( err, fd ) {
@@ -120,11 +122,9 @@ function getAllFiles( array, folder ) {
  */
 function getSingleFile( file, folder ) {
 
-  // Root URL for downloading files from GitHub
-  var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-' + folder + '/';
-
   // Concatenate a file name to reference a file on my GitHub Repo
-  var singleFile  = fileDownload + file;
+  // "githubRoot" is defined above
+  var singleFile  = githubRoot + folder + '/'  + file;
 
   // Use Node "fs.open" to check if the file exists before downloading
   fs.open( file, 'rs', function( err, fd ) {
