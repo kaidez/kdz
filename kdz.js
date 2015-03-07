@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Run this task with Node
 
-"use strict"; // use ES5 when possible
+"use strict"; // use ES5 strict mode
 
 
 
@@ -20,18 +20,17 @@ var fs = require( 'fs' ),
 
 
 
-// Exit task if "build" & "wordpress" flags are passed at the same time
-// Also exit task if "less" & "sass" flags are passed at the same time
-// Passes the error as under code 9 ("Invalid Argument")
+// Exit tasks under certain conditions
+// Passes error as under Node proccess exit code 9 ("Invalid Argument")
 function flagCheck() {
 
-  // Build type
+  // Exit if "build" & "wordpress" flags are passed at the same time
   if ( program.build && program.wordpress ) {
     console.log(chalk.red( '"build and "wordpress" flags cannot be passed at the same time\nExiting task....\n' ) );
     process.exit(9);
   }
 
-  // CSS preprocessor type
+  // Exit if "less" & "sass" flags are passed at the same time
   if ( program.less && program.scss ) {
     console.log(chalk.red( '"less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
     process.exit(9);
@@ -45,6 +44,7 @@ function flagCheck() {
 // Go to "init-test" if it's "program.build"
 // Go to "wp-test" if it's "program.wordpress"
 function goToTest() {
+
   if( program.build && program.test ) {
     process.chdir( 'init-test' );
   } else if( program.wordpress && program.test )  {
@@ -52,21 +52,29 @@ function goToTest() {
   } else {
     return false;
   }
+
 } // end "goToTest()"
 
 
 
 /*
-* "getAllFiles()" function
-* =====================================================================
-*
-*/
+ * "getAllFiles()" function
+ * =====================================================================
+ *
+ * Download files based on arrays in "config/data.js"
+ * Download them to folders defined by the "folder" parameter
+ * "folder" is defined by concatenating this param in "var fileDownload"
+ * THIS WILL NEED TO BE REFACTORED!!!!!!!!!!
+ */
 function getAllFiles( array, folder ) {
 
   // Root URL for downloading files from GitHub
   var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-' + folder + '/';
 
+  // Loop through the given array to find files
   array.forEach( function( coreFile ) {
+
+    // Concatenate a file name to reference a file on my GitHub Repo
     var file  = fileDownload + coreFile;
 
     // Use Node "fs.open" to check if the file exists before downloading
@@ -79,6 +87,7 @@ function getAllFiles( array, folder ) {
         .dest( '.' )
         .use( progress() );
 
+        // Throw an error if the file can't be downloaded
         download.run( function ( err ) {
           if ( err ) {
             throw err;
@@ -86,62 +95,73 @@ function getAllFiles( array, folder ) {
         });
 
       } else {
-      // If the file DOES NOT exists, download it
+
+        // If the file DOES exists, pass a console message saying so
+        // Stop the fs process
         console.log( chalk.red( coreFile + ' exists...don\'t download it.\n' ) );
         fs.close( fd );
       }
 
     });
-    return Q.delay( 2000 );
-  })
 
+    return Q.delay( 2000 ); // Return a Promise
+  })
 
 } // end "getAllFiles()"
 
 
 
 /*
-* "getSingleFile()" function
-* =====================================================================
-*
-*/
+ * "getSingleFile()" function
+ * =====================================================================
+ *
+ * Roughly the same as "getAllFiles()" but grabs only one file
+ * THIS WILL NEED TO BE REFACTORED!!!!!!!!!!
+ */
 function getSingleFile( file, folder ) {
 
   // Root URL for downloading files from GitHub
   var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-' + folder + '/';
 
-      var singleFile  = fileDownload + file;
+  // Concatenate a file name to reference a file on my GitHub Repo
+  var singleFile  = fileDownload + file;
 
-      // Use Node "fs.open" to check if the file exists before downloading
-      fs.open( file, 'rs', function( err, fd ) {
-        if ( err && err.code == 'ENOENT' ) {
+  // Use Node "fs.open" to check if the file exists before downloading
+  fs.open( file, 'rs', function( err, fd ) {
+    if ( err && err.code == 'ENOENT' ) {
 
-          // If the file DOES NOT exists, download it
-          var download = new Download( { strip: 1 } )
-          .get( singleFile )
-          .dest( '.' )
-          .use( progress() );
+      // If the file DOES NOT exists, download it
+      var download = new Download( { strip: 1 } )
+      .get( singleFile )
+      .dest( '.' )
+      .use( progress() );
 
-          download.run( function ( err ) {
-            if ( err ) {
-              throw err;
-            }
-          });
-
-        } else {
-        // If the file DOES NOT exists, download it
-          console.log( chalk.red( file + ' exists...don\'t download it.\n' ) );
-          fs.close( fd );
+      // Throw an error if the file can't be downloaded
+      download.run( function ( err ) {
+        if ( err ) {
+          throw err;
         }
-
       });
-      return Q.delay( 2000 );
-}
+
+    } else {
+
+      // If the file DOES exists, pass a console message saying so
+      // Stop the fs process
+      console.log( chalk.red( file + ' exists...don\'t download it.\n' ) );
+      fs.close( fd );
+    }
+
+  });
+
+  return Q.delay( 2000 ); // Return a Promise
+
+} // end "getSingleFile()"
 
 
 
 // Create core project directories when "kdz app" is run
 function buildFolders() {
+
   console.log( chalk.green.underline( '>> Creating project directories...\n' ) );
   ['css-build/imports', 'coffee', 'image-min'].forEach( function( element ) {
     mkdirp( element , function ( err ) {
@@ -150,7 +170,7 @@ function buildFolders() {
     });
   });
 
-} // end 'buildFolders()'
+} // end "buildFolders()"
 
 
 
@@ -164,6 +184,7 @@ function buildDir()  {
     if ( err && err.code == 'ENOENT' ) {
 
       // If "build/" does NOT exist, create it & its subdirectories
+      // Use 'forEach()' to create them
       ['build/css', 'build/js', 'build/js/libs'].forEach( function( element ) {
         mkdirp( element , function ( err ) {
           if ( err ) console.error( err )
@@ -179,6 +200,7 @@ function buildDir()  {
       fs.close( fd );
     }
   });
+
   return Q.delay( 2000 );
 } // end "buildDir()"
 
@@ -188,7 +210,9 @@ function buildDir()  {
 // Step 2: create "main.coffee" inside of "coffee"
 // Step 3: go back up to the root folder
 function buildCoffee() {
+
   console.log( chalk.green.underline( '>> Creating "coffee/main.coffee"...\n' ) );
+
   process.chdir( 'coffee' );
 
   child = exec('touch main.coffee',
@@ -199,20 +223,31 @@ function buildCoffee() {
   });
 
   process.chdir( '../' );
-  return Q.delay( 2000 );
+
+  return Q.delay( 2000 ); // Return a Promise
 } // end "buildCoffee()"
 
 
 
-// Helper function for creating CSS preprocessors files
-// "whatType" will be a preprocessor file type: either "less" or "scss"
+// Helper function for downloading CSS preprocessors files
+// "whatType" is a preprocessor file type: either "less" or "scss"
+// "ifFile" is a file to look for before downloading files...
+// ...either "style.less" or "style.scss"
 // Internally uses the above "getAllFiles()" function
+// Downloads .zip files, which are unzipped with the "unzip()" function
 function preProcess( whatType, ifFile ) {
 
+  // Create a reference for a file to look for before downloading files
+  // Look in the "css-build/" folder
   var coreFile = "css-build/" + ifFile;
 
+  // Use Node fs.open to check if "style" file exists in "css-build/"
   fs.open( coreFile, 'rs', function( err, fd ) {
     if ( err && err.code == 'ENOENT' ) {
+
+      // If "style" file DOES NOT exist, download the files
+      // When "wordpress" flag is passed, download WordPress-type files
+      // When "build" flag is passed, download SPA-type files
       if( program.wordpress ) {
         getAllFiles( whatType, "wordpress" );
 
@@ -220,19 +255,16 @@ function preProcess( whatType, ifFile ) {
         getAllFiles( whatType, "spa" );
       }
     } else {
-      // If "build" DOES exist, don't create it
+
+      // If "style" file DOES exist, don't download files
       // Pass a console message saying it exists & stop the fs process
       console.log( chalk.red( '"CSS preprocessor files may exists...don\'t create new ones.\n' ) );
       fs.close( fd );
     }
 
-
   });
 
-
-    return Q.delay( 2000 );
-
-
+  return Q.delay( 2000 ); // Return a Promise
 } // end "preProcess()"
 
 
@@ -241,11 +273,12 @@ function preProcess( whatType, ifFile ) {
 function unzip() {
 
   var whatType;
-  if( program.less ) {
+  if( program.less ) { // if "less" flag is passed
     whatType = "less.zip";
-  } else {
+  } else { // if "sass" flag is passed
     whatType = "sass.zip";
   }
+
   var decompress = new Decompress({mode: '755'})
     .src( whatType )
     .dest( 'css-build/imports' )
@@ -258,11 +291,8 @@ function unzip() {
 
   });
 
-  return Q.delay( 2000 );
-
-}
-
-
+  return Q.delay( 2000 ); // Return a Promise
+} // end "unzip()"
 
 
 
@@ -378,6 +408,7 @@ program
 
 
 
+// Pass options to commands
 program.parse( process.argv );
 
 
