@@ -34,9 +34,6 @@ functions.php
 
 !test-wp/*
 
-# bower downloads
-# ---------------
-bower_components/
 
 
 # Sass-related files
