@@ -17,7 +17,7 @@ Gruntfile.js
 gulpfile.js
 
 functions.php
-!wp-test/functions.php
+!test-wp/functions.php
 
 !source-shared-files/*
 
@@ -28,11 +28,11 @@ functions.php
 !source-wordpress/*
 
 
-!init-test/*
+!test-spa/*
 
 
 
-!wp-test/*
+!test-wp/*
 
 # bower downloads
 # ---------------
