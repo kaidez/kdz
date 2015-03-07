@@ -100,6 +100,46 @@ function getAllFiles( array, folder ) {
 
 
 
+/*
+* "getSingleFile()" function
+* =====================================================================
+*
+*/
+function getSingleFile( file, folder ) {
+
+  // Root URL for downloading files from GitHub
+  var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-' + folder + '/';
+
+      var singleFile  = fileDownload + file;
+
+      // Use Node "fs.open" to check if the file exists before downloading
+      fs.open( file, 'rs', function( err, fd ) {
+        if ( err && err.code == 'ENOENT' ) {
+
+          // If the file DOES NOT exists, download it
+          var download = new Download( { strip: 1 } )
+          .get( singleFile )
+          .dest( '.' )
+          .use( progress() );
+
+          download.run( function ( err ) {
+            if ( err ) {
+              throw err;
+            }
+          });
+
+        } else {
+        // If the file DOES NOT exists, download it
+          console.log( chalk.red( file + ' exists...don\'t download it.\n' ) );
+          fs.close( fd );
+        }
+
+      });
+      return Q.delay( 2000 );
+}
+
+
+
 // Create core project directories when "kdz app" is run
 function buildFolders() {
   console.log( chalk.green.underline( '>> Creating project directories...\n' ) );
@@ -267,7 +307,7 @@ program
     .then(function(){
       console.log( chalk.green.underline( '>> Download task runner project files & package.json...\n' ) );
       return Q.delay( 2000 );
-    }, function() { console.log( '✘ Task runner project and.or files failed to download!' );})
+    })
     .then(function() {
       if( program.wordpress ) {
         getAllFiles( data.core, "wordpress" );
@@ -278,6 +318,14 @@ program
       }
       return Q.delay( 2000 );
     }, function() { console.log( '✘ Core files failed to download!' );} )
+    .then(function(){
+      if ( program.gitignore && program.wordpress ) {
+        getSingleFile( data.wp_files[0], "wordpress" );
+      } else if ( program.gitignore && program.build ) {
+        getSingleFile( data.spa_files, "spa" );
+      }
+      return Q.delay( 2000 );
+    })
     .then(function(){
       console.log( chalk.green.underline( '>> Download CSS preprocessor project files"...\n' ) );
       return Q.delay( 2000 );
