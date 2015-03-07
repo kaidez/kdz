@@ -57,11 +57,11 @@ function goToTest() {
 
 
 /*
-* "getFile()" function
+* "getAllFiles()" function
 * =====================================================================
 *
 */
-function getFile( array, folder ) {
+function getAllFiles( array, folder ) {
 
   // Root URL for downloading files from GitHub
   var fileDownload = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-' + folder + '/';
@@ -96,7 +96,7 @@ function getFile( array, folder ) {
   })
 
 
-} // end "getFile()"
+} // end "getAllFiles()"
 
 
 
@@ -166,7 +166,7 @@ function buildCoffee() {
 
 // Helper function for creating CSS preprocessors files
 // "whatType" will be a preprocessor file type: either "less" or "scss"
-// Internally uses the above "getFile()" function
+// Internally uses the above "getAllFiles()" function
 function preProcess( whatType, ifFile ) {
 
   var coreFile = "css-build/" + ifFile;
@@ -174,10 +174,10 @@ function preProcess( whatType, ifFile ) {
   fs.open( coreFile, 'rs', function( err, fd ) {
     if ( err && err.code == 'ENOENT' ) {
       if( program.wordpress ) {
-        getFile( whatType, "wordpress" );
+        getAllFiles( whatType, "wordpress" );
 
       } else if ( program.build ) {
-        getFile( whatType, "spa" );
+        getAllFiles( whatType, "spa" );
       }
     } else {
       // If "build" DOES exist, don't create it
@@ -261,7 +261,7 @@ program
       return Q.delay( 2000 );
     }, function() { console.log( '✘ Common project files failed to down!' );})
     .then(function(){
-      getFile( data.shared, "shared-files" );
+      getAllFiles( data.shared, "shared-files" );
       return Q.delay( 2000 );
     }, function() { console.log( '✘ Core project files failed to download!' );} )
     .then(function(){
@@ -270,9 +270,9 @@ program
     }, function() { console.log( '✘ Task runner project and.or files failed to download!' );})
     .then(function() {
       if( program.wordpress ) {
-        getFile( data.core, "wordpress" );
+        getAllFiles( data.core, "wordpress" );
       } else if( program.build ) {
-        getFile( data.core, "spa" );
+        getAllFiles( data.core, "spa" );
       } else {
         return false;
       }
