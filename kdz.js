@@ -188,8 +188,6 @@ function getAllFiles( array, folder ) {
 
   })
 
-  return Q.delay( 1000 ); // Return a Promise
-
 } // end "getAllFiles()"
 
 
@@ -207,8 +205,6 @@ function getSingleFile( file, folder ) {
   // Use "download()" to file-check & download the single file
   // Pass "file" & "folder" params above, "download()" does the rest
   download( file, folder );
-
-  return Q.delay( 1000 ); // Return a Promise
 
 } // end "getSingleFile()"
 
@@ -274,7 +270,7 @@ function preProcess( whatType, ifFile ) {
 
   });
 
-  return Q.delay( 1000 ); // Return a Promise
+  return Q.delay( 1500 ); // Return a Promise
 } // end "preProcess()"
 
 
@@ -303,7 +299,7 @@ function unzip() {
 
   });
 
-  return Q.delay( 1000 ); // Return a Promise
+  return Q.delay( 1500 ); // Return a Promise
 } // end "unzip()"
 
 
@@ -332,27 +328,24 @@ program
     Q.fcall( goToTest )
     .then(function() {
       console.log( chalk.green.underline( '>> Create preprocess folders...\n' ) );
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     })
     .then(function() {
       buildFolder( data.source_build, "css-build" );
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     }, function() { console.log( '✘ preprocess folders failed to be created!' );} )
-    .then(function(){
-      console.log( chalk.green.underline( '>> Create build folders...\n' ) );
-      return Q.delay( 1000 );
-    })
     .then(function() {
       if( program.wordpress ) {
         return false;
       } else {
+        console.log( chalk.green.underline( '>> Create build folders...\n' ) );
         buildFolder( data.build_folder, "build" );
       }
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     }, function() { console.log( '✘ build folders failed to be created!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Create coffee/main.coffee...\n' ) );
-      return Q.delay( 1000 );
+      return Q.delay( 500 );
     })
     .then(function(){
       process.chdir( 'coffee' );
@@ -370,19 +363,19 @@ program
       if( program.wordpress ) {
         getSingleFile( data.wp_files[1], "wordpress" );
       }
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     }, function() { console.log( '✘ "functions.php" failed to download!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download common project files"...\n' ) );
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     })
     .then(function(){
       getAllFiles( data.shared, "shared-files" );
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     }, function() { console.log( '✘ Common project files failed to download!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download task runner project files & package.json...\n' ) );
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     })
     .then(function() {
       if( program.wordpress ) {
@@ -390,19 +383,21 @@ program
       } else {
         getAllFiles( data.core, "spa" );
       }
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     }, function() { console.log( '✘ Core files failed to download!' );} )
-    .then(function(){
-      if ( program.gitignore && program.wordpress ) {
+    .then(function() {
+      if ( program.gitignore && program.wordpress && !program.build ) {
         getSingleFile( data.wp_files[0], "wordpress" );
-      } else {
+      } else if (( program.gitignore && program.build ) || ( program.gitignore && !program.wordpress && !program.build )) {
         getSingleFile( data.spa_files, "spa" );
       }
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     })
     .then(function(){
-      console.log( chalk.green.underline( '>> Download CSS preprocessor project files"...\n' ) );
-      return Q.delay( 1000 );
+      if( program.less || program.scss ) {
+        console.log( chalk.green.underline( '>> Download CSS preprocessor project files"...\n' ) );
+        return Q.delay( 1500 );
+      }
     })
     .then(function() {
       if( program.less ) {
@@ -412,7 +407,7 @@ program
       } else {
         return false;
       }
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     }, function() { console.log( '✘ Preprocessor files failed to download!' );} )
     .then(function() {
       return unzip()
