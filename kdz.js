@@ -27,17 +27,17 @@ var fs = require( 'fs' ),
 // Used in both "getAllFiles()" and "getSingleFile()" functions
 var githubRoot = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-';
 
-// Exit tasks under certain conditions
+// Stop "kdz app" tasks under certain conditions
 // Passes error as under Node proccess exit code 9 ("Invalid Argument")
 function flagCheck() {
 
-  // Exit if "build" & "wordpress" flags are passed at the same time
+  // Stop it if "build" & "wordpress" flags are passed at the same time
   if ( program.build && program.wordpress ) {
     console.log(chalk.red( '"build and "wordpress" flags cannot be passed at the same time\nExiting task....\n' ) );
     process.exit(9);
   }
 
-  // Exit if "less" & "sass" flags are passed at the same time
+  // Stop it if "less" & "sass" flags are passed at the same time
   if ( program.less && program.scss ) {
     console.log(chalk.red( '"less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
     process.exit(9);
@@ -51,15 +51,18 @@ function flagCheck() {
 // Go to "test-spa" if it's "program.build"
 // Go to "test-wordpress" if it's "program.wordpress"
 function goToTest() {
-
+  var deferred = Q.defer();
   if( program.build && program.test ) {
     process.chdir( 'test-spa' );
+    deferred.resolve();
   } else if( program.wordpress && program.test )  {
     process.chdir( 'test-wordpress' );
+    deferred.resolve();
   } else {
     return false;
+    deferred.resolve();
   }
-  return Q.delay( 1000 );
+  return deferred.promise;
 } // end "goToTest()"
 
 
@@ -140,7 +143,7 @@ function buildFolder( array, getDir ) {
 
       if ( err && err.code == 'ENOENT' ) {
 
-        // If the folder DOES NOT exists, create it with "mkdirp"
+        // If a folder DOES NOT exists, create it with "mkdirp"
         mkdirp( folder , function ( err ) {
 
           // Throw an error if it can't be created for whaterver reason
@@ -151,7 +154,7 @@ function buildFolder( array, getDir ) {
         });
       } else {
 
-        // If the folder DOES exists, don't download it
+        // If a folder DOES exists, don't download it
         // Pass a console message saying so and stop the fs process
         console.log( chalk.red( '"' +folder + '/" exists...don\'t create it.\n' ) );
         fs.close( fd );
@@ -159,7 +162,7 @@ function buildFolder( array, getDir ) {
 
     });
 
-  });
+  }); // end "array.forEach()"
 
 } // end "buildFolder()"
 
@@ -208,21 +211,6 @@ function getSingleFile( file, folder ) {
   return Q.delay( 2000 ); // Return a Promise
 
 } // end "getSingleFile()"
-
-
-
-// Create core project directories when "kdz app" is run
-function buildFolders() {
-
-  console.log( chalk.green.underline( '>> Creating project directories...\n' ) );
-  ['css-build/imports', 'coffee', 'image-min'].forEach( function( element ) {
-    mkdirp( element , function ( err ) {
-      if ( err ) console.error( err )
-      else console.log( '"' + element + '/" created!\n' )
-    });
-  });
-
-} // end "buildFolders()"
 
 
 
@@ -297,7 +285,7 @@ function unzip() {
     whatType = "sass.zip";
   }
 
-  // Use "decompress" module to unzip file to "css-build/imports"
+  // Use "decompress" module to unzip file in "css-build/imports"
   var decompress = new Decompress({mode: '755'})
     .src( whatType )
     .dest( 'css-build/imports' )
@@ -337,8 +325,8 @@ program
   .description( 'scaffold a basic web application' )
   .action(function() {
     flagCheck(); // does not return a promise
-    goToTest() //returns a promise
-    .then(function(){
+    Q.fcall(goToTest)
+    .then(function() {
       console.log( chalk.green.underline( '>> Create preprocess folders...\n' ) );
       return Q.delay( 2000 );
     })
@@ -362,6 +350,7 @@ program
       if( program.build ) {
         buildFolder( data.build_folder, "build" );
       }
+      return Q.delay( 2000 );
     }, function() { console.log( '✘ build folders failed to be created!' );} )
     .then(function() {
       if( program.wordpress ) {
