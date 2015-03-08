@@ -109,7 +109,7 @@ function download( file, folder ) {
 
       // If the file DOES exists, don't download it
       // Pass a console message saying so and stop the fs process
-      console.log( chalk.red( file + ' exists...don\'t download it.\n' ) );
+      console.log( chalk.red( '"' +  file + '" exists...don\'t download it.\n' ) );
       fs.close( fd );
     }
 
@@ -267,7 +267,7 @@ function preProcess( whatType, ifFile ) {
 
       // If "style" file DOES exist, don't download files
       // Pass a console message saying it exists & stop the fs process
-      console.log( chalk.red( '"CSS preprocessor files may exists...don\'t create new ones.\n' ) );
+      console.log( chalk.red( '"CSS preprocessor files may exists...new ones won\'t be created.\n' ) );
       fs.close( fd );
     }
 
@@ -347,7 +347,7 @@ program
       return Q.delay( 1500 );
     }, function() { console.log( '✘ build folders failed to be created!' );} )
     .then(function(){
-      console.log( chalk.green.underline( '>> Create coffee/main.coffee...\n' ) );
+      console.log( chalk.green.underline( '>> Create "coffee/main.coffee"...\n' ) );
       return Q.delay( 500 );
     })
     .then(function(){
