@@ -221,12 +221,15 @@ function touchCoffee() {
       function ( error ) {
         if (error !== null) {
           console.log( 'exec error: ' + error );a
+        } else {
+          // Pass a console message saying that it's been created
+          console.log( '"coffee/main.coffee" created!\n' )
         }
       });
     } else {
       // If a folder DOES exists, don't download it
       // Pass a console message saying so and stop the fs process
-      console.log( chalk.red( '"main.coffee" exists...don\'t create it.\n' ) );
+      console.log( chalk.red( '"coffee/main.coffee" exists...don\'t create it.\n' ) );
       fs.close( fd );
     }
   })
