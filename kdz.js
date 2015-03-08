@@ -52,7 +52,7 @@ function flagCheck() {
 // Go to "test-wordpress" if it's "program.wordpress"
 function goToTest() {
   var deferred = Q.defer();
-  if( program.build && program.test ) {
+  if ( ( program.test && !program.wordpress ) || ( program.build && program.test ) ) {
     process.chdir( 'test-spa' );
     deferred.resolve();
   } else if( program.wordpress && program.test )  {
@@ -261,7 +261,7 @@ function preProcess( whatType, ifFile ) {
       if( program.wordpress ) {
         getAllFiles( whatType, "wordpress" );
 
-      } else if ( program.build ) {
+      } else {
         getAllFiles( whatType, "spa" );
       }
     } else {
@@ -329,7 +329,7 @@ program
   .description( 'scaffold a basic web application' )
   .action(function() {
     flagCheck(); // does not return a promise
-    Q.fcall(goToTest)
+    Q.fcall( goToTest )
     .then(function() {
       console.log( chalk.green.underline( '>> Create preprocess folders...\n' ) );
       return Q.delay( 1000 );
@@ -338,6 +338,18 @@ program
       buildFolder( data.source_build, "css-build" );
       return Q.delay( 1000 );
     }, function() { console.log( '✘ preprocess folders failed to be created!' );} )
+    .then(function(){
+      console.log( chalk.green.underline( '>> Create build folders...\n' ) );
+      return Q.delay( 1000 );
+    })
+    .then(function() {
+      if( program.wordpress ) {
+        return false;
+      } else {
+        buildFolder( data.build_folder, "build" );
+      }
+      return Q.delay( 1000 );
+    }, function() { console.log( '✘ build folders failed to be created!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Create coffee/main.coffee...\n' ) );
       return Q.delay( 1000 );
@@ -354,16 +366,6 @@ program
       process.chdir( '../' );
       return Q.delay( 1000 );
     })
-    .then(function(){
-      console.log( chalk.green.underline( '>> Create build folders...\n' ) );
-      return Q.delay( 1000 );
-    })
-    .then(function() {
-      if( program.build ) {
-        buildFolder( data.build_folder, "build" );
-      }
-      return Q.delay( 1000 );
-    }, function() { console.log( '✘ build folders failed to be created!' );} )
     .then(function() {
       if( program.wordpress ) {
         getSingleFile( data.wp_files[1], "wordpress" );
@@ -373,11 +375,11 @@ program
     .then(function(){
       console.log( chalk.green.underline( '>> Download common project files"...\n' ) );
       return Q.delay( 1000 );
-    }, function() { console.log( '✘ Common project files failed to down!' );})
+    })
     .then(function(){
       getAllFiles( data.shared, "shared-files" );
       return Q.delay( 1000 );
-    }, function() { console.log( '✘ Core project files failed to download!' );} )
+    }, function() { console.log( '✘ Common project files failed to download!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download task runner project files & package.json...\n' ) );
       return Q.delay( 1000 );
@@ -385,17 +387,15 @@ program
     .then(function() {
       if( program.wordpress ) {
         getAllFiles( data.core, "wordpress" );
-      } else if( program.build ) {
-        getAllFiles( data.core, "spa" );
       } else {
-        return false;
+        getAllFiles( data.core, "spa" );
       }
       return Q.delay( 1000 );
     }, function() { console.log( '✘ Core files failed to download!' );} )
     .then(function(){
       if ( program.gitignore && program.wordpress ) {
         getSingleFile( data.wp_files[0], "wordpress" );
-      } else if ( program.gitignore && program.build ) {
+      } else {
         getSingleFile( data.spa_files, "spa" );
       }
       return Q.delay( 1000 );
