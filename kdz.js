@@ -59,7 +59,7 @@ function goToTest() {
   } else {
     return false;
   }
-
+  return Q.delay( 1000 );
 } // end "goToTest()"
 
 
@@ -231,8 +231,6 @@ function buildFolders() {
 // Step 3: go back up to the root folder
 function buildCoffee() {
 
-  console.log( chalk.green.underline( '>> Creating "coffee/main.coffee"...\n' ) );
-
   process.chdir( 'coffee' );
 
   child = exec('touch main.coffee',
@@ -339,12 +337,29 @@ program
   .description( 'scaffold a basic web application' )
   .action(function() {
     flagCheck(); // does not return a promise
-    goToTest(); // does not return a promise
-    buildFolders(); // does not return a promise
-    buildCoffee() // returns a promise
+    goToTest() //returns a promise
+    .then(function(){
+      console.log( chalk.green.underline( '>> Create preprocess folders...\n' ) );
+      return Q.delay( 2000 );
+    })
+    .then(function() {
+      buildFolder( data.source_build, "css-build" );
+      return Q.delay( 2000 );
+    }, function() { console.log( '✘ preprocess folders failed to be created!' );} )
+    .then(function(){
+      console.log( chalk.green.underline( '>> Create coffee/main.coffee...\n' ) );
+      return Q.delay( 2000 );
+    })
+    .then(function(){
+      buildCoffee();
+      return Q.delay( 2000 );
+    })
+    .then(function(){
+      console.log( chalk.green.underline( '>> Create build folders...\n' ) );
+      return Q.delay( 2000 );
+    })
     .then(function() {
       if( program.build ) {
-        console.log( chalk.green.underline( '>> Create "build" folders...\n' ) );
         buildFolder( data.build_folder, "build" );
       }
     }, function() { console.log( '✘ build folders failed to be created!' );} )
