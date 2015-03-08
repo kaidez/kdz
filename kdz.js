@@ -188,7 +188,7 @@ function getAllFiles( array, folder ) {
 
   })
 
-  return Q.delay( 2000 ); // Return a Promise
+  return Q.delay( 1000 ); // Return a Promise
 
 } // end "getAllFiles()"
 
@@ -208,7 +208,7 @@ function getSingleFile( file, folder ) {
   // Pass "file" & "folder" params above, "download()" does the rest
   download( file, folder );
 
-  return Q.delay( 2000 ); // Return a Promise
+  return Q.delay( 1000 ); // Return a Promise
 
 } // end "getSingleFile()"
 
@@ -217,21 +217,25 @@ function getSingleFile( file, folder ) {
 // Step 1: go to the "coffee" directory
 // Step 2: create "main.coffee" inside of "coffee"
 // Step 3: go back up to the root folder
-function buildCoffee() {
+function touchCoffee() {
 
-  process.chdir( 'coffee' );
-
-  child = exec('touch main.coffee',
-  function ( error ) {
-    if (error !== null) {
-      console.log( 'exec error: ' + error );
+  fs.open( 'main.coffee', 'rs', function( err, fd ) {
+    if ( err && err.code == 'ENOENT' ) {
+      child = exec('touch main.coffee',
+      function ( error ) {
+        if (error !== null) {
+          console.log( 'exec error: ' + error );a
+        }
+      });
+    } else {
+      // If a folder DOES exists, don't download it
+      // Pass a console message saying so and stop the fs process
+      console.log( chalk.red( '"main.coffee" exists...don\'t create it.\n' ) );
+      fs.close( fd );
     }
-  });
+  })
 
-  process.chdir( '../' );
-
-  return Q.delay( 2000 ); // Return a Promise
-} // end "buildCoffee()"
+} // end "touchCoffee()"
 
 
 
@@ -270,7 +274,7 @@ function preProcess( whatType, ifFile ) {
 
   });
 
-  return Q.delay( 2000 ); // Return a Promise
+  return Q.delay( 1000 ); // Return a Promise
 } // end "preProcess()"
 
 
@@ -299,7 +303,7 @@ function unzip() {
 
   });
 
-  return Q.delay( 2000 ); // Return a Promise
+  return Q.delay( 1000 ); // Return a Promise
 } // end "unzip()"
 
 
@@ -328,47 +332,55 @@ program
     Q.fcall(goToTest)
     .then(function() {
       console.log( chalk.green.underline( '>> Create preprocess folders...\n' ) );
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     })
     .then(function() {
       buildFolder( data.source_build, "css-build" );
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     }, function() { console.log( '✘ preprocess folders failed to be created!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Create coffee/main.coffee...\n' ) );
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     })
     .then(function(){
-      buildCoffee();
-      return Q.delay( 2000 );
+      process.chdir( 'coffee' );
+      return Q.delay( 1000 );
+    })
+    .then(function(){
+      touchCoffee();
+      return Q.delay( 1000 );
+    })
+    .then(function(){
+      process.chdir( '../' );
+      return Q.delay( 1000 );
     })
     .then(function(){
       console.log( chalk.green.underline( '>> Create build folders...\n' ) );
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     })
     .then(function() {
       if( program.build ) {
         buildFolder( data.build_folder, "build" );
       }
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     }, function() { console.log( '✘ build folders failed to be created!' );} )
     .then(function() {
       if( program.wordpress ) {
         getSingleFile( data.wp_files[1], "wordpress" );
       }
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     }, function() { console.log( '✘ "functions.php" failed to download!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download common project files"...\n' ) );
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     }, function() { console.log( '✘ Common project files failed to down!' );})
     .then(function(){
       getAllFiles( data.shared, "shared-files" );
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     }, function() { console.log( '✘ Core project files failed to download!' );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download task runner project files & package.json...\n' ) );
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     })
     .then(function() {
       if( program.wordpress ) {
@@ -378,7 +390,7 @@ program
       } else {
         return false;
       }
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     }, function() { console.log( '✘ Core files failed to download!' );} )
     .then(function(){
       if ( program.gitignore && program.wordpress ) {
@@ -386,11 +398,11 @@ program
       } else if ( program.gitignore && program.build ) {
         getSingleFile( data.spa_files, "spa" );
       }
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     })
     .then(function(){
       console.log( chalk.green.underline( '>> Download CSS preprocessor project files"...\n' ) );
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     })
     .then(function() {
       if( program.less ) {
@@ -400,7 +412,7 @@ program
       } else {
         return false;
       }
-      return Q.delay( 2000 );
+      return Q.delay( 1000 );
     }, function() { console.log( '✘ Preprocessor files failed to download!' );} )
     .then(function() {
       return unzip()
