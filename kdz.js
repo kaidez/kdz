@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 // Run this task with Node
 
+
+
 "use strict"; // use ES5 strict mode
+
 
 
 // Bring in Node modules
@@ -62,12 +65,12 @@ function goToTest() {
 
 
 /*
- * "download()" function
+ * "download()"
  * =====================================================================
  *
  * Used in both the "getAllFiles()" and "getSingle()" functions
- * "file" parameter represents the file to be downloaded
- * "folder" parameter defines which folder the file's in...
+ * "file" param represents the file to be downloaded
+ * "folder" param defines which folder the file's in...
  *  ...which is either "source-spa" or "source-wordpress"
  *
  * "download()" performs the following steps:
@@ -79,9 +82,10 @@ function goToTest() {
  */
 function download( file, folder ) {
 
+  // Build GitHub repo link
   var getFile  = githubRoot + folder + '/' + file;
 
-  // Use Node "fs.open" to check if the file exists before downloading
+  // Use Node "fs.open" to check if the file exists
   fs.open( file, 'rs', function( err, fd ) {
     if ( err && err.code == 'ENOENT' ) {
 
@@ -107,17 +111,67 @@ function download( file, folder ) {
     }
 
   });
+
 } // end "download()"
 
 
 
 /*
- * "getAllFiles()" function
+ * "buildFolder()"
+ * =====================================================================
+ *
+ * Reusable function that looks at given arrays to build folders
+ * "array" param points to an array listed in "config/data.js"
+ * "getDir" param points to which folder to check to see if it exists
+ *
+ * "buildFolder()" performs the following steps:
+ * 1. Runs "forEach()"" against the array, with "folder" as its index
+ * 2. Checks to see if folder defined by "getDir" doesn't already exist
+ * 3. Builds the foler if it DOES NOT exist
+ * 4. Doesn't build the folder if it DOES exist, then sends a message
+ * 5. Stops the Node "fs" process
+ */
+function buildFolder( array, getDir ) {
+
+  array.forEach( function( folder ) {
+
+    // Use Node "fs.open" to folder defined by "getDir" exists
+    fs.open( getDir, 'rs', function( err, fd ) {
+
+      if ( err && err.code == 'ENOENT' ) {
+
+        // If the folder DOES NOT exists, create it with "mkdirp"
+        mkdirp( folder , function ( err ) {
+
+          // Throw an error if it can't be created for whaterver reason
+          if ( err ) console.error( err )
+
+          // Pass a console message saying that it's been created
+          else console.log( '"' + folder + '/" created!\n' )
+        });
+      } else {
+
+        // If the folder DOES exists, don't download it
+        // Pass a console message saying so and stop the fs process
+        console.log( chalk.red( '"' +folder + '/" exists...don\'t create it.\n' ) );
+        fs.close( fd );
+      }
+
+    });
+
+  });
+
+} // end "buildFolder()"
+
+
+
+/*
+ * "getAllFiles()"
  * =====================================================================
  *
  * Uses the above "download()" method to download an array of files
- * "arrays" parameter points to an array listed in "config/data.js"
- * "folder" parameter points to which folder to download the files
+ * "arrays" param points to an array listed in "config/data.js"
+ * "folder" param points to which folder to download the files
  */
 function getAllFiles( array, folder ) {
 
@@ -138,12 +192,12 @@ function getAllFiles( array, folder ) {
 
 
 /*
- * "getSingleFile()" function
+ * "getSingleFile()"
  * =====================================================================
  *
  * Uses the above "download()" method to download a single file
- * "file" parameter points to a file listed in "config/data.js"
- * "folder" parameter points to which folder to download the files
+ * "file" param points to a file listed in "config/data.js"
+ * "folder" param points to which folder to download the files
  */
 function getSingleFile( file, folder ) {
 
@@ -169,38 +223,6 @@ function buildFolders() {
   });
 
 } // end "buildFolders()"
-
-
-
-// If the "build" flag is passed, create a "build/" folder
-// Place "css/" & "js/" subdirectories inside of it.
-function buildDir()  {
-
-  // Use Node fs.open to check if the folder exists before making it
-  fs.open( 'build', 'rs', function( err, fd ) {
-    console.log( chalk.green.underline( '>> Creating \"build\" folder & sub-directories...\n' ) );
-    if ( err && err.code == 'ENOENT' ) {
-
-      // If "build/" does NOT exist, create it & its subdirectories
-      // Use 'forEach()' to create them
-      ['build/css', 'build/js', 'build/js/libs'].forEach( function( element ) {
-        mkdirp( element , function ( err ) {
-          if ( err ) console.error( err )
-          else console.log( '"' + element + '" created!\n' )
-        });
-      });
-
-    } else {
-
-      // If "build" DOES exist, don't create it
-      // Pass a console message saying it exists & stop the fs process
-      console.log( chalk.red( '"build/" already exists...don\'t create a new one.\n' ) );
-      fs.close( fd );
-    }
-  });
-
-  return Q.delay( 2000 );
-} // end "buildDir()"
 
 
 
@@ -267,21 +289,23 @@ function preProcess( whatType, ifFile ) {
 
 
 
-// Unzip preprocessor zip files to "css-build/imports"
+// Unzip preprocessor zip files
 function unzip() {
 
-  var whatType;
+  var whatType;  // Variable that will grab a reference to the .zip file
   if( program.less ) { // if "less" flag is passed
     whatType = "less.zip";
   } else { // if "sass" flag is passed
     whatType = "sass.zip";
   }
 
+  // Use "decompress" module to unzip file to "css-build/imports"
   var decompress = new Decompress({mode: '755'})
     .src( whatType )
     .dest( 'css-build/imports' )
     .use( Decompress.zip( {strip: 1} ) );
 
+  // Throw an error if "decompress" can't unzip the file
   decompress.run(function ( err ) {
     if ( err ) {
       throw err;
@@ -320,10 +344,10 @@ program
     buildCoffee() // returns a promise
     .then(function() {
       if( program.build ) {
-        buildDir();
+        console.log( chalk.green.underline( '>> Create "build" folders...\n' ) );
+        buildFolder( data.build_folder, "build" );
       }
-      return Q.delay( 2000 );
-    }, function() { console.log( '✘ "build/" directory failed to be created!' );} )
+    }, function() { console.log( '✘ build folders failed to be created!' );} )
     .then(function() {
       if( program.wordpress ) {
         getSingleFile( data.wp_files[1], "wordpress" );

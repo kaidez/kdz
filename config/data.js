@@ -21,6 +21,16 @@ var data = {
     ".gitignore",
     "functions.php"
   ],
+  "build_folder":[
+    "build/css",
+    "build/js",
+    "build/js/libs"
+  ],
+  "source_build": [
+    "css-build/imports",
+    "coffee",
+    "image-min"
+  ],
   "spa_files": ".gitignore"
 }
 
