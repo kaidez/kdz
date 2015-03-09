@@ -54,17 +54,20 @@ Scaffolds out a WordPress-like project.  It performs almost the same tasks as `k
 * The `build` folder and its subdirectories are not created.
 * The `Gruntfile.js`, `gulpfile.js` and `package.json` files that are downloaded are more geared toward WordPress development.
 
-#### `-g`
+#### `-g, --gitignore`
 Downloads a `.gitignore` file to the root folder. If the `-w` option is passed, `.gitignore` will be WordPress-specific.
 
-#### `-l`
+#### `-l, --less`
 Downloads LESS files to `css-build` and `css-build/imports` If the `-w` option is passed, the LESS files will be WordPress-specific.
 
-#### `-s`
+#### `-s, --scss`
 Downloads Sass files to `css-build` and `css-build/imports` If the `-w` option is passed, the Sass files will be WordPress-specific.
 
-#### `-t`
+#### `-t, --test`
 Creates a test folder for where you can test your scaffold...this is more for my testing while developing.
+
+#### `-b, --build`
+Does the same thing as `kdz app`. Since this is redundant, it will probably be deleted.
 
 ## GENERAL NOTES
 * `kdz` uses an older version of the [download](https://www.npmjs.com/package/download) module, which is used to download files from my GitHub repo. This is because it currently causes errors when used with the [download-status](https://www.npmjs.com/package/download-status) module, which is displays a progress bar for an individual download....read more about this [here](https://github.com/kevva/download/issues/45). I'll watch for if/when this is fixed.
