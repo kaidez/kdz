@@ -53,19 +53,24 @@ Scaffolds out a WordPress-like project.  It performs almost the same tasks as `k
 
 * The `build` folder and its subdirectories are not created.
 * The `Gruntfile.js`, `gulpfile.js` and `package.json` files that are downloaded are more geared toward WordPress development.
-<br />
+<br />  
+
 #### `-g, --gitignore`
 Downloads a `.gitignore` file to the root folder. If the `-w` option is passed, `.gitignore` will be WordPress-specific.
-<br />
+<br />  
+
 #### `-l, --less`
 Downloads LESS files to `css-build` and `css-build/imports` If the `-w` option is passed, the LESS files will be WordPress-specific.
-<br />
+<br />  
+
 #### `-s, --scss`
 Downloads Sass files to `css-build` and `css-build/imports` If the `-w` option is passed, the Sass files will be WordPress-specific.
-<br />
+<br />  
+
 #### `-t, --test`
 Creates a test folder for where you can test your scaffold...this is more for my testing while developing.
-<br />
+<br />  
+
 #### `-b, --build`
 Does the same thing as `kdz app`. Since this is redundant, it will probably be deleted.
 
