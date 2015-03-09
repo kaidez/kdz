@@ -52,44 +52,13 @@ Download LESS files to `css-build` and `css-build/imports` If the `-w` option is
 Download Sass files to `css-build` and `css-build/imports` If the `-w` option is passed, the Sass files will be WordPress-specific.
 
 ### `-t`
-Create a test folder for where you can test your scaffold...this more for my testing will developing.
+Create a test folder for where you can test your scaffold...this is more for my testing while developing.
 ## TODO
+kdz is still new so there are some things I'd still like to do:
 * See how the promises can be made to work better.
-* See if `download()` can be exported in. Will require a refactor.
+* Create specific commands for both the LESS and Sass downloads...don't make them work with just an option.
+* Update the whole "test" folder process...use one folder instead of two & add it to `gitignore`.
+* See if the `download()` function can be exported in. Will require a refactor.
 * Perform error handling when flags are passed improperly.
 * Remove `-b` flag since it's now the default build.
 * See how templates can be used.
-
-## COOL LINKS
-
-Remember that `fs.existsSync()` is being deprecated...see [this](http://nodejs.org/api/fs.html#fs_fs_existssync_path)
-
-[Command-line utilities with Node.js](http://cruft.io/posts/node-command-line-utilities/)
-
-[Node.js as a build script](http://blog.millermedeiros.com/node-js-as-a-build-script/)
-
-[Understanding `fs`](http://www.sitepoint.com/accessing-the-file-system-in-node-js/)
-
-[TJ Holowaychuk commander article](http://tjholowaychuk.tumblr.com/post/9103188408/commander-js-nodejs-command-line-interfaces-made)
-
-[Shell script post from Axel Rauschmayer](http://www.2ality.com/2011/12/nodejs-shell-scripting.html)
-
-[Great example on setting up promises](http://runnable.com/Uld0ZmCZki8aAABf/create-a-promise-with-q-for-node-js-and-promises)
-
-[Good SO post on Promises with Q](http://stackoverflow.com/questions/22678613/how-to-actually-use-q-promise-in-node-js)
-
-[Good post about using `delay` with promises](http://joseoncode.com/2013/05/23/promises-a-plus/)
-
-[Good SO post on creating & saving files with `fs.createWriteStream()`.](http://stackoverflow.com/questions/2496710/writing-files-in-node-js)
-
-[Another Good Node scripts post from Modulus](http://blog.modulus.io/nodejs-scripts)
-
-[Great example of `Q.all()`](http://jsfiddle.net/En9n7/19/)
-
-[Good Medium article on Node CLIs](https://medium.com/@_jh3y/creating-a-node-cli-application-72e539b2069a)
-
-[Good SO article on `fs.write`](http://stackoverflow.com/questions/20309398/access-name-of-file-being-written-by-fs-writefile)
-
-["Globals" instead of "this"](http://stackoverflow.com/questions/19850234/node-js-variable-declaration-and-scope)
-
-[Excellent SO thread on `stdin`, `stdout` and `stderror`](http://stackoverflow.com/questions/3385201/confused-about-stdin-stdout-and-stderr)
