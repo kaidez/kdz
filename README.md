@@ -37,5 +37,6 @@ Remember that `fs.existsSync()` is being deprecated...see [this](http://nodejs.o
 [Excellent SO thread on `stdin`, `stdout` and `stderror`](http://stackoverflow.com/questions/3385201/confused-about-stdin-stdout-and-stderr)
 
 ## TODO
+* See how the promises can be made to work better.
 * See if `download()` can be exported in. Will require a refactor.
 * See how templates can be used.
