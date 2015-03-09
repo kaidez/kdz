@@ -364,7 +364,10 @@ program
     })
     .then(function() {
       if( program.wordpress ) {
-        getSingleFile( data.wp_files[1], "wordpress" );
+        Q.delay(1500).then(console.log( chalk.green.underline( '>> Download "functions.php"...\n' ) ) )
+        .then(function(){
+          getSingleFile( data.wp_files[1], "wordpress" );
+        })
       }
       return Q.delay( 1500 );
     }, function() { console.log( '✘ "functions.php" failed to download!' );} )
