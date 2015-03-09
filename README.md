@@ -94,7 +94,7 @@ Does the same thing as `kdz app`. This is redundant so it will probably be delet
 kdz uses an older version of the [download](https://www.npmjs.com/package/download) module, which is used to download files from my GitHub repo. This is because it currently causes errors when used with the [download-status](https://www.npmjs.com/package/download-status) module, which is displays a progress bar for an individual download....read more about this [here](https://github.com/kevva/download/issues/45). I'll watch for if/when this is fixed.
 
 ## TODO/WISH-LIST
-kdz is still new so there are some things I'd still like to do:
+kdz is still new so there are some things I'd still like/want to do:
 * See how the promises can be made to work better.
 * Create specific commands for both the LESS and Sass downloads...don't make them work with just an option.
 * Update the whole "test" folder process...use one folder instead of two & add it to `gitignore`.
