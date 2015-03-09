@@ -2,11 +2,9 @@
 ## kaidez's personal project scaffolding tool
 v.0.0.1
 
-
 kdz is a Node build tool I created for scaffolding out my projects.
 
 Review the actual code in the heavily-commented [`kdz.js`](https://github.com/kaidez/kdz/blob/master/kdz.js).
-
 
 ### Before you install
 kdz is not available as a downloadable npm module so if you want to install it, you will need to clone this repo to your machine first. This means that some assumptions are made:
