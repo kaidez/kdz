@@ -51,7 +51,7 @@ There is one command: `app`. Running `kdz app` scaffolds out a single-page-appli
 There is small set of options
 
 #### `-w`
-Scaffolds out a WordPress-like project.  It performs almost the same tasks as `kdz app` with the following difference:
+Scaffolds out a WordPress-like project.  It performs almost the same tasks as `kdz app` with the following differences:
 
 * The `build` folder and its subdirectories are not created.
 * The `Gruntfile.js`, `gulpfile.js` and `package.json` files that are downloaded are more geared toward WordPress development.
