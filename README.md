@@ -57,7 +57,8 @@ Scaffolds out a WordPress-like project.  It performs almost the same tasks as `k
 
 #### `-g, --gitignore`
 Downloads a `.gitignore` file to the root folder. If the `-w` option is passed, `.gitignore` will be WordPress-specific.
-<br />  
+<br />
+<br />
 
 #### `-l, --less`
 Downloads LESS files to `css-build` and `css-build/imports` If the `-w` option is passed, the LESS files will be WordPress-specific.
