@@ -38,7 +38,7 @@ There is one command: `app`. Running `kdz app` scaffolds out a single-page-appli
 * `bower.json`, `.bowerrc` and `STYLEGUIDE.md` files are downloaded.
 * SPA-like `Gruntfile.js`, `gulpfile.js` and `package.json` files are downloaded.
 
-## OPTIONS
+## Options
 There is small set of options
 
 ### `-w`
