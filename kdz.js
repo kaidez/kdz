@@ -27,17 +27,10 @@ var fs = require( 'fs' ), // Read files with Node's fs modulke
 // Change this value if you want to download it from another repo
 var githubRoot = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-';
 
-// Stop "kdz app" tasks under certain conditions
+// Stop "kdz app" if "less" & "sass" flags are passed at the same time
 // Passes error as under Node proccess exit code 9 ("Invalid Argument")
 function flagCheck() {
 
-  // Stop it if "build" & "wordpress" flags are passed at the same time
-  if ( program.build && program.wordpress ) {
-    console.log(chalk.red( '"build and "wordpress" flags cannot be passed at the same time\nExiting task....\n' ) );
-    process.exit( 9 );
-  }
-
-  // Stop it if "less" & "sass" flags are passed at the same time
   if ( program.less && program.scss ) {
     console.log(chalk.red( '"less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
     process.exit( 9 );
@@ -48,14 +41,14 @@ function flagCheck() {
 
 
 // If the "test" flag is passed, check the type of project
-// Go to "test-spa" if it's "program.build"
+// Go to "test-spa" if "kdz app --test" is run
 // Go to "test-wordpress" if it's "program.wordpress"
 // Return a promise
 function goToTest() {
 
   var deferred = Q.defer();
 
-  if ( ( program.test && !program.wordpress ) || ( program.build && program.test ) ) {
+  if ( ( program.test && !program.wordpress ) ) {
     process.chdir( 'test-spa' );
     deferred.resolve();
   } else if( program.wordpress && program.test )  {
@@ -415,9 +408,9 @@ program
       }
     })
     .then(function() {
-      if ( program.gitignore && program.wordpress && !program.build ) {
+      if ( program.gitignore && program.wordpress ) {
         getSingleFile( data.wp_files[0], "wordpress" );
-      } else if (( program.gitignore && program.build ) || ( program.gitignore && !program.wordpress && !program.build )) {
+      } else if (( program.gitignore ) || ( program.gitignore && !program.wordpress)) {
         getSingleFile( data.spa_files, "spa" );
       }
       return Q.delay( 1500 );
@@ -461,7 +454,6 @@ program
 // options
 program
   .version( '0.0.1' )
-  .option( '-b, --build', 'create a SPA-like project' )
   .option( '-w, --wordpress', 'create a WordPress project' )
   .option( '-g, --gitignore', 'download ".gitignore" file' )
   .option( '-l, --less', 'download LESS files in "css-build"' )
