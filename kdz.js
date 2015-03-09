@@ -8,17 +8,16 @@
 
 
 // Bring in Node modules
-var fs = require( 'fs' ),
-    exec = require( 'child_process' ).exec,
-    program = require( 'commander' ),
-    mkdirp = require( 'mkdirp' ),
-    Q = require( 'q' ),
-    chalk = require( 'chalk' ),
-    Download = require( 'download' ),
-    progress = require( 'download-status' ),
-    Decompress = require( 'decompress' ),
-    data = require( './config/data.js' ),
-    child;
+var fs = require( 'fs' ), // Read files with Node's fs modulke
+    exec = require( 'child_process' ).exec, // launch external processes
+    program = require( 'commander' ), // Fires off commands and options
+    mkdirp = require( 'mkdirp' ), // Recursively make directories
+    Q = require( 'q' ), // Use Q to manage Promises
+    chalk = require( 'chalk' ), // Colorize console messages
+    Download = require( 'download' ), // Download files
+    progress = require( 'download-status' ), // Display download status
+    Decompress = require( 'decompress' ), // Unzip files
+    data = require( './config/data.js' ); // JSON file data is visible
 
 
 
@@ -50,6 +49,7 @@ function flagCheck() {
 // If the "test" flag is passed, check the type of project
 // Go to "test-spa" if it's "program.build"
 // Go to "test-wordpress" if it's "program.wordpress"
+// Return a promise
 function goToTest() {
   var deferred = Q.defer();
   if ( ( program.test && !program.wordpress ) || ( program.build && program.test ) ) {
@@ -217,7 +217,7 @@ function touchCoffee() {
 
   fs.open( 'main.coffee', 'rs', function( err, fd ) {
     if ( err && err.code == 'ENOENT' ) {
-      child = exec('touch main.coffee',
+      exec('touch main.coffee',
       function ( error ) {
         if (error !== null) {
           console.log( 'exec error: ' + error );a
