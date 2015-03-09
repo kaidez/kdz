@@ -8,7 +8,7 @@ kdz is a Node and Promise-powered build tool I created for scaffolding out my pr
 Review the actual code in the [`kdz.js` file](https://github.com/kaidez/kdz/blob/master/kdz.js).
 
 
-## How it works
+### How it works
 To begin, start with typing either `kdz` or `kdz --help` in your terminal.  The following will be outputted:
 
     Usage: kdz [options] [command]
@@ -38,25 +38,25 @@ There is one command: `app`. Running `kdz app` scaffolds out a single-page-appli
 * `bower.json`, `.bowerrc` and `STYLEGUIDE.md` files are downloaded.
 * SPA-like `Gruntfile.js`, `gulpfile.js` and `package.json` files are downloaded.
 
-## Options
+### Options
 There is small set of options
 
-### `-w`
+#### `-w`
 Scaffolds out a WordPress-like project.  It performs almost the same tasks as `kdz app` with the following difference:
 
 * a `build` folder is not created.
 * The `Gruntfile.js`, `gulpfile.js` and `package.json` files that are downloaded are more geared toward WordPress development.
 
-### `-g`
+#### `-g`
 Download a `.gitignore` file to the root folder. If the `-w` option is passed, `.gitignore` will be WordPress-specific.
 
-### `-l`
+#### `-l`
 Download LESS files to `css-build` and `css-build/imports` If the `-w` option is passed, the LESS files will be WordPress-specific.
 
-### `-s`
+#### `-s`
 Download Sass files to `css-build` and `css-build/imports` If the `-w` option is passed, the Sass files will be WordPress-specific.
 
-### `-t`
+#### `-t`
 Create a test folder for where you can test your scaffold...this is more for my testing while developing.
 ## TODO
 kdz is still new so there are some things I'd still like to do:
