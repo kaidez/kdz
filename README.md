@@ -18,11 +18,11 @@ kdz is not available as a downloadable npm module so if you want to install it, 
 ### How to install
 1. Open a terminal window and clone this repository somewhere on your local machine:
 
-        `git clone https://github.com/kaidez/kdz.git`
+        git clone https://github.com/kaidez/kdz.git
 
 2. Navigate to the repo in your terminal and install it...you may need to do this using `sudo`:
 
-        `npm install -g`
+        npm install -g
 
 ### How it works
 To begin, start with typing either `kdz` or `kdz --help` in your terminal.  The following will be outputted:
