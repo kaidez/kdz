@@ -38,7 +38,6 @@ To begin, start with typing either `kdz` or `kdz --help` in your terminal.  The 
 
     -h, --help       output usage information
     -V, --version    output the version number
-    -b, --build      create a SPA-like project
     -w, --wordpress  create a WordPress project
     -g, --gitignore  download ".gitignore" file
     -l, --less       download LESS files in "css-build"
@@ -85,11 +84,6 @@ Creates a test folder for where you can test your scaffold...this is more for my
 <br />  
 <br />
 
-#### `-b, --build`
-Does the same thing as `kdz app`. This is redundant so it will probably be deleted at some point.
-<br />  
-<br />
-
 ## General Notes
 kdz uses an older version of the [download](https://www.npmjs.com/package/download) module, which is used to download files from my GitHub repo. This is because it currently causes errors when used with the [download-status](https://www.npmjs.com/package/download-status) module, which is displays a progress bar for an individual download....read more about this [here](https://github.com/kevva/download/issues/45). I'll watch for if/when this is fixed, then update it.
 
@@ -100,7 +94,6 @@ kdz is still new so there are some things I'd still like/want to do:
 * Update the whole "test" folder process...use one folder instead of two & add it to `gitignore`.
 * See if the `download()` function can be exported in. Will require a refactor.
 * Perform error handling when flags are passed improperly.
-* Remove `-b` flag since it's now the default build.
 * See how templates can be used.
 * Rewrite `kdz.js` in Coffeescript.
 * Test on Windows machines.
