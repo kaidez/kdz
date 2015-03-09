@@ -15,7 +15,7 @@ kdz is not available as a downloadable npm module so if you want to install it, 
 
 * This tool downloads files from a pre-defined root link in `kdz.js` that points to my GitHub repo. If you want to change that link, you would have to do that [here](https://github.com/kaidez/kdz/blob/master/kdz.js#L28).
 
-### Before you install
+### How to install
 1. Open a terminal window and clone this repository somewhere on your local machine:
 
     `git clone https://github.com/kaidez/kdz.git`
