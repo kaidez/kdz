@@ -1,5 +1,8 @@
-# kdz - kaidez's personal project scaffolding tool
-## v.0.0.1
+# ![Alt text](kdz-logo.png)
+## kaidez's personal project scaffolding tool
+v.0.0.1
+
+
 kdz is a Node and Promise-powered build tool I created for scaffolding out my projects.
 
 Review the actual code in the [`kdz.js` file](https://github.com/kaidez/kdz/blob/master/kdz.js).
