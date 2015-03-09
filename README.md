@@ -6,8 +6,6 @@ COOL LINKS
 
 Remember that `fs.existsSync()` is being deprecated...see [this](http://nodejs.org/api/fs.html#fs_fs_existssync_path)
 
-Great posts related to building Node CLI tools...
-
 [Command-line utilities with Node.js](http://cruft.io/posts/node-command-line-utilities/)
 
 [Node.js as a build script](http://blog.millermedeiros.com/node-js-as-a-build-script/)
@@ -40,3 +38,4 @@ Great posts related to building Node CLI tools...
 
 ## TODO
 * See if `download()` can be exported in. Will require a refactor.
+* See how templates can be used.
