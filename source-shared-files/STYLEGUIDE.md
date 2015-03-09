@@ -211,6 +211,20 @@ __Really REALLY Wrong__
       font-size: 12px;
       font-weight: bold;
     }
+If using LESS mixins inside CSS selectors, end the mixin with `()`
+
+__Right__
+
+    // Parentheses are optional, but make it easier to tell it's a mixin
+    .menu-list-item {
+      .font-styles();
+    }
+  __Wrong__
+
+    // Legal but not as verbose than if parentheses were added
+    .menu-list-item {
+      .font-styles;
+    }
 <hr>
 Whenever possible, plugin-specific styles should go in their own preprocess file and start with `PLUGIN_`. So if I'm using jQuery Cycle, create a files called `PLUGIN_cycle.`
 <hr>
