@@ -48,7 +48,7 @@ There is one command: `app`. Running `kdz app` scaffolds out a single-page-appli
 ### Options
 There is small set of options
 
-#### `-w`
+#### `-w, --wordpress`
 Scaffolds out a WordPress-like project.  It performs almost the same tasks as `kdz app` with the following differences:
 
 * The `build` folder and its subdirectories are not created.
