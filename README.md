@@ -1,4 +1,4 @@
-# ![Alt text](kdz-logo.png)
+# ![Alt text](logo-kdz.png)
 ## kaidez's personal project scaffolding tool
 v.0.0.1
 
