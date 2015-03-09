@@ -77,7 +77,7 @@ Creates a test folder for where you can test your scaffold...this is more for my
 <br />
 
 #### `-b, --build`
-Does the same thing as `kdz app`. Since this is redundant, it will probably be deleted.
+Does the same thing as `kdz app`. Since this is redundant, it will probably be deleted at some point.
 <br />  
 <br />
 
