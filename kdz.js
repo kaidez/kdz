@@ -216,7 +216,7 @@ function getSingleFile( file, folder ) {
  * "touchCoffee() "
  * =====================================================================
  *
- * Step 1: Check to se if "main.coffee" exists
+ * Step 1: Check to see if "main.coffee" exists
  * Step 2: Create it if it does
  * Step 3: Don't create it if it doesn't and pass a message saying so  * * Step 4: Stop the fs process folder
 */
