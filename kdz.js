@@ -24,6 +24,7 @@ var fs = require( 'fs' ), // Read files with Node's fs modulke
 // Root URL for downloading files from GitHub
 // Concatenate this to other variables create absolute file references
 // Used in both "getAllFiles()" and "getSingleFile()" functions
+// Change this value if you want to download it from another repo
 var githubRoot = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-';
 
 // Stop "kdz app" tasks under certain conditions
