@@ -33,13 +33,13 @@ function flagCheck() {
   // Stop it if "build" & "wordpress" flags are passed at the same time
   if ( program.build && program.wordpress ) {
     console.log(chalk.red( '"build and "wordpress" flags cannot be passed at the same time\nExiting task....\n' ) );
-    process.exit(9);
+    process.exit( 9 );
   }
 
   // Stop it if "less" & "sass" flags are passed at the same time
   if ( program.less && program.scss ) {
     console.log(chalk.red( '"less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
-    process.exit(9);
+    process.exit( 9 );
   }
 
 }
