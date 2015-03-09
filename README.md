@@ -68,3 +68,4 @@ kdz is still new so there are some things I'd still like to do:
 * Remove `-b` flag since it's now the default build.
 * See how templates can be used.
 * Rewrite `kdz.js` in Coffeescript.
+* Test on Windows machines.
