@@ -104,3 +104,4 @@ kdz is still new so there are some things I'd still like to do:
 * See how templates can be used.
 * Rewrite `kdz.js` in Coffeescript.
 * Test on Windows machines.
+* Add prompt functionality so things like `package.json` can be customized
