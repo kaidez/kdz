@@ -5,7 +5,7 @@ v.0.0.1
 
 kdz is a Node build tool I created for scaffolding out my projects.
 
-Review the actual code in [`kdz.js`](https://github.com/kaidez/kdz/blob/master/kdz.js).
+Review the actual code in the heavily-commented [`kdz.js`](https://github.com/kaidez/kdz/blob/master/kdz.js).
 
 
 ### How it works
