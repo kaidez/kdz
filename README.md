@@ -38,12 +38,14 @@ There is one command: `app`. Running `kdz app` scaffolds out a single-page-appli
 * `bower.json`, `.bowerrc` and `STYLEGUIDE.md` files are downloaded.
 * SPA-like `Gruntfile.js`, `gulpfile.js` and `package.json` files are downloaded.
 
-Running `kdz app -w` scaffolds out a WordPress-like project.  It performs almost the same tasks as `kdz app` with the following difference:
+## OPTIONS
+There is small set of options
+
+### `-w`
+Scaffolds out a WordPress-like project.  It performs almost the same tasks as `kdz app` with the following difference:
+
 * a `build` folder is not created.
 * The `Gruntfile.js`, `gulpfile.js` and `package.json` files that are downloaded are more geared toward WordPress development.
-
-## OPTIONS
-Aside from `-w`, there is small set of options
 
 ### `-g`
 Download a `.gitignore` file to the root folder. If the `-w` option is passed, `.gitignore` will be WordPress-specific.
