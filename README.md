@@ -79,7 +79,8 @@ Creates a test folder for where you can test your scaffold...this is more for my
 #### `-b, --build`
 Does the same thing as `kdz app`. Since this is redundant, it will probably be deleted.
 <br />  
-<br />    
+<br />
+
 ## GENERAL NOTES
 * `kdz` uses an older version of the [download](https://www.npmjs.com/package/download) module, which is used to download files from my GitHub repo. This is because it currently causes errors when used with the [download-status](https://www.npmjs.com/package/download-status) module, which is displays a progress bar for an individual download....read more about this [here](https://github.com/kevva/download/issues/45). I'll watch for if/when this is fixed.
 
