@@ -41,7 +41,7 @@ To begin, start with typing either `kdz` or `kdz --help` in your terminal.  The 
 
 There is one command: `app`. Running `kdz app` scaffolds out a single-page-application (SPA) by performing the following steps:
 * a `build` folder is created with `css` and `js` subdirectories.
-* a `coffee` folder is created`and includes a `main.coffee` file.
+* a `coffee` folder is created and includes a `main.coffee` file.
 * a `css-build` folder is created with an `imports` subdirectory.
 * and empty `image-min` folder is created (images that need to be minified go here)
 * `bower.json`, `.bowerrc` and `STYLEGUIDE.md` files are downloaded.
