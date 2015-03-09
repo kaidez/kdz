@@ -289,7 +289,7 @@ function unzip() {
   }
 
   // Use "decompress" module to unzip file in "css-build/imports"
-  var decompress = new Decompress({mode: '755'})
+  var decompress = new Decompress( {mode: '755'} )
     .src( whatType )
     .dest( 'css-build/imports' )
     .use( Decompress.zip( {strip: 1} ) );
@@ -352,22 +352,27 @@ program
     })
     .then(function(){
       process.chdir( 'coffee' );
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     })
     .then(function(){
       touchCoffee();
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
     })
     .then(function(){
       process.chdir( '../' );
-      return Q.delay( 1000 );
+      return Q.delay( 1500 );
+    })
+    .then(function(){
+      if ( program.wordpress ){
+        console.log( chalk.green.underline( '>> Download "functions.php"...\n' ) );
+      }  else {
+         return false;
+      }
+      return Q.delay( 1500 );
     })
     .then(function() {
       if( program.wordpress ) {
-        Q.delay(1500).then(console.log( chalk.green.underline( '>> Download "functions.php"...\n' ) ) )
-        .then(function(){
-          getSingleFile( data.wp_files[1], "wordpress" );
-        })
+        getSingleFile( data.wp_files[1], "wordpress" );
       }
       return Q.delay( 1500 );
     }, function() { console.log( '✘ "functions.php" failed to download!' );} )
@@ -391,6 +396,12 @@ program
       }
       return Q.delay( 1500 );
     }, function() { console.log( '✘ Core files failed to download!' );} )
+    .then(function(){
+      if( program.gitignore ) {
+        console.log( chalk.green.underline( '>> Download ".gitignore"...\n' ) );
+        return Q.delay( 1500 );
+      }
+    })
     .then(function() {
       if ( program.gitignore && program.wordpress && !program.build ) {
         getSingleFile( data.wp_files[0], "wordpress" );
@@ -398,7 +409,7 @@ program
         getSingleFile( data.spa_files, "spa" );
       }
       return Q.delay( 1500 );
-    })
+    }, function() { console.log( '✘ .gitignore failed to download!'  );} )
     .then(function(){
       if( program.less || program.scss ) {
         console.log( chalk.green.underline( '>> Download CSS preprocessor project files"...\n' ) );
@@ -426,8 +437,8 @@ program
           zip = "rm -rf sass.zip";
           file = "mv style.scss css-build/";
         }
-        exec(zip);
-        exec(file);
+        exec( zip );
+        exec( file );
       })
     })
     .done( doneMessage );
