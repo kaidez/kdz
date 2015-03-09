@@ -51,7 +51,9 @@ function flagCheck() {
 // Go to "test-wordpress" if it's "program.wordpress"
 // Return a promise
 function goToTest() {
+
   var deferred = Q.defer();
+
   if ( ( program.test && !program.wordpress ) || ( program.build && program.test ) ) {
     process.chdir( 'test-spa' );
     deferred.resolve();
@@ -210,9 +212,14 @@ function getSingleFile( file, folder ) {
 
 
 
-// Step 1: go to the "coffee" directory
-// Step 2: create "main.coffee" inside of "coffee"
-// Step 3: go back up to the root folder
+/*
+ * "touchCoffee() "
+ * =====================================================================
+ *
+ * Step 1: Check to se if "main.coffee" exists
+ * Step 2: Create it if it does
+ * Step 3: Don't create it if it doesn't and pass a message saying so  * * Step 4: Stop the fs process folder
+*/
 function touchCoffee() {
 
   fs.open( 'main.coffee', 'rs', function( err, fd ) {
@@ -238,12 +245,18 @@ function touchCoffee() {
 
 
 
-// Helper function for downloading CSS preprocessors files
-// "whatType" is a preprocessor file type: either "less" or "scss"
-// "ifFile" is a file to look for before downloading files...
-// ...either "style.less" or "style.scss"
-// Internally uses the above "getAllFiles()" function
-// Downloads .zip files to be later unzipped with the "unzip()" function
+/*
+ * "preProcess() "
+ * =====================================================================
+ *
+ * Helper function for downloading CSS preprocessors files
+ * "whatType" is a preprocessor file type: either "less" or "scss"
+ * Step 3: Don't create it if it doesn't and pass a message saying so  * * Step 4: Stop the fs process folder
+ * "ifFile" is a file to look for before downloading files...
+ * ...either "style.less" or "style.scss"
+ * Internally uses the above "getAllFiles()" function
+ * Downloads .zip files to be later unzipped with the "unzip()" functio
+ */
 function preProcess( whatType, ifFile ) {
 
   // Create a reference for a file to look for before downloading files
