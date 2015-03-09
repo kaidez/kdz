@@ -67,6 +67,10 @@ Download Sass files to `css-build` and `css-build/imports` If the `-w` option is
 
 #### `-t`
 Create a test folder for where you can test your scaffold...this is more for my testing while developing.
+
+## GENERAL NOTES
+* `kdz` uses an older version of the [download](https://www.npmjs.com/package/download) module, which is used to download files from my GitHub repo. This is because it currently causes errors when used with the [download-status](https://www.npmjs.com/package/download-status) module, which is displays a progress bar for an individual download....read more about this [here](https://github.com/kevva/download/issues/45). I'll watch for if/when this is fixed.
+
 ## TODO
 kdz is still new so there are some things I'd still like to do:
 * See how the promises can be made to work better.
