@@ -30,7 +30,7 @@ var githubRoot = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-';
 // Stop "kdz app" if "less" & "sass" flags are passed at the same time
 // Passes error as under Node proccess exit code 9 ("Invalid Argument")
 function flagCheck() {
-
+  var deferred = Q.defer();
   if ( program.less && program.scss ) {
     console.log(chalk.red( '"less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
     process.exit( 9 );
@@ -40,19 +40,38 @@ function flagCheck() {
 
 
 
-// If the "test" flag is passed, check the type of project
-// Go to "test-spa" if "kdz app --test" is run
-// Go to "test-wordpress" if it's "program.wordpress"
-// Return a promise
+/*
+ * "goToTest()"
+ * =====================================================================
+ *
+ * If "test" flag is passed, check if "test-build/" folder exists
+ * If "test-build/" exists, create it then "cd" into it
+ * If "test-build/" does not exist, "cd" into it
+ * Returns a promise
+ */
 function goToTest() {
-
   var deferred = Q.defer();
+  if ( program.test ) {
+    fs.open( 'test-build', 'rs', function( err, fd ) {
+      if ( err && err.code == 'ENOENT' ) {
 
-  if ( ( program.test && !program.wordpress ) ) {
-    process.chdir( 'test-spa' );
-    deferred.resolve();
-  } else if( program.wordpress && program.test )  {
-    process.chdir( 'test-wordpress' );
+        // If "test-build" DOES NOT exists, create it with "mkdirp"
+        mkdirp( 'test-build' , function ( err ) {
+
+          // Throw an error if it can't be created for whatever reason
+          if ( err ) {
+            console.error( err )
+          } else {
+            process.chdir( 'test-build' );
+            console.log( chalk.cyan.underline( '>> Do test scaffold in "test-build/"...\n' ) );
+          }
+        });
+      } else {
+        console.log( chalk.cyan.underline( '>> Do test scaffold in the already-existing "test-build/"...\n' ) );
+        process.chdir( 'test-build' );
+        fs.close( fd );
+      }
+    });
     deferred.resolve();
   } else {
     return false;
@@ -333,7 +352,7 @@ program
   .description( 'scaffold a basic web application' )
   .action(function() {
     flagCheck(); // does not return a promise
-    Q.fcall( goToTest )
+    goToTest()
     .then(function() {
       console.log( chalk.green.underline( '>> Create preprocess folders...\n' ) );
       return Q.delay( 1500 );
@@ -448,6 +467,7 @@ program
     })
     .done( doneMessage );
   }) // end "app" command
+
 
 
 
