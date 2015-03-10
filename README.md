@@ -90,10 +90,11 @@ kdz uses an older version of the [download](https://www.npmjs.com/package/downlo
 ## TODO/WISH-LIST
 kdz is still new so there are some things I'd still like/want to do:
 * See how the promises can be made to work better.
+* The folder-existence check isn't accurate...make it more accurate.
 * Create specific commands for both the LESS and Sass downloads...don't make them work with just an option.
 * Perform error handling when flags are passed improperly.
 * See how templates can be used.
 * Rewrite `kdz.js` in Coffeescript.
 * Test on Windows machines.
-* Point to the repo with the GitHub API.
+* See if pointing to GitHub files with the GitHub API is better than pointint to them directly.
 * Add prompt functionality so things like `package.json` can be customized
