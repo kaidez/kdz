@@ -23,11 +23,6 @@ var fs = require( 'fs' ), // Read files with Node's fs module
     goToTest = require( './config/goToTest.js' ); // Run a test build
 
 
-// Root URL for downloading files from GitHub
-// Concatenate this to other variables create absolute file references
-// Used in both "getAllFiles()" and "getSingleFile()" functions
-// Change this value if you want to download it from another repo
-var githubRoot = 'https://raw.githubusercontent.com/kaidez/kdz/master/source-';
 
 // Stop "kdz app" if "less" & "sass" flags are passed at the same time
 // Passes error as under Node proccess exit code 9 ("Invalid Argument")
@@ -39,8 +34,6 @@ function flagCheck() {
   }
 
 }
-
-
 
 
 /*
