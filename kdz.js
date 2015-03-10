@@ -29,7 +29,7 @@ var fs = require( 'fs' ), // Read files with Node's fs module
 function flagCheck() {
   var deferred = Q.defer();
   if ( program.less && program.scss ) {
-    console.log(chalk.red( '"less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
+    console.log(chalk.red( 'ILLEGAL OPERATION: "less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
     process.exit( 9 );
   }
 
