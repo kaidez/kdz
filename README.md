@@ -67,7 +67,6 @@ If the `--test` flag is attached to `kdz app`, a `test-build` folder is created,
 <br />
 
 ### Options
-kdz comes with a small set of options:
 
 #### `-w, --wordpress`
 Scaffolds out a WordPress-like project.  It performs almost the same tasks as `kdz app` with the following differences:
