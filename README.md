@@ -27,7 +27,7 @@ kdz is not available as a downloadable npm module so if you want to install it, 
         npm install -g
 
 ### How it works
-kdz uses a small set of commands and options to scaffold a basic web application based on the methods and tricks I like to use for web development. It creates files & folders and also downloads specific files from this repo.
+kdz uses a small set of commands and options to scaffold a basic web application based on the methods and tricks I commonly use for web development. It creates files & folders and also downloads specific files from this repo.
 
 ### Commands
 
