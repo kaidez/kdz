@@ -26,13 +26,15 @@ var data = require( './config/data.js' ), // JSON file data is visible
 // Stop "kdz app" if "less" & "sass" flags are passed at the same time
 // Passes error as under Node proccess exit code 9 ("Invalid Argument")
 function flagCheck() {
-  var deferred = Q.defer();
+
   if ( program.less && program.scss ) {
     console.log(chalk.red( 'ILLEGAL OPERATION: "less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
     process.exit( 9 );
   }
 
-}
+} // end "flagCheck()"
+
+
 
 
 /*
