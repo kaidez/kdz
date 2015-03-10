@@ -110,5 +110,6 @@ kdz is still new so there are some things I'd still like/want to do:
 * See how templates can be used.
 * Rewrite `kdz.js` in Coffeescript.
 * Test on Windows machines.
-* See if pointing to GitHub files with the GitHub API is better than pointint to them directly.
+* See if pointing to GitHub files with the GitHub API is better than pointing to them directly.
+* See if a reusable function can be created for tasks related to `fs.open()`.
 * Add prompt functionality so things like `package.json` can be customized
