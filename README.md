@@ -25,25 +25,7 @@ kdz is not available as a downloadable npm module so if you want to install it, 
         npm install -g
 
 ### How it works
-To begin, start with typing either `kdz` or `kdz --help` in your terminal.  The following will be outputted:
-
-    Usage: kdz [options] [command]
-
-
-    Commands:
-
-     app   scaffold a basic web application
-     dt    delete "test-build" folder
-
-    Options:
-
-    -h, --help       output usage information
-    -V, --version    output the version number
-    -w, --wordpress  create a WordPress project
-    -g, --gitignore  download ".gitignore" file
-    -l, --less       download LESS files in "css-build"
-    -s, --scss       download Sass files in "css-build"
-    -t, --test       do a test scaffold
+kdz uses a small set of commands and options to scaffold a basic web application based on the methods and trick I like to use for web development. It creates files, folders and downloads files from this repo.
 
 ### Commands
 
@@ -99,6 +81,28 @@ Creates a folder called `test-build` and creates a test scaffold.
 
 ## General Notes
 kdz uses an older version of the [download](https://www.npmjs.com/package/download) module, which is used to download files from my GitHub repo. This is because it currently causes errors when used with the [download-status](https://www.npmjs.com/package/download-status) module, which is displays a progress bar for an individual download....read more about this [here](https://github.com/kevva/download/issues/45). I'll watch for if/when this is fixed, then update it.
+
+### To get help
+Type either `kdz` or `kdz --help` in your terminal.  The following will be outputted:
+
+    Usage: kdz [options] [command]
+
+
+    Commands:
+
+     app   scaffold a basic web application
+     dt    delete "test-build" folder
+
+    Options:
+
+    -h, --help       output usage information
+    -V, --version    output the version number
+    -w, --wordpress  create a WordPress project
+    -g, --gitignore  download ".gitignore" file
+    -l, --less       download LESS files in "css-build"
+    -s, --scss       download Sass files in "css-build"
+    -t, --test       do a test scaffold in "test-build"
+
 
 ## TODO/WISH-LIST
 kdz is still new so there are some things I'd still like/want to do:

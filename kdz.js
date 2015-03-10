@@ -357,7 +357,7 @@ program
   .option( '-g, --gitignore', 'download ".gitignore" file' )
   .option( '-l, --less', 'download LESS files in "css-build"' )
   .option( '-s, --scss', 'download Sass files in "css-build"' )
-  .option( '-t, --test', 'do a test scaffold' );
+  .option( '-t, --test', 'do a test scaffold in "test-build"' );
 
 
 
