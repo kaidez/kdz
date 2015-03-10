@@ -28,11 +28,11 @@ function goToTest() {
             console.error( err )
           } else {
             process.chdir( 'test-build' );
-            console.log( chalk.cyan.underline( '>> Do test scaffold in "test-build/"...\n' ) );
+            console.log( chalk.cyan.underline( '>> Create "test-build" folder then do a test scaffold inside of it"...\n' ) );
           }
         });
       } else {
-        console.log( chalk.cyan.underline( '>> Do test scaffold in the already-existing "test-build/"...\n' ) );
+        console.log( chalk.cyan.underline( '>> Do a test scaffold in the already-existing "test-build" folder...\n' ) );
         process.chdir( 'test-build' );
         fs.close( fd );
       }
