@@ -80,7 +80,7 @@ Downloads Sass files to `css-build` and `css-build/imports` If the `-w` option i
 <br />
 
 #### `-t, --test`
-Creates a test folder for where you can test your scaffold...this is more for my testing while developing.
+Creates a folder called `test-build` and creates a test your scaffold.
 <br />  
 <br />
 
