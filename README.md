@@ -84,7 +84,7 @@ Creates a folder called `test-build` and creates a test scaffold.
 ## General Notes
 kdz uses an older version of the [download](https://www.npmjs.com/package/download) module, which is used to download files from my GitHub repo. This is because it currently causes errors when used with the [download-status](https://www.npmjs.com/package/download-status) module, which is displays a progress bar for an individual download....read more about this [here](https://github.com/kevva/download/issues/45). I'll watch for if/when this is fixed, then update it.
 
-### To get help
+## To get help
 Type either `kdz` or `kdz --help` in your terminal.  The following will be outputted:
 
     Usage: kdz [options] [command]
