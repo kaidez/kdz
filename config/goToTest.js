@@ -28,7 +28,7 @@ function goToTest() {
             console.error( err )
           } else {
             process.chdir( 'test-build' );
-            console.log( chalk.cyan.underline( '>> Create "test-build" folder then do a test scaffold inside of it"...\n' ) );
+            console.log( chalk.cyan.underline( '>> Create "test-build" folder, do a test scaffold inside of it"...\n' ) );
           }
         });
       } else {
