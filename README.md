@@ -77,7 +77,7 @@ Downloads Sass files from `source-spa` to `css-build` and `css-build/imports` If
 <br />
 
 #### `-t, --test`
-Creates a folder called `test-build` and creates a test scaffold.
+Creates a folder called `test-build` and creates a test scaffold. `test-build` is listed as "non-commitable" in `.gitignore`.
 <br />  
 <br />
 
