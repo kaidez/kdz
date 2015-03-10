@@ -58,7 +58,8 @@ Running `kdz app` scaffolds out a single-page-application (SPA) by performing th
 * and empty `image-min` folder is created (images that need to be minified go here)
 * `bower.json`, `.bowerrc` and `STYLEGUIDE.md` files are downloaded from the `source-shared-files` directory.
 * SPA-like `Gruntfile.js`, `gulpfile.js` and `package.json` files are downloaded from the `source-spa` directory.
-
+<br />
+<br />
 
 #### `dt`
 If the `--test` flag is attached to `kdz app`, a `test-build` folder is created, then a test scaffold is created in that folder. `kdz dt` is a quick way of deleting `test-build`.
