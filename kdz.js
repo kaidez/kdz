@@ -8,7 +8,7 @@
 
 
 // Bring in Node modules
-var fs = require( 'fs' ), // Read files with Node's fs modulke
+var fs = require( 'fs' ), // Read files with Node's fs module
     exec = require( 'child_process' ).exec, // launch external processes
     program = require( 'commander' ), // Fires off commands and options
     mkdirp = require( 'mkdirp' ), // Recursively make directories
@@ -17,8 +17,8 @@ var fs = require( 'fs' ), // Read files with Node's fs modulke
     Download = require( 'download' ), // Download files
     progress = require( 'download-status' ), // Display download status
     Decompress = require( 'decompress' ), // Unzip files
-    data = require( './config/data.js' ); // JSON file data is visible
-
+    data = require( './config/data.js' ), // JSON file data is visible
+    goToTest = require( './config/goToTest.js' ); // JSON file data is visible
 
 
 // Root URL for downloading files from GitHub
@@ -38,47 +38,6 @@ function flagCheck() {
 
 }
 
-
-
-/*
- * "goToTest()"
- * =====================================================================
- *
- * If "test" flag is passed, check if "test-build/" folder exists
- * If "test-build/" exists, create it then "cd" into it
- * If "test-build/" does not exist, "cd" into it
- * Returns a promise
- */
-function goToTest() {
-  var deferred = Q.defer();
-  if ( program.test ) {
-    fs.open( 'test-build', 'rs', function( err, fd ) {
-      if ( err && err.code == 'ENOENT' ) {
-
-        // If "test-build" DOES NOT exists, create it with "mkdirp"
-        mkdirp( 'test-build' , function ( err ) {
-
-          // Throw an error if it can't be created for whatever reason
-          if ( err ) {
-            console.error( err )
-          } else {
-            process.chdir( 'test-build' );
-            console.log( chalk.cyan.underline( '>> Do test scaffold in "test-build/"...\n' ) );
-          }
-        });
-      } else {
-        console.log( chalk.cyan.underline( '>> Do test scaffold in the already-existing "test-build/"...\n' ) );
-        process.chdir( 'test-build' );
-        fs.close( fd );
-      }
-    });
-    deferred.resolve();
-  } else {
-    return false;
-    deferred.resolve();
-  }
-  return deferred.promise;
-} // end "goToTest()"
 
 
 
