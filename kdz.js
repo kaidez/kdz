@@ -7,17 +7,17 @@
 
 
 
-// Bring in Node modules
+// Bring in core and plugin-like Node modules
 var fs = require( 'fs' ), // Read files with Node's fs module
     exec = require( 'child_process' ).exec, // launch external processes
     program = require( 'commander' ), // Fires off commands and options
     mkdirp = require( 'mkdirp' ), // Recursively make directories
     Q = require( 'q' ), // Use Q to manage Promises
-    chalk = require( 'chalk' ), // Colorize console messages
-    Download = require( 'download' ), // Download files
-    progress = require( 'download-status' ), // Display download status
-    data = require( './config/data.js' ), // JSON file data is visible
-    dlFiles = require( './config/dlFiles.js' ), // Download files
+    chalk = require( 'chalk' ); // Colorize console messages
+
+// Bring in Node modules that kaidez created
+var data = require( './config/data.js' ), // JSON file data is visible
+    dlFiles = require( './config/dlFiles.js' ), // Download GitHub files
     unzip = require( './config/unzip.js' ), // Unzip files
     goToTest = require( './config/goToTest.js' ); // Run a test build
 
