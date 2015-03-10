@@ -17,7 +17,7 @@ var fs = require( 'fs' ), // Read files with Node's fs module
     Download = require( 'download' ), // Download files
     progress = require( 'download-status' ), // Display download status
     data = require( './config/data.js' ), // JSON file data is visible
-    downloadable = require( './config/downloadable.js' ), // Download
+    dlFiles = require( './config/dlFiles.js' ), // Download files
     unzip = require( './config/unzip.js' ), // Unzip files
     goToTest = require( './config/goToTest.js' ); // Run a test build
 
@@ -88,7 +88,7 @@ function buildFolder( array, getDir ) {
  * "getAllFiles()"
  * =====================================================================
  *
- * Uses the above "downloadable()" method to download an array of files
+ * Uses the above "dlFiles()" method to download an array of files
  * "arrays" param points to an array listed in "config/data.js"
  * "folder" param points to which folder to download the files
  */
@@ -98,9 +98,9 @@ function getAllFiles( array, folder ) {
   // "coreFile" represents one item in an array
   array.forEach( function( coreFile ) {
 
-    // Use "downloadable()" to file-check & download the files in the array
-    // Pass "array" & "folder" params above, "downloadable()" does the rest
-    downloadable( coreFile, folder );
+    // Use "dlFiles()" to file-check & download the files in the array
+    // Pass "array" & "folder" params above, "dlFiles()" does the rest
+    dlFiles( coreFile, folder );
 
   })
 
@@ -112,15 +112,15 @@ function getAllFiles( array, folder ) {
  * "getSingleFile()"
  * =====================================================================
  *
- * Uses the above "downloadable()" method to download a single file
+ * Uses the above "dlFiles()" method to download a single file
  * "file" param points to a file listed in "config/data.js"
  * "folder" param points to which folder to download the files
  */
 function getSingleFile( file, folder ) {
 
-  // Use "downloadable()" to file-check & download the single file
-  // Pass "file" & "folder" params above, "downloadable()" does the rest
-  downloadable( file, folder );
+  // Use "dlFiles()" to file-check & download the single file
+  // Pass "file" & "folder" params above, "dlFiles()" does the rest
+  dlFiles( file, folder );
 
 } // end "getSingleFile()"
 
@@ -273,7 +273,7 @@ program
       return Q.delay( 1500 );
     }, function() { console.log( chalk.red( '✘ "functions.php" failed to download!' ) );} )
     .then(function(){
-      console.log( chalk.green.underline( '>> Download common project files"...\n' ) );
+      console.log( chalk.green.underline( '>> Download common project files...\n' ) );
       return Q.delay( 1500 );
     })
     .then(function(){
@@ -308,7 +308,7 @@ program
     }, function() { console.log( chalk.red( '✘ .gitignore failed to download!' ) );} )
     .then(function(){
       if( program.less || program.scss ) {
-        console.log( chalk.green.underline( '>> Download CSS preprocessor project files"...\n' ) );
+        console.log( chalk.green.underline( '>> Download CSS preprocessor project files...\n' ) );
         return Q.delay( 1500 );
       }
     })
