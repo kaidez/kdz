@@ -17,6 +17,7 @@ var fs = require( 'fs' ), // Read files with Node's fs module
     Download = require( 'download' ), // Download files
     progress = require( 'download-status' ), // Display download status
     Decompress = require( 'decompress' ), // Unzip files
+    downloadable = require( './config/downloadable.js' ), // Unzip files
     data = require( './config/data.js' ), // JSON file data is visible
     unzip = require( './config/unzip.js' ), // Unzip files
     goToTest = require( './config/goToTest.js' ); // Run a test build
@@ -39,58 +40,6 @@ function flagCheck() {
 
 }
 
-
-
-
-/*
- * "download()"
- * =====================================================================
- *
- * Used in both the "getAllFiles()" and "getSingle()" functions
- * "file" param represents the file to be downloaded
- * "folder" param defines which folder the file's in...
- *  ...which is either "source-spa" or "source-wordpress"
- *
- * "download()" performs the following steps:
- * 1. Builds GitHub repo link for the file that needs to be downloaded
- * 2. Checks to see if this file doesn't already exist
- * 3. Downloads the file if it DOES NOT exist
- * 4. Doesn't downloads the file if it DOES exist, then sends a message
- * 5. Stops the Node "fs" process
- */
-function download( file, folder ) {
-
-  // Build GitHub repo link
-  var getFile  = githubRoot + folder + '/' + file;
-
-  // Use Node "fs.open" to check if the file exists
-  fs.open( file, 'rs', function( err, fd ) {
-    if ( err && err.code == 'ENOENT' ) {
-
-      // If the file DOES NOT exists, download it
-      var download = new Download( { strip: 1 } )
-      .get( getFile )
-      .dest( '.' )
-      .use( progress() );
-
-      // Throw an error if the file can't be downloaded
-      download.run( function ( err ) {
-        if ( err ) {
-          throw err;
-        }
-      });
-
-    } else {
-
-      // If the file DOES exists, don't download it
-      // Pass a console message saying so and stop the fs process
-      console.log( chalk.red( '"' +  file + '" exists...don\'t download it.\n' ) );
-      fs.close( fd );
-    }
-
-  });
-
-} // end "download()"
 
 
 
@@ -147,7 +96,7 @@ function buildFolder( array, getDir ) {
  * "getAllFiles()"
  * =====================================================================
  *
- * Uses the above "download()" method to download an array of files
+ * Uses the above "downloadable()" method to download an array of files
  * "arrays" param points to an array listed in "config/data.js"
  * "folder" param points to which folder to download the files
  */
@@ -157,9 +106,9 @@ function getAllFiles( array, folder ) {
   // "coreFile" represents one item in an array
   array.forEach( function( coreFile ) {
 
-    // Use "download()" to file-check & download the files in the array
-    // Pass "array" & "folder" params above, "download()" does the rest
-    download( coreFile, folder );
+    // Use "downloadable()" to file-check & download the files in the array
+    // Pass "array" & "folder" params above, "downloadable()" does the rest
+    downloadable( coreFile, folder );
 
   })
 
@@ -171,15 +120,15 @@ function getAllFiles( array, folder ) {
  * "getSingleFile()"
  * =====================================================================
  *
- * Uses the above "download()" method to download a single file
+ * Uses the above "downloadable()" method to download a single file
  * "file" param points to a file listed in "config/data.js"
  * "folder" param points to which folder to download the files
  */
 function getSingleFile( file, folder ) {
 
-  // Use "download()" to file-check & download the single file
-  // Pass "file" & "folder" params above, "download()" does the rest
-  download( file, folder );
+  // Use "downloadable()" to file-check & download the single file
+  // Pass "file" & "folder" params above, "downloadable()" does the rest
+  downloadable( file, folder );
 
 } // end "getSingleFile()"
 
