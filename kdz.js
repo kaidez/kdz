@@ -11,7 +11,6 @@
 var fs = require( 'fs' ), // Read files with Node's fs module
     exec = require( 'child_process' ).exec, // launch external processes
     program = require( 'commander' ), // Fires off commands and options
-    mkdirp = require( 'mkdirp' ), // Recursively make directories
     Q = require( 'q' ), // Use Q to manage Promises
     chalk = require( 'chalk' ); // Colorize console messages
 
