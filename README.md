@@ -91,7 +91,6 @@ kdz uses an older version of the [download](https://www.npmjs.com/package/downlo
 kdz is still new so there are some things I'd still like/want to do:
 * See how the promises can be made to work better.
 * Create specific commands for both the LESS and Sass downloads...don't make them work with just an option.
-* See if the `download()` function can be exported in. Will require a refactor.
 * Perform error handling when flags are passed improperly.
 * See how templates can be used.
 * Rewrite `kdz.js` in Coffeescript.
