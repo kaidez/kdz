@@ -17,8 +17,8 @@ var fs = require( 'fs' ), // Read files with Node's fs module
     Download = require( 'download' ), // Download files
     progress = require( 'download-status' ), // Display download status
     Decompress = require( 'decompress' ), // Unzip files
-    downloadable = require( './config/downloadable.js' ), // Unzip files
     data = require( './config/data.js' ), // JSON file data is visible
+    downloadable = require( './config/downloadable.js' ), // Download
     unzip = require( './config/unzip.js' ), // Unzip files
     goToTest = require( './config/goToTest.js' ); // Run a test build
 
@@ -240,7 +240,7 @@ program
     .then(function() {
       buildFolder( data.source_build, "css-build" );
       return Q.delay( 1500 );
-    }, function() { console.log( '✘ preprocess folders failed to be created!' );} )
+    }, function() { console.log( chalk.red( '✘ preprocess folders failed to be created!' )  );} )
     .then(function() {
       if( program.wordpress ) {
         return false;
@@ -249,7 +249,7 @@ program
         buildFolder( data.build_folder, "build" );
       }
       return Q.delay( 1500 );
-    }, function() { console.log( '✘ build folders failed to be created!' );} )
+    }, function() { console.log( chalk.red( '✘ build folders failed to be created!' ) ) ;} )
     .then(function(){
       console.log( chalk.green.underline( '>> Create "coffee/main.coffee"...\n' ) );
       return Q.delay( 500 );
@@ -261,7 +261,7 @@ program
     .then(function(){
       touchCoffee();
       return Q.delay( 1500 );
-    })
+    }, function() { console.log( chalk.red( '✘ "coffee/main.coffee" failed to be created!' ) ) ;})
     .then(function(){
       process.chdir( '../' );
       return Q.delay( 1500 );
@@ -279,7 +279,7 @@ program
         getSingleFile( data.wp_files[1], "wordpress" );
       }
       return Q.delay( 1500 );
-    }, function() { console.log( '✘ "functions.php" failed to download!' );} )
+    }, function() { console.log( chalk.red( '✘ "functions.php" failed to download!' ) );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download common project files"...\n' ) );
       return Q.delay( 1500 );
@@ -287,7 +287,7 @@ program
     .then(function(){
       getAllFiles( data.shared, "shared-files" );
       return Q.delay( 1500 );
-    }, function() { console.log( '✘ Common project files failed to download!' );} )
+    }, function() { console.log( chalk.red( '✘ Common project files failed to download!' ) );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download task runner project files & package.json...\n' ) );
       return Q.delay( 1500 );
@@ -299,7 +299,7 @@ program
         getAllFiles( data.core, "spa" );
       }
       return Q.delay( 1500 );
-    }, function() { console.log( '✘ Core files failed to download!' );} )
+    }, function() { console.log( chalk.red( '✘ Task runner project files & package.jsons failed to download!' ) );} )
     .then(function(){
       if( program.gitignore ) {
         console.log( chalk.green.underline( '>> Download ".gitignore"...\n' ) );
@@ -313,7 +313,7 @@ program
         getSingleFile( data.spa_files, "spa" );
       }
       return Q.delay( 1500 );
-    }, function() { console.log( '✘ .gitignore failed to download!'  );} )
+    }, function() { console.log( chalk.red( '✘ .gitignore failed to download!' ) );} )
     .then(function(){
       if( program.less || program.scss ) {
         console.log( chalk.green.underline( '>> Download CSS preprocessor project files"...\n' ) );
@@ -329,7 +329,7 @@ program
         return false;
       }
       return Q.delay( 1500 );
-    }, function() { console.log( '✘ Preprocessor files failed to download!' );} )
+    }, function() { console.log( chalk.red( '✘ Preprocessor files failed to download!' ) );} )
     .then(function() {
       return unzip()
       .then(function(){
@@ -343,13 +343,20 @@ program
         }
         exec( zip );
         exec( file );
-      }, function() { console.log( '✘ Preprocess files failed to copy over!' );})
-    }, function() { console.log( '✘ Preprocess files failed unzip!' );})
+      }, function() { console.log( chalk.red( '✘ Preprocess files failed to copy over!' ) );})
+    }, function() { console.log( chalk.red( '✘ Preprocess files failed unzip!' ) );})
     .done( doneMessage );
   }) // end "app" command
 
 
 
+// delete "test-build" folder
+program
+  .command( 'dt' )
+  .description( 'delete "test-build" folder' )
+  .action(function() {
+    exec( "rm -rf test-build/" );
+  });
 
 // options
 program
