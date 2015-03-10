@@ -18,7 +18,8 @@ var fs = require( 'fs' ), // Read files with Node's fs module
     progress = require( 'download-status' ), // Display download status
     Decompress = require( 'decompress' ), // Unzip files
     data = require( './config/data.js' ), // JSON file data is visible
-    goToTest = require( './config/goToTest.js' ); // JSON file data is visible
+    unzip = require( './config/unzip.js' ), // Unzip files
+    goToTest = require( './config/goToTest.js' ); // Run a test build
 
 
 // Root URL for downloading files from GitHub
@@ -311,7 +312,7 @@ program
   .description( 'scaffold a basic web application' )
   .action(function() {
     flagCheck(); // does not return a promise
-    goToTest()
+    Q.fcall(goToTest)
     .then(function() {
       console.log( chalk.green.underline( '>> Create preprocess folders...\n' ) );
       return Q.delay( 1500 );
@@ -422,8 +423,8 @@ program
         }
         exec( zip );
         exec( file );
-      })
-    })
+      }, function() { console.log( '✘ Preprocess files failed to copy over!' );})
+    }, function() { console.log( '✘ Preprocess files failed unzip!' );})
     .done( doneMessage );
   }) // end "app" command
 
