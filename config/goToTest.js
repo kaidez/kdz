@@ -15,7 +15,7 @@ var fs = require( 'fs' ),
     chalk = require( 'chalk' ); // Colorize console messages
 
 function goToTest() {
-  var deferred = Q.defer();
+
   if ( program.test ) {
     fs.open( 'test-build', 'rs', function( err, fd ) {
       if ( err && err.code == 'ENOENT' ) {
@@ -37,13 +37,11 @@ function goToTest() {
         fs.close( fd );
       }
     });
-    deferred.resolve();
   } else {
     return false;
-    deferred.resolve();
+
   }
-  return deferred.promise;
-  return this;
+  return Q.delay( 3000 );
 } // end "goToTest()"
 
 module.exports = goToTest;
