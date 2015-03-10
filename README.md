@@ -17,6 +17,9 @@ kdz is not available as a downloadable npm module so if you want to install it, 
 
 * I'm assuming that you have Node/npm installed in the machine you're downloading this file to. If not, please [get Node & npm](https://nodejs.org/download/).
 
+### How it works
+kdz uses a small set of commands and options to scaffold a basic web application based on the methods and tricks I commonly use for web development. It creates files & folders and also downloads specific files from this repo.
+
 ### How to install
 1. Open a terminal window and clone this repository somewhere on your local machine:
 
@@ -26,9 +29,7 @@ kdz is not available as a downloadable npm module so if you want to install it, 
 
         npm install -g
 
-### How it works
-kdz uses a small set of commands and options to scaffold a basic web application based on the methods and tricks I commonly use for web development. It creates files & folders and also downloads specific files from this repo.
-
+From here, run `kdz app` whenever you want from whatever folder you want.
 ### Commands
 
 #### `app`
