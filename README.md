@@ -13,7 +13,7 @@ kdz is not available as a downloadable npm module so if you want to install it, 
 
 * There shouldn't be an npm tool or module called `kdz` already installed on your machine. So you should be able to install it with no issues but just to be sure, run `which kdz` in your terminal. If it doesn't say the file is installed somewhere, you're ok.  If it does, PLEASE LET ME KNOW ASAP!!
 
-* This tool downloads files from a pre-defined root link in `kdz.js` that points to my GitHub repo. If you want to change that link, you would have to change the `githubRoot` variable in [`config/downloadble.js`](https://github.com/kaidez/kdz/blob/master/config/downloadable.js).
+* This tool downloads files from a pre-defined root link in `kdz.js` that points to my GitHub repo. If you want to change that link, you would have to change the `githubRoot` variable in [`config/dlFiles.js`](https://github.com/kaidez/kdz/blob/master/config/dlFiles.js).
 
 * I'm assuming that you have Node/npm installed in the machine you're downloading this file to. If not, please [get Node & npm](https://nodejs.org/download/).
 
