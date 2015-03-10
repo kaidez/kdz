@@ -4,7 +4,7 @@ v.0.0.1
 
 kdz is a Node build tool I created for scaffolding out my projects.
 
-Review the actual code in the heavily-commented [`kdz.js`](https://github.com/kaidez/kdz/blob/master/kdz.js) files as well as the JS in ['config/'](https://github.com/kaidez/kdz/tree/master/config).
+Review the actual code in the heavily-commented [`kdz.js`](https://github.com/kaidez/kdz/blob/master/kdz.js) files as well as the JS files in [`config/`](https://github.com/kaidez/kdz/tree/master/config).
 
 ### Before you install
 kdz is not available as a downloadable npm module so if you want to install it, you will need to clone this repo to your machine first. Therefore, please note the following:
