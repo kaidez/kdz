@@ -33,6 +33,7 @@ To begin, start with typing either `kdz` or `kdz --help` in your terminal.  The 
     Commands:
 
      app   scaffold a basic web application
+     dt    delete "test-build" folder
 
     Options:
 
@@ -44,14 +45,25 @@ To begin, start with typing either `kdz` or `kdz --help` in your terminal.  The 
     -s, --scss       download Sass files in "css-build"
     -t, --test       do a test scaffold
 
+### Commands
 
-There is one command: `app`. Running `kdz app` scaffolds out a single-page-application (SPA) by performing the following steps:
+#### `app`
+Running `kdz app` scaffolds out a single-page-application (SPA) by performing the following steps:
+<br />
+<br />
+
 * a `build` folder is created with `css` and `js` subdirectories.
 * a `coffee` folder is created and includes a `main.coffee` file.
 * a `css-build` folder is created with an `imports` subdirectory.
 * and empty `image-min` folder is created (images that need to be minified go here)
-* `bower.json`, `.bowerrc` and `STYLEGUIDE.md` files are downloaded.
-* SPA-like `Gruntfile.js`, `gulpfile.js` and `package.json` files are downloaded.
+* `bower.json`, `.bowerrc` and `STYLEGUIDE.md` files are downloaded from the `source-shared-files` directory.
+* SPA-like `Gruntfile.js`, `gulpfile.js` and `package.json` files are downloaded from the `source-spa` directory.
+
+
+#### `dt`
+If the `--test` flag is attached to `kdz app`, a `test-build` folder is created, then a test scaffold is created in that folder. `kdz dt` is a quick way of deleting `test-build`.
+<br />
+<br />
 
 ### Options
 kdz comes with a small set of options:
@@ -60,22 +72,23 @@ kdz comes with a small set of options:
 Scaffolds out a WordPress-like project.  It performs almost the same tasks as `kdz app` with the following differences:
 
 * The `build` folder and its subdirectories are not created.
-* The `Gruntfile.js`, `gulpfile.js` and `package.json` files that are downloaded are more geared toward WordPress development.
+* The `Gruntfile.js`, `gulpfile.js` and `package.json` files that are downloaded are more geared toward WordPress development and downloaded from `source-wordpress`.
+* A `functions.php` file is downloaded.
 <br />
 <br />
 
 #### `-g, --gitignore`
-Downloads a `.gitignore` file to the root folder. If the `-w` option is passed, `.gitignore` will be WordPress-specific.
+Downloads a `.gitignore` file from `source-spa` to the root folder. If the `-w` option is passed, `.gitignore` will be WordPress-specific and downloaded from the `source-wordpress` folder.
 <br />
 <br />
 
 #### `-l, --less`
-Downloads LESS files to `css-build` and `css-build/imports` If the `-w` option is passed, the LESS files will be WordPress-specific.
+Downloads LESS files from `source-spa` to `css-build` and `css-build/imports` If the `-w` option is passed, the LESS files will be WordPress-specific and downloaded from the `source-wordpress` folder.
 <br />  
 <br />
 
 #### `-s, --scss`
-Downloads Sass files to `css-build` and `css-build/imports` If the `-w` option is passed, the Sass files will be WordPress-specific.
+Downloads Sass files from `source-spa` to `css-build` and `css-build/imports` If the `-w` option is passed, the Sass files will be WordPress-specific and downloaded from the `source-wordpress` folder.
 <br />  
 <br />
 
