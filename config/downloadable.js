@@ -19,12 +19,9 @@
 
  // Bring in Node modules
  var fs = require( 'fs' ), // Read files with Node's fs module
-     program = require( 'commander' ), // Fires off commands and options
-     Q = require( 'q' ), // Use Q to manage Promises
      chalk = require( 'chalk' ), // Colorize console messages
      Download = require( 'download' ), // Download files
-     progress = require( 'download-status' ),
-     data = require( './data.js' ); // JSON file data is visible;
+     progress = require( 'download-status' );
 
 
 function downloadable( file, folder ) {
