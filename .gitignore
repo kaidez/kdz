@@ -20,20 +20,14 @@ functions.php
 
 cool-links.md
 
-!source-shared-files/*
+test-build/
 
+!source-shared-files/*
 
 !source-spa/*
 
-
 !source-wordpress/*
 
-
-!test-spa/*
-
-
-
-!test-wp/*
 
 
 
