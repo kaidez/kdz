@@ -16,7 +16,6 @@ var fs = require( 'fs' ), // Read files with Node's fs module
     chalk = require( 'chalk' ), // Colorize console messages
     Download = require( 'download' ), // Download files
     progress = require( 'download-status' ), // Display download status
-    Decompress = require( 'decompress' ), // Unzip files
     data = require( './config/data.js' ), // JSON file data is visible
     downloadable = require( './config/downloadable.js' ), // Download
     unzip = require( './config/unzip.js' ), // Unzip files
