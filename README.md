@@ -7,13 +7,15 @@ kdz is a Node build tool I created for scaffolding out my projects.
 Review the actual code in the heavily-commented [`kdz.js`](https://github.com/kaidez/kdz/blob/master/kdz.js).
 
 ### Before you install
-kdz is not available as a downloadable npm module so if you want to install it, you will need to clone this repo to your machine first. This means that some assumptions are made:
+kdz is not available as a downloadable npm module so if you want to install it, you will need to clone this repo to your machine first. Therefore, please note the following:
 
 * This tool has been tested on Unix-like systems only. Testing it on Windows machines is listed in the todo section.
 
 * There shouldn't be an npm tool or module called `kdz` already installed on your machine. So you should be able to install it with no issues but just to be sure, run `which kdz` in your terminal. If it doesn't say the file is installed somewhere, you're ok.  If it does, PLEASE LET ME KNOW ASAP!!
 
 * This tool downloads files from a pre-defined root link in `kdz.js` that points to my GitHub repo. If you want to change that link, you would have to change the `githubRoot` variable in [`config/downloadble.js`](https://github.com/kaidez/kdz/blob/master/config/downloadable.js).
+
+* I'm assuming that you have Node/npm installed in the machine you're downloading this file to. If not, please [get Node & npm](https://nodejs.org/download/).
 
 ### How to install
 1. Open a terminal window and clone this repository somewhere on your local machine:
