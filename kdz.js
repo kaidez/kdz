@@ -20,6 +20,7 @@ var data = require( './config/data.js' ), // JSON file data is visible
     buildFolder = require( './config/buildFolder.js' ), // Build folders
     unzip = require( './config/unzip.js' ), // Unzip files
     goToTest = require( './config/goToTest.js' ), // Run a test build
+    touchCoffee = require( './config/touchCoffee.js' ), // "main.coffee"
     doneMsg = require( './config/doneMessage.js' ); // ".done()" message
 
 // Stop "kdz app" if "less" & "sass" flags are passed at the same time
@@ -78,50 +79,17 @@ function getSingleFile( file, folder ) {
 
 
 /*
- * "touchCoffee()"
- * =====================================================================
- *
- * Step 1: Check to see if "main.coffee" exists
- * Step 2: Create it if it does
- * Step 3: Don't create it if it doesn't and pass a message saying so
- * Step 4: Stop the fs process
-*/
-function touchCoffee() {
-
-  fs.open( 'main.coffee', 'rs', function( err, fd ) {
-    if ( err && err.code == 'ENOENT' ) {
-      exec('touch main.coffee',
-      function ( error ) {
-        if (error !== null) {
-          console.log( 'exec error: ' + error );a
-        } else {
-          // Pass a console message saying that it's been created
-          console.log( '"coffee/main.coffee" created!\n' )
-        }
-      });
-    } else {
-      // If a folder DOES exists, don't download it
-      // Pass a console message saying so and stop the fs process
-      console.log( chalk.red( '"coffee/main.coffee" exists...don\'t create it.\n' ) );
-      fs.close( fd );
-    }
-  })
-
-} // end "touchCoffee()"
-
-
-
-/*
- * "preProcess() "
+ * "preProcess()"
  * =====================================================================
  *
  * Helper function for downloading CSS preprocessors files
  * "whatType" is a preprocessor file type: either "less" or "scss"
- * Step 3: Don't create it if it doesn't and pass a message saying so  * * Step 4: Stop the fs process folder
+ * Don't create it if it doesn't and pass a message saying so
+ * Stop the fs process folder
  * "ifFile" is a file to look for before downloading files...
  * ...either "style.less" or "style.scss"
  * Internally uses the above "getAllFiles()" function
- * Downloads .zip files to be later unzipped with the "unzip()" functio
+ * Downloads .zip files to be later unzipped with the "unzip()" function
  */
 function preProcess( whatType, ifFile ) {
 
