@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "chalk": "^1.0.0",
-    "commander": "~2.7.0",
+    "commander": "^2.7.1",
     "decompress": "^2.2.1",
     "download": "^3.3.0",
     "download-status": "^2.1.1",
