@@ -15,7 +15,7 @@ kdz is not available as a downloadable npm module so if you want to install it, 
 
 * This tool downloads files from a pre-defined root link in `kdz.js` that points to my GitHub repo. If you want to change that link, you would have to change the `githubRoot` variable in [`config/dlFiles.js`](https://github.com/kaidez/kdz/blob/master/config/dlFiles.js).
 
-* I'm assuming that you have Node/npm installed in the machine you're downloading this file to. If not, please [get Node & npm](https://nodejs.org/download/).
+* I'm assuming that you have Node/npm installed on the machine to which you're downloading this tool. If not, please [get Node & npm](https://nodejs.org/download/).
 
 ### How it works
 kdz uses a small set of commands and options to scaffold a basic web application based on the methods and tricks I commonly use for web development. It creates files & folders and also downloads specific files from this repo.
