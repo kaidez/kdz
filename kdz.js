@@ -28,7 +28,7 @@ var data = require( './config/data.js' ), // JSON file data is visible
 function flagCheck() {
 
   if ( program.less && program.scss ) {
-    console.log(chalk.red( 'ILLEGAL OPERATION: "less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
+    console.log(chalk.red( 'Invalid Argument: "less" and "scss" flags cannot be passed at the same time\nExiting task....\n' ) )
     process.exit( 9 );
   }
 
