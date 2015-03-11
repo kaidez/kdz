@@ -103,13 +103,14 @@ function preProcess( whatType, ifFile ) {
 
       // If "style" file DOES NOT exist, download the files
       // When "wordpress" flag is passed, download WordPress-type files
-      // When "build" flag is passed, download SPA-type files
+      // Otherwise, download SPA-type files
       if( program.wordpress ) {
         getAllFiles( whatType, "wordpress" );
 
       } else {
         getAllFiles( whatType, "spa" );
       }
+
     } else {
 
       // If "style" file DOES exist, don't download files
@@ -251,8 +252,37 @@ program
 
 // delete "test-build" folder
 program
+  .command( 'less' )
+  .description( 'download LESS files to "css-build"' )
+  .action(function() {
+    Q.fcall(goToTest)
+    .then(function(){
+      preProcess( data.less, "style.less" );
+      return Q.delay( 1500 );
+    })
+    .then(function() {
+      return unzip()
+      .then(function(){
+        var zip, file;
+        if ( program.less ) {
+          zip = "rm -rf less.zip";
+          file = "mv style.less css-build/";
+        } else if ( program.scss ) {
+          zip = "rm -rf sass.zip";
+          file = "mv style.scss css-build/";
+        }
+        exec( zip );
+        exec( file );
+      }, function() { console.log( chalk.red( '✘ Preprocess files failed to copy over!' ) );})
+    }, function() { console.log( chalk.red( '✘ Preprocess files failed unzip!' ) );})
+  })
+
+
+
+// delete "test-build" folder
+program
   .command( 'dt' )
-  .description( 'delete "test-build" folder' )
+  .description( 'delete "test-build" folder if it exists' )
   .action(function() {
     fs.open( 'test-build', 'rs', function( err, fd ) {
       if ( err && err.code == 'ENOENT' ) {
@@ -270,8 +300,8 @@ program
   .version( '0.0.1' )
   .option( '-w, --wordpress', 'create a WordPress project' )
   .option( '-g, --gitignore', 'download ".gitignore" file' )
-  .option( '-l, --less', 'download LESS files in "css-build"' )
-  .option( '-s, --scss', 'download Sass files in "css-build"' )
+  .option( '-l, --less', 'download LESS files to "css-build"' )
+  .option( '-s, --scss', 'download Sass files to "css-build"' )
   .option( '-t, --test', 'do a test scaffold in "test-build"' );
 
 

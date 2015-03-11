@@ -5,6 +5,7 @@
  * If "test" flag is passed, check if "test-build/" folder exists
  * If "test-build/" exists, don't create...just "cd" into it
  * If "test-build/" does not exist, create it and then "cd" into it
+ * Return a delayed promise
  */
 
 var fs = require( 'fs' ), // Read files with Node's fs module
@@ -52,7 +53,7 @@ function goToTest() {
     return false;
 
   }
-
+  return Q.delay( 1500 ); // Return a promise
 } // end "goToTest()"
 
 module.exports = goToTest;
