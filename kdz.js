@@ -9,7 +9,7 @@
 
 // Bring in core and plugin-like Node modules
 var fs = require( 'fs' ), // Read files with Node's fs module
-    exec = require( 'child_process' ).exec, // launch external processes
+    exec = require( 'child_process' ).exec, // execute line commands
     program = require( 'commander' ), // Fires off commands and options
     Q = require( 'q' ), // Use Q to manage Promises
     chalk = require( 'chalk' ); // Colorize console messages
@@ -19,8 +19,8 @@ var data = require( './config/data.js' ), // JSON file data is visible
     dlFiles = require( './config/dlFiles.js' ), // Download GitHub files
     buildFolder = require( './config/buildFolder.js' ), // Build folders
     unzip = require( './config/unzip.js' ), // Unzip files
-    goToTest = require( './config/goToTest.js' ); // Run a test build
-
+    goToTest = require( './config/goToTest.js' ), // Run a test build
+    doneMsg = require( './config/doneMessage.js' ); // ".done()" message
 
 
 // Stop "kdz app" if "less" & "sass" flags are passed at the same time
@@ -158,18 +158,6 @@ function preProcess( whatType, ifFile ) {
 
 
 
-// Output a console message after "app" is done
-function doneMessage() {
-  console.log( chalk.yellow.bold.underline( 'THE PROJECT IS SCAFFOLDED!!') );
-  console.log( chalk.yellow( 'Next steps...\n') );
-  console.log( chalk.yellow( 'You will need to fill in fields in \"package.json\" and \"bower.json\"\n') );
-  console.log( chalk.yellow( 'Run \"npm-check-updates\" to check for project modules updates\n') );
-  console.log( chalk.yellow( 'Run \"bower list\" to check for front-end dependency updates\n') );
-  console.log( chalk.yellow( 'Run \"npm install\" and \"bower install\" after that\n') );
-} // end "doneMessage()"
-
-
-
 // "app" command: scaffolds out a SPA-like project
 program
   .command( 'app' )
@@ -289,7 +277,7 @@ program
         exec( file );
       }, function() { console.log( chalk.red( '✘ Preprocess files failed to copy over!' ) );})
     }, function() { console.log( chalk.red( '✘ Preprocess files failed unzip!' ) );})
-    .done( doneMessage );
+    .done( doneMsg );
   }) // end "app" command
 
 
