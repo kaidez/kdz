@@ -22,7 +22,6 @@ var data = require( './config/data.js' ), // JSON file data is visible
     goToTest = require( './config/goToTest.js' ), // Run a test build
     doneMsg = require( './config/doneMessage.js' ); // ".done()" message
 
-
 // Stop "kdz app" if "less" & "sass" flags are passed at the same time
 // Passes error as under Node proccess exit code 9 ("Invalid Argument")
 function flagCheck() {
@@ -295,6 +294,8 @@ program
       }
     });
   })
+
+
 
 // options
 program
