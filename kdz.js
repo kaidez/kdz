@@ -287,8 +287,14 @@ program
   .command( 'dt' )
   .description( 'delete "test-build" folder' )
   .action(function() {
-    exec( "rm -rf test-build/" );
-  });
+    fs.open( 'test-build', 'rs', function( err, fd ) {
+      if ( err && err.code == 'ENOENT' ) {
+        console.log( chalk.cyan.underline( '>> "test-build" doesn\'t exist...nothing to delete\n' ) );
+      } else {
+        exec( "rm -rf test-build/" );
+      }
+    });
+  })
 
 // options
 program
