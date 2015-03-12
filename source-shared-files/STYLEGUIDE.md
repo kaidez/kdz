@@ -1,4 +1,4 @@
-# Style Guide for kaidez-written code
+# CSS Style Guide for kaidez-written code
   (this is a living, breathing document)
 
 This is a style guide for my self-imposed rules for how I write code in projects. Follow these rules makes it easier for me to debug code, especially CSS.
@@ -6,9 +6,9 @@ This is a style guide for my self-imposed rules for how I write code in projects
 I would probably need to change these rules when working in a team environment. But for projects where I'm only the client side person, following this style guide works for me.
 
 ## Understand the Basic structure
-When the `kdz init` command is run, it scaffolds out my standard file and folder structure for a project. The structure looks like this:
+When the `kdz app` command is run, it scaffolds out my standard file and folder structure for a project. The structure looks like this:
 
-       ├── project-folder
+       ├── build
        ├── coffee
        |   └── main.coffee
        ├── css-build
@@ -16,7 +16,8 @@ When the `kdz init` command is run, it scaffolds out my standard file and folder
        ├── image-min
        ├── bower.json
        └── package.json
-If either the `-l` flag or `-s` flag is passed to `kdz init`, then specific `.less` or `.scss` files will be created in `css-build/imports`, respectively. Afterwards, commands are run that download Bootstrap's core CSS file via Bower and creates a core stylesheet that imports in all the preprocessor files.
+
+If either the `-l` flag or `-s` flag is passed to `kdz app`, then specific `.less` or `.scss` files will be created in `css-build/imports`, respectively. Afterwards, commands are run that download Bootstrap's core CSS file via Bower and creates a core stylesheet that imports in all the preprocessor files.
 
 For example, if `.less` files were built out, the structure would look like this:
 
@@ -24,7 +25,6 @@ For example, if `.less` files were built out, the structure would look like this
        ...
        └── css-build
            ├── style.less
-           ├── bootstrap.css
            └── imports
                ├── all-transform-3d-webkit-transform-3d.less
                ├── bootstrap-override.less
