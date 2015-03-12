@@ -34,7 +34,7 @@ function goToTest() {
 
             // If "test-build" was created," cd" into it & send message
             process.chdir( 'test-build' );
-            console.log( chalk.cyan.underline( '>> Create "test-build" folder, do a test scaffold inside of it"...\n' ) );
+            console.log( chalk.cyan.underline( '>> Create "test-build" folder, do a test scaffold inside of it...\n' ) );
           }
         });
       } else {
