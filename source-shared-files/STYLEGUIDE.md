@@ -9,6 +9,9 @@ I would probably need to change these rules when working in a team environment. 
 When the `kdz app` command is run, it scaffolds out my standard file and folder structure for a project. The structure looks like this:
 
        ├── build
+       |   └── css
+       |   └── js
+       |       └── libs
        ├── coffee
        |   └── main.coffee
        ├── css-build
@@ -82,7 +85,7 @@ Key points
 
 * `mobile-first.less` would contain classes that appear on handheld views only.
 
-* Media query files are listed in the order that the queries appear in the current version of bootstrap.css.
+* Media query files are listed in the order that the queries appear in the current version of `bootstrap.css`.
 
 ## CSS Build-out Process
 In the example above, `style.less` compiles out to `style.css` in `css-build`. `style.css` gets concatenated with `bootstrap.css` to wherever I specify.
@@ -125,7 +128,7 @@ __Wrong__
 
     .articleHeader
 <hr>
-Selectors that appear on all views should be listed in `globals.less` and should start with `g-`
+Selectors that appear on all views should be listed in `globals.less` and should start with `gl-`
 
 __Right__
 
