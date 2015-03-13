@@ -71,7 +71,7 @@ For example, if `.less` files were built out, the structure would look like this
     @import "imports/all-transform-3d-webkit-transform-3d";
     @import "imports/min-width-768-max-width-991";
 
-Key points
+## Key points
 
 * All preprocessor variables would go in `variables.less`
 
@@ -79,9 +79,9 @@ Key points
 
 * `for.less` is a LESS-specific file that outputs a set of CSS selectors using a LESS function. The `.scss` file buildout doesn't have a similar file.
 
-* `bootstrap-overide.less` would contain classes that are inside `bootstrap.css`.
+* `bootstrap-overide.less` would contain classes needed to override classes already inside `bootstrap.css`.
 
-* `retina-media-queries` would contain classes that define any classes based on retina and non-retina images.
+* `retina-media-queries` would contain classes that define any settings for retina and non-retina images.
 
 * `mobile-first.less` would contain classes that appear on handheld views only.
 
@@ -162,13 +162,6 @@ __Right__
 
 
 __Wrong__
-
-    // Mobile First
-    .article-header {
-      font-size: 10px;
-      color: red;
-    }
-
     // Overrides the Mobile First font size unnecessarily
     @media (max-width: 767px) {
       .article-header {
@@ -176,6 +169,14 @@ __Wrong__
         color: blue;
       }
     }
+
+    // Mobile First
+    .article-header {
+      font-size: 10px;
+      color: red;
+    }
+
+
 Consider placing selectors like this `globals.less`
 <hr>
 Avoid overly-specific selectors (this may be unavoidable with WordPress)
@@ -228,8 +229,26 @@ __Right__
     .menu-list-item {
       .font-styles;
     }
+
 <hr>
-Whenever possible, plugin-specific styles should go in their own preprocess file and start with `PLUGIN_`. So if I'm using jQuery Cycle, create a files called `PLUGIN_cycle.`
+Use as little `z-index` levels as possible: there should never be a need for more than five levels (unless plugins force there to be more.)
+
+__Right__
+
+    .about-textbox {
+      z-index: 3;
+    }
+  __Wrong__
+
+    .about-textbox {
+      z-index: 10000;
+    }
+
+
+<hr>
+## General Notes
+
+Whenever possible, plugin-specific styles should go in their own pre-process file and start with `PLUGIN_`. So if I'm using jQuery Cycle, create a pre-process files called `PLUGIN_cycle.`
 <hr>
 ALWAYS try to avoid using `!important`, but there are times when you have no choice, such as overriding a plugin.
 <hr>
