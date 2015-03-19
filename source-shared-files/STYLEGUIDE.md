@@ -229,6 +229,22 @@ __Right__
     .menu-list-item {
       .font-styles;
     }
+<hr>
+If you HAVE to use any sort of CSS descendant selectors, nest them if your pre processor allows for it. Even if you only have one.  It makes it easier to add more if needed.
+
+__Right__
+
+    // Done with LESS
+    .menu-list-item {
+      .header-copy {
+        font-size: 16px;
+      }
+    }
+  __Wrong__
+
+    .menu-list-item .header-copy {
+      font-size: 16px;
+    }
 
 <hr>
 Use as little `z-index` levels as possible: there should never be a need for more than five levels (unless plugins force there to be more.)
