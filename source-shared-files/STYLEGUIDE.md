@@ -247,6 +247,22 @@ __Right__
     }
 
 <hr>
+
+Avoid CSS descendant selectors because they're inefficient.
+
+__Right__
+
+
+    .menu-list-item {
+      font-size: 16px;
+    }
+  __Wrong__
+
+    ul .menu list-item {
+      font-size: 16px;
+    }
+
+<hr>
 Use as little `z-index` levels as possible: there should never be a need for more than five levels (unless plugins force there to be more.)
 
 __Right__
