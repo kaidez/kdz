@@ -20,7 +20,7 @@ var data = {
   "wp_files":[
     ".gitignore",
     "functions.php",
-    "wp-comments-block.css"
+    "wp-comment-block.css"
   ],
   "build_folder":[
     "build/css",
