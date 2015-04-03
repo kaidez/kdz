@@ -19,7 +19,8 @@ var data = {
   ],
   "wp_files":[
     ".gitignore",
-    "functions.php"
+    "functions.php",
+    "wp-comments-block.css"
   ],
   "build_folder":[
     "build/css",
