@@ -41,7 +41,7 @@ function flagCheck() {
  * =====================================================================
  *
  * Uses the above "dlFiles()" method to download an array of files
- * "arrays" param points to an array listed in "config/data.js"
+ * "array" param points to an array listed in "config/data.js"
  * "folder" param points to which folder to download the files
  */
 function getAllFiles( array, folder ) {
@@ -167,7 +167,7 @@ program
     })
     .then(function(){
       if ( program.wordpress ){
-        console.log( chalk.green.underline( '>> Download "functions.php"...\n' ) );
+        console.log( chalk.green.underline( '>> Download "functions.php & "wp-comment-block.css"...\n' ) );
       }  else {
          return false;
       }
@@ -175,10 +175,11 @@ program
     })
     .then(function() {
       if( program.wordpress ) {
-        getSingleFile( data.wp_files[1], "wordpress" );
+        var coreWpArray = data.wp_files.slice(-2);
+        getAllFiles( coreWpArray, "wordpress" );
       }
       return Q.delay( 1500 );
-    }, function() { console.log( chalk.red( '✘ "functions.php" failed to download!' ) );} )
+    }, function() { console.log( chalk.red( '✘ Either "functions.php" or "wp-comment-block.css" failed to download!' ) );} )
     .then(function(){
       console.log( chalk.green.underline( '>> Download common project files...\n' ) );
       return Q.delay( 1500 );
@@ -229,6 +230,16 @@ program
       }
       return Q.delay( 1500 );
     }, function() { console.log( chalk.red( '✘ Preprocessor files failed to download!' ) );} )
+    .then(function(){
+      fs.open( 'wp-comment-block.css', 'rs', function( err, fd ) {
+        if ( err && err.code == 'ENOENT' ) {
+          return false;
+        } else {
+          console.log( chalk.cyan.green( '>> Move "wp-comment-block.css" to "css-build/...\n' ) );
+          exec( "mv wp-comment-block.css css-build/" );
+        }
+      });
+    })
     .then(function() {
       return unzip()
       .then(function(){
