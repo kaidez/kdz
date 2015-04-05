@@ -12,6 +12,7 @@ var fs = require( 'fs' ), // Read files with Node's fs module
     exec = require( 'child_process' ).exec, // execute line commands
     program = require( 'commander' ), // Fires off commands and options
     Q = require( 'q' ), // Use Q to manage Promises
+    Decompress = require('decompress'),
     chalk = require( 'chalk' ); // Colorize console messages
 
 // Bring in Node modules that kaidez created
